@@ -6,6 +6,7 @@ function App() {
   return (
     <>
       <h1>X-PENSE</h1>
+      <p>Seemlessly Track Your Budget</p>
     </>
   )
 }
