@@ -16,23 +16,11 @@ function App() {
       <div className='container'>
         <h1>Budget Tracker</h1>
         <nav>
-          <ul>
-            <li>
-              <Link to='/'>Home</Link>
-            </li>
-          </ul>
-          <ul>
-            <li><Link to='/transactions'>Transactions</Link></li>
-          </ul>
-          <ul>
-            <li>
-              <Link to='/add'>Add Transaction</Link>
-            </li>
-          </ul>
-          <ul>
-            <li>
-              <Link to='budget'>Budget</Link>
-            </li>
+          <ul className='nav nav-tabs justify-content-center'>
+            <li className='nav-item'><Link className='nav-link' to='/'>Home</Link></li>
+            <li className='nav-item'><Link className='nav-link' to='/transactions'>Transactions</Link></li>
+            <li className='nav-item'><Link className='nav-link' to='/add'>Add Transaction</Link></li>
+            <li className='nav-item'><Link className='nav-link' to='budget'>Budget</Link></li>
           </ul>
         </nav>
         <Routes>
