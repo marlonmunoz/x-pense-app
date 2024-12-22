@@ -40,3 +40,30 @@
 .read-the-docs {
   color: #888;
 }
+
+
+body.light-mode {
+  background-color: white;
+  color: black;
+}
+
+body.dark-mode {
+  background-color: black;
+  color: white;
+}
+
+.navbar-light-mode {
+  background-color: lightgray;
+}
+
+.navbar-dark-mode {
+  background-color: darkgray;
+}
+
+.nav-link-light-mode {
+  color: black;
+}
+
+.nav-link-dark-mode {
+  color: white;
+}
