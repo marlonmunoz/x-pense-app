@@ -1,27 +1,18 @@
-// import React from 'react';
+import React from 'react';
 
-// const Transactions = ({ transactions = [] }) => {
-//     return (
-//         <div>
-//             <ul>
-//                 {transactions.map((transaction, index) => (
-//                     <li key={index}>
-//                         {transaction.text}: ${transaction.amount}
-//                     </li>
-//                 ))}
-//             </ul>
-//         </div>
-//     );
-// };
-
-// export default Transactions;
-
-function Transactions() {
+const Transactions = ({ transactions = [] }) => {
     return (
         <div>
-            <p>Something to return</p>
+            <ul>
+                {transactions.map((transaction, index) => (
+                    <li key={index}>
+                        {transaction.text}: ${transaction.amount} - ${transaction.category}
+                    </li>
+                ))}
+            </ul>
         </div>
-    )
-}
+    );
+};
 
 export default Transactions;
+

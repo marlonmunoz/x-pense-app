@@ -7,12 +7,7 @@ import Budget from '../components/Budget'
 import '/src/App.css'
 
 function App() {
-
-  // const [transactions, setTransactions] = useState([]);
-  // const addTransaction = (transaction) => {
-  //   setTransactions([...transactions, transaction])
-  // }
-
+  // Add Transaction Tab works normally
   const [darkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -40,7 +35,7 @@ function App() {
           <div className='collapse navbar-collapse justify-content-center' id='navbarNav'>
             <ul className='nav nav-tabs nav-tabs-bg'>
               <li className='nav-item'>
-                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/'>Home</NavLink>
+                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/'>Balance</NavLink>
                 </li>
               <li className='nav-item'>
                 <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/transactions'>Transactions</NavLink>
