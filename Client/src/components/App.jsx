@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, NavLink }  from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink, Outlet }  from 'react-router-dom';
 import Transactions from '../components/Transactions';
 import AddTransactions from '../components/AddTransactions';
 import Balance from '../components/Balance'
@@ -55,10 +55,12 @@ function App() {
         </div>
         </nav>
         <Routes>
-          <Route path='/' element ={<Balance />}/>
-          <Route path='/transactions' element ={<Transactions />}/>
-          <Route path='/add' element ={<AddTransactions />}/>
-          <Route path='/budget' element ={<Budget />}/>
+          <Route path='/' element={<div><Outlet /></div>}>
+            <Route index element ={<Balance />}/>
+            <Route path='/transactions' element ={<Transactions />}/>
+            <Route path='/add' element ={<AddTransactions />}/>
+            <Route path='/budget' element ={<Budget />}/>
+          </Route>
         </Routes>
       </div>
     </Router>
