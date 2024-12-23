@@ -52,12 +52,34 @@ body.dark-mode {
   color: white;
 }
 
-.navbar-light-mode {
+/* .navbar-light-mode {
   background-color: lightgray;
 }
 
 .navbar-dark-mode {
   background-color: darkgray;
+} */
+
+.navbar {
+  display: flex;
+  justify-content: space-between; /* Ensure space between brand and toggler */
+  align-items: center; /* Center items vertically */
+}
+
+.navbar-toggler {
+  margin-left: auto; /* Push the toggler to the right */
+}
+
+.navbar-collapse {
+  flex-grow: 0; /* Prevent the collapse from taking up extra space */
+}
+
+.navbar-light-mode {
+  background-color: transparent; /* Make the navbar background transparent */
+}
+
+.navbar-dark-mode {
+  background-color: transparent; /* Make the navbar background transparent */
 }
 
 .nav-link-light-mode {
@@ -65,5 +87,16 @@ body.dark-mode {
 }
 
 .nav-link-dark-mode {
-  color: white;
+  color: rgb(3, 100, 255);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  
+}
+
+.nav-tabs-bg {
+  background-color: lightgray; /* Set the background color for the tabs */
+  border-radius: 5px; /* Optional: Add some border radius for better appearance */
+  padding: 1px; /* Optional: Add some padding */
 }

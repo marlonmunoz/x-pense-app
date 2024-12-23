@@ -1,11 +1,17 @@
-import React from "react";
+import React from 'react';
 
-function Transactions() {
-    return(
+const Transactions = ({ transactions = [] }) => {
+    return (
         <div>
-            <h1>Transactions</h1>
+            <ul>
+                {transactions.map((transaction, index) => (
+                    <li key={index}>
+                        {transaction.text}: ${transaction.amount}
+                    </li>
+                ))}
+            </ul>
         </div>
     );
-}
+};
 
 export default Transactions;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link }  from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink }  from 'react-router-dom';
 import Transactions from '../components/Transactions';
 import AddTransactions from '../components/AddTransactions';
 import Balance from '../components/Balance'
@@ -7,8 +7,13 @@ import Budget from '../components/Budget'
 import '/src/App.css'
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
 
+  // const [transactions, setTransactions] = useState([]);
+  // const addTransaction = (transaction) => {
+  //   setTransactions([...transactions, transaction])
+  // }
+
+  const [darkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     if (!darkMode) {
@@ -23,23 +28,31 @@ function App() {
   return (
     <Router>
       <div className={`container d-flex flex-column align-items-center ${darkMode ? 'dark-mode' : 'light-mode'}`}>
-        <h1>Budget Tracker</h1>
+        <h1>X-PENSE</h1>
+        <h6>A Budget Tracker At Your Fingertips</h6>
         <button onClick={toggleDarkMode} className='btn btn-secondary mb-3'>
-          Toggle {darkMode ? 'Light': 'Dark'} Mode
+          {darkMode ? 'Light': 'Dark'} Mode
         </button>
-        
         <nav className={`navbar navbar-expand-lg ${darkMode ? 'navbar-dark-mode' : 'navbar-light-mode'}`}>
           <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toogle navigation'>
             <span className='navbar-toggler-icon'></span>
           </button>
           <div className='collapse navbar-collapse justify-content-center' id='navbarNav'>
-            <ul className='nav nav-tabs'>
-              <li className='nav-item'><Link className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/'>Home</Link></li>
-              <li className='nav-item'><Link className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/transactions'>Transactions</Link></li>
-              <li className='nav-item'><Link className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/add'>Add Transaction</Link></li>
-              <li className='nav-item'><Link className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='budget'>Budget</Link></li>
+            <ul className='nav nav-tabs nav-tabs-bg'>
+              <li className='nav-item'>
+                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/'>Home</NavLink>
+                </li>
+              <li className='nav-item'>
+                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/transactions'>Transactions</NavLink>
+                </li>
+              <li className='nav-item'>
+                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/add'>Add Transaction</NavLink>
+                </li>
+              <li className='nav-item'>
+                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='budget'>Budget</NavLink>
+                </li>
             </ul>
-          </div>
+        </div>
         </nav>
         <Routes>
           <Route path='/' element ={<Balance />}/>
