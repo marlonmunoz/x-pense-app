@@ -4,13 +4,24 @@ const Transactions = ({ transactions }) => {
     return (
         <div>
             <h5>New Transactions Added</h5>
-            <ul>
-                {transactions.map((transaction, index) => (
-                    <li key={index}>
-                        {transaction.text}: ${transaction.amount} - ${transaction.category}
-                    </li>
-                ))}
-            </ul>
+            <table className='table'>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {transactions.map((transaction, index) => (
+                        <tr key={index}>
+                            <td>{transaction.category}</td>
+                            <td>{transaction.text}</td>
+                            <td>{transaction.amount}</td>
+                        </tr>  
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 };
