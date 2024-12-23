@@ -9,7 +9,6 @@ import '/src/App.css'
 function App() {
   const [transactions, setTransactions] = useState([]);
 
-  // Add Transaction Tab works as expected
   const [darkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);

@@ -60,6 +60,10 @@ body.dark-mode {
   background-color: darkgray;
 } */
 
+
+
+
+
 .navbar {
   display: flex;
   justify-content: space-between; /* Ensure space between brand and toggler */

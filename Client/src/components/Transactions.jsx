@@ -1,4 +1,5 @@
 import React from 'react';
+import '/src/App.css'
 
 const Transactions = ({ transactions }) => {
     return (
@@ -17,7 +18,7 @@ const Transactions = ({ transactions }) => {
                         <tr key={index}>
                             <td>{transaction.category}</td>
                             <td>{transaction.text}</td>
-                            <td>{transaction.amount}</td>
+                            <td>$ {transaction.amount}</td>
                         </tr>  
                     ))}
                 </tbody>
