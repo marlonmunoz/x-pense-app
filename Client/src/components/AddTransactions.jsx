@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 
-
-function AddTransactions() {
+function AddTransactions( {transactions, setTransactions} ) {
     const [text, setText] = useState('');
     const [amount , setAmount] = useState(0);
     const [category, setCategory] = useState('');
-    const [transactions, setTransactions] = useState([]);
+    // const [transactions, setTransactions] = useState([]);
 
     const handleAmountChange = (e) => {
         const value = parseFloat(e.target.value);
@@ -75,7 +74,7 @@ function AddTransactions() {
             <div>
                 <button type="submit" className="btn btn-primary"> Add Transaction</button>
             </div>
-            <div>
+            {/* <div>
                 <ul>
                     {transactions.map((transaction, index) => (
                         <li key={index}>
@@ -83,7 +82,7 @@ function AddTransactions() {
                         </li>
                     ))}
                 </ul>
-            </div>
+            </div> */}
         </form>
     );
 }

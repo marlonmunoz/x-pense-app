@@ -7,7 +7,9 @@ import Budget from '../components/Budget'
 import '/src/App.css'
 
 function App() {
-  // Add Transaction Tab works normally
+  const [transactions, setTransactions] = useState([]);
+
+  // Add Transaction Tab works as expected
   const [darkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -52,8 +54,8 @@ function App() {
         <Routes>
           <Route path='/' element={<div><Outlet /></div>}>
             <Route index element ={<Balance />}/>
-            <Route path='/transactions' element ={<Transactions />}/>
-            <Route path='/add' element ={<AddTransactions />}/>
+            <Route path='/transactions' element ={<Transactions transactions={transactions} />}/>
+            <Route path='/add' element ={<AddTransactions transactions={transactions} setTransactions={setTransactions} />}/>
             <Route path='/budget' element ={<Budget />}/>
           </Route>
         </Routes>

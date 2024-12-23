@@ -1,8 +1,9 @@
 import React from 'react';
 
-const Transactions = ({ transactions = [] }) => {
+const Transactions = ({ transactions }) => {
     return (
         <div>
+            <h5>New Transactions Added</h5>
             <ul>
                 {transactions.map((transaction, index) => (
                     <li key={index}>
