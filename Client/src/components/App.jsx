@@ -8,6 +8,7 @@ import '/src/App.css'
 
 function App() {
   const [transactions, setTransactions] = useState([]);
+  const [balance, setBalance] = useState("");
 
   const [darkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => {
@@ -52,10 +53,10 @@ function App() {
         </nav>
         <Routes>
           <Route path='/' element={<div><Outlet /></div>}>
-            <Route index element ={<Balance />}/>
+            <Route index element ={<Balance balance={balance} setBalance={setBalance} transactions={transactions} />}/>
             <Route path='/transactions' element ={<Transactions transactions={transactions} />}/>
             <Route path='/add' element ={<AddTransactions transactions={transactions} setTransactions={setTransactions} />}/>
-            <Route path='/budget' element ={<Budget />}/>
+            <Route path='/budget' element ={<Budget balance={balance} />}/>
           </Route>
         </Routes>
       </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import Balance from "./Balance";
 
-function Budget() {
+function Budget({ balance }) {
     const [items, setItems] = useState([]);
     const [name, setName] = useState("");
     const [amount, setAmount] = useState("");
@@ -37,11 +38,12 @@ function Budget() {
             <ul>
                 {items.map((item, index) => (
                     <li key={index}>
-                        {item.name}: ${item.amount.toFixed(2)}
+                        {item.name}: $ {item.amount.toFixed(2)}
                     </li>
                 ))}
             </ul>
             <h2>Total Budget: ${totalBudget.toFixed(2)}</h2>
+            <h2>Balance: ${balance}</h2>
         </div>
     );
 }
