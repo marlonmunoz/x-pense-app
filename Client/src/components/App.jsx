@@ -26,7 +26,7 @@ function App() {
     <Router>
       <div className={`container d-flex flex-column align-items-center ${darkMode ? 'dark-mode' : 'light-mode'}`}>
         <h1>X-PENSE</h1>
-        <h6>A Budget Tracker At Your Fingertips</h6>
+        <h6>A Budget Tracker At Your Fingertips </h6>
         <button onClick={toggleDarkMode} className='btn btn-secondary mb-3'>
           {darkMode ? 'Light': 'Dark'} Mode
         </button>
@@ -38,25 +38,25 @@ function App() {
             <ul className='nav nav-tabs nav-tabs-bg'>
               <li className='nav-item'>
                 <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/'>Balance</NavLink>
-                </li>
+              </li>
               <li className='nav-item'>
                 <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/transactions'>Transactions</NavLink>
-                </li>
+              </li>
               <li className='nav-item'>
                 <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/add'>Add Transaction</NavLink>
-                </li>
+              </li>
               <li className='nav-item'>
                 <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='budget'>Budget</NavLink>
-                </li>
+              </li>
             </ul>
         </div>
         </nav>
         <Routes>
           <Route path='/' element={<div><Outlet /></div>}>
-            <Route index element ={<Balance balance={balance} setBalance={setBalance} transactions={transactions} />}/>
-            <Route path='/transactions' element ={<Transactions transactions={transactions} setTransactions={setTransactions}/>}/>
-            <Route path='/add' element ={<AddTransactions transactions={transactions} setTransactions={setTransactions} />}/>
-            <Route path='/budget' element ={<Budget balance={balance} />}/>
+            <Route index element ={<Balance balance={balance} setBalance={setBalance} transactions={transactions} darkMode={darkMode} />}/>
+            <Route path='/transactions' element ={<Transactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} />}/>
+            <Route path='/add' element ={<AddTransactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} />}/>
+            <Route path='/budget' element ={<Budget balance={balance} darkMode={darkMode} />}/>
           </Route>
         </Routes>
       </div>
