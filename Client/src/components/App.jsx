@@ -54,7 +54,7 @@ function App() {
         <Routes>
           <Route path='/' element={<div><Outlet /></div>}>
             <Route index element ={<Balance balance={balance} setBalance={setBalance} transactions={transactions} />}/>
-            <Route path='/transactions' element ={<Transactions transactions={transactions} />}/>
+            <Route path='/transactions' element ={<Transactions transactions={transactions} setTransactions={setTransactions}/>}/>
             <Route path='/add' element ={<AddTransactions transactions={transactions} setTransactions={setTransactions} />}/>
             <Route path='/budget' element ={<Budget balance={balance} />}/>
           </Route>
