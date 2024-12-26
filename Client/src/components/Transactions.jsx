@@ -2,6 +2,7 @@ import React from 'react';
 import '/src/App.css'
 
 const Transactions = ({ transactions }) => {
+    const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0);
     return (
         <div>
             <h5>New Transactions Added</h5>
@@ -21,6 +22,10 @@ const Transactions = ({ transactions }) => {
                             <td>$ {transaction.amount}</td>
                         </tr>  
                     ))}
+                    <tr>
+                        <td colSpan="2">Total</td>
+                        <td>$ {totalAmount}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
