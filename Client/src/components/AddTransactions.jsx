@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom'
 
 function AddTransactions( {transactions, setTransactions} ) {
     const [text, setText] = useState('');
     const [amount , setAmount] = useState(0);
     const [category, setCategory] = useState('');
-    // const [transactions, setTransactions] = useState([]);
+    const navigate = useNavigate();
 
     const handleAmountChange = (e) => {
         const value = parseFloat(e.target.value);
@@ -18,6 +19,7 @@ function AddTransactions( {transactions, setTransactions} ) {
         setText('');
         setAmount(0);
         setCategory('');
+        navigate('/transactions')
     };
 
 
@@ -74,15 +76,6 @@ function AddTransactions( {transactions, setTransactions} ) {
             <div>
                 <button type="submit" className="btn btn-primary"> Add Transaction</button>
             </div>
-            {/* <div>
-                <ul>
-                    {transactions.map((transaction, index) => (
-                        <li key={index}>
-                            {transaction.text}: ${transaction.amount} - {transaction.category}
-                        </li>
-                    ))}
-                </ul>
-            </div> */}
         </form>
     );
 }
