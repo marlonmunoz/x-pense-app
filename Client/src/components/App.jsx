@@ -37,6 +37,9 @@ function App() {
           <div className='collapse navbar-collapse justify-content-center' id='navbarNav'>
             <ul className='nav nav-tabs nav-tabs-bg'>
               <li className='nav-item'>
+                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='budget'>Budget</NavLink>
+              </li>
+              <li className='nav-item'>
                 <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/'>Balance</NavLink>
               </li>
               <li className='nav-item'>
@@ -44,9 +47,6 @@ function App() {
               </li>
               <li className='nav-item'>
                 <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/add'>Add Transaction</NavLink>
-              </li>
-              <li className='nav-item'>
-                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='budget'>Budget</NavLink>
               </li>
             </ul>
         </div>

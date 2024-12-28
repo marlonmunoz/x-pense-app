@@ -26,3 +26,6 @@ function Balance({ balance, setBalance, transactions }) {
 }
 
 export default Balance;
+
+// Assests
+// Liabilities 
