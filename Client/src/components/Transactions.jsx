@@ -26,7 +26,7 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
         setEditIndex(null);
     };
 
-    const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, ''); // the '' will remove the 0 the shows in front of every transaction.
+    const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0); // the '' will remove the 0 the shows in front of every transaction.
     return (
         <div>
             <h5>New Transactions Added</h5>

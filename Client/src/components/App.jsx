@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink, Outlet }  from 'react-router-dom';
-import Transactions from '../components/Transactions';
 import AddTransactions from '../components/AddTransactions';
 import Balance from '../components/Balance'
 import Budget from '../components/Budget'
+import Dashboard from '../components/Dashboard'
+import Transactions from '../components/Transactions';
 import '/src/App.css'
 
 function App() {
@@ -37,6 +38,9 @@ function App() {
           <div className='collapse navbar-collapse justify-content-center' id='navbarNav'>
             <ul className='nav nav-tabs nav-tabs-bg'>
               <li className='nav-item'>
+                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/dashboard'>Dashboard</NavLink>
+              </li>
+              <li className='nav-item'>
                 <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='budget'>Budget</NavLink>
               </li>
               <li className='nav-item'>
@@ -57,6 +61,7 @@ function App() {
             <Route path='/transactions' element ={<Transactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} />}/>
             <Route path='/add' element ={<AddTransactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} />}/>
             <Route path='/budget' element ={<Budget balance={balance} darkMode={darkMode} />}/>
+            <Route path='/dashboard' element = {<Dashboard />} />
           </Route>
         </Routes>
       </div>
