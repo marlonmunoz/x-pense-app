@@ -5,6 +5,7 @@ function AddTransactions( {transactions, setTransactions} ) {
     const [text, setText] = useState('');
     const [amount , setAmount] = useState(0);
     const [category, setCategory] = useState('');
+    const [date, setDate] = useState('');
     const navigate = useNavigate();
 
     const handleAmountChange = (e) => {
@@ -27,7 +28,7 @@ function AddTransactions( {transactions, setTransactions} ) {
     return (
         <form onSubmit={handleSubmit}>
             <div className="form-group">
-                <label htmlFor="category">Category :</label>
+                <label htmlFor="category"><h5>Category :</h5></label>
                 <select 
                     id="category"
                     className="form-control" 
@@ -54,7 +55,7 @@ function AddTransactions( {transactions, setTransactions} ) {
                 </select>
             </div>
             <div className="form-group">
-                <label htmlFor="text">Description :</label>
+                <label htmlFor="text"><h5>Description :</h5></label>
                 <input 
                     type="text" 
                     className="form-control"
@@ -64,7 +65,7 @@ function AddTransactions( {transactions, setTransactions} ) {
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="amount">Amount :</label>
+                <label htmlFor="amount"><h5>Amount :</h5></label>
                 <input 
                     type="text" 
                     id="amount" 
@@ -72,6 +73,17 @@ function AddTransactions( {transactions, setTransactions} ) {
                     value={amount} 
                     onChange={handleAmountChange}
                 />
+            </div>
+            <div className="form-group">
+                <label htmlFor="date"><h5>Date :</h5></label>
+                <input 
+                    type="date" 
+                    id="date"
+                    className="form-control"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                />
+
             </div>
             <div>
                 <button type="submit" className="btn btn-primary"> Add Transaction</button>

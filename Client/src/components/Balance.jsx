@@ -1,6 +1,6 @@
 import React from "react";
 
-function Balance({ balance, setBalance, transactions }) {
+function Balance({ balance, setBalance, transactions, budget }) {
   const handleChange = (event) => {
     setBalance(event.target.value);
   };
@@ -10,7 +10,7 @@ function Balance({ balance, setBalance, transactions }) {
 
   return (
     <div className="container">
-      <h1>Balance</h1>
+      {/* <h1>Balance</h1> */}
       <input
         type="number"
         value={balance}
@@ -21,6 +21,7 @@ function Balance({ balance, setBalance, transactions }) {
       <p>Your balance is: $ {balance}</p>
       <p>Total transactions: $ {totalTransactions}</p>
       <p>Remaining balance: $ {remainingBalance}</p>
+      <p>Budget: $ {budget}</p>
     </div>
   );
 }

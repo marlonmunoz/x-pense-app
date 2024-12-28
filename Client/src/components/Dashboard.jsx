@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts'
 
-function Dashboard({ transactions =[], balance =0, goals =[], investments= [] }) {
+function Dashboard({ transactions =[], balance =0, goals =[], investments= [], budget = 0 }) {
     const navigate = useNavigate();
 
     const recentTransactions = transactions.slice(-5);
@@ -11,37 +11,40 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [] })
         ...goal,
         progress: (goal.saved / goal.target) * 100
     }));
+
     return (
         <div>
-            <h2>Dashboard</h2>
+            {/* <h2>Dashboard</h2> */}
             <div className="summary">
                 <h3>Recent Transactions</h3>
-                <ul>
+                <ul className="list-unstyled">
                     {recentTransactions.map((transaction, index) => (
-                        <li>
+                        <li key={index}>
                             {transaction.category}: ${transaction.amount} - {transaction.text}
                         </li>
                     ))}
                 </ul>
                 <button onClick={() => navigate('/transactions')} className="btn btn-primary"> View All Transactions</button>
             </div>
+            <br />
             <div className="balance-overview">
-                <h3>Balance Overview</h3>
+                <h4>Balance Overview</h4>
                 <p>Current Balance: ${balance}</p>
-                <p>Totla Investments: ${totalInvestments}</p>
+                <p>Total Investments: ${totalInvestments}</p>
+                <p>Budget: ${budget}</p>
             </div>
             <div className="goals-progress">
-                <h3>Goals Progress</h3>
+                <h4>Goals Progress</h4>
                 <ul>
                     {goalsProgress.map((goal, index) => (
-                        <li>
+                        <li key={index}>
                             {goal.name}: {goal.progress.toFixed(2)}%
                         </li>
                     ))}
                 </ul>
             </div>
             <div className="charts">
-                <h3>Spending Over Time</h3>
+                <h4>Spending Over Time</h4>
                 <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={transactions}>
                         <CartesianGrid strokeDasharray="3 3" />

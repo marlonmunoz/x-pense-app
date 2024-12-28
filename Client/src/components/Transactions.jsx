@@ -3,7 +3,7 @@ import '/src/App.css'
 
 const Transactions = ({ transactions, setTransactions, darkMode }) => {
     const [editIndex, setEditIndex] = useState(null);
-    const [editTransaction, setEditTransaction] = useState({ category: '', text: '', amount:'' });
+    const [editTransaction, setEditTransaction] = useState({ category: '', text: '', amount:'', date:'' });
 
     // DELETE 
     const handleDelete = (index) => {
@@ -34,9 +34,11 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                 <thead>
                     <tr>
                         <th>Category</th>
+                        <th>Date</th>
                         <th>Description</th>
                         <th>Amount</th>
                         <th>Actions</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -45,6 +47,7 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                             {editIndex === index ? (
                                 <>
                                     <td><input type="text" name='category' value={editTransaction.category} onChange={handleEditChange} className="form-control" /></td>
+                                    <td><input type="date" name='date' value={editTransaction.date} onChange={handleEditChange} className='form-control' /></td>
                                     <td><input type="text" name='text' value={editTransaction.text} onChange={handleEditChange} className="form-control" /></td>
                                     <td><input type="number" name='amount' value={editTransaction.amount} onChange={handleEditChange} className="form-control" /></td>
                                     <td>
@@ -55,6 +58,7 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                             ) : (
                                 <>
                                     <td>{transaction.category}</td>
+                                    <td>{transaction.date}</td>
                                     <td>{transaction.text}</td>
                                     <td>$ {transaction.amount}</td>
                                     <td>
@@ -66,7 +70,7 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                         </tr>  
                     ))}
                     <tr>
-                        <td colSpan="3">Total</td>
+                        <td colSpan="4"><strong>Total</strong></td>
                         <td>$ {totalAmount}</td>
                     </tr>
                 </tbody>

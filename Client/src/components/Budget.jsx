@@ -1,22 +1,43 @@
 import React, { useState } from "react";
-import Balance from "./Balance";
+// import Balance from "./Balance";
 
-function Budget({ balance }) {
+function Budget({ balance, budget, setBudget }) {
     const [items, setItems] = useState([]);
     const [name, setName] = useState("");
-    const [amount, setAmount] = useState("");
+    const [amount, setAmount] = useState(0);
+    const [newBudget, setNewBudget] = useState(budget)
 
     const addItem = () => {
-        setItems([...items, { name, amount: parseFloat(amount) }]);
+        const itemAmount = parseFloat(amount);
+        setItems([...items, { name, amount: itemAmount }]);
         setName("");
         setAmount("");
+        setBudget(prevBudget => prevBudget + itemAmount);
     };
 
-    const totalBudget = items.reduce((total, item) => total + item.amount, 0);
+    // const totalBudget = items.reduce((total, item) => total + item.amount, 0);
+
+    const handleSetBudget = () => {
+        setBudget(newBudget);
+    }
 
     return (
         <div>
-            <h1>Budget</h1>
+            <h4>Set Budget</h4>
+            <div>
+                <label htmlFor="budget"> Set Amount: </label>
+                <input 
+                    type="number"
+                    id="budget"
+                    value={newBudget} 
+                    onChange={(e) => setNewBudget(parseFloat(e.target.value))}
+                    className="form-control"
+                />
+                <br />
+                <button className="btn btn-primary" onClick={handleSetBudget} >Set Budget</button>
+            </div>
+            <br />
+            <h4>Add New Budget</h4>
             <div>
                 <input
                     type="text"
@@ -25,6 +46,7 @@ function Budget({ balance }) {
                     onChange={(e) => setName(e.target.value)}
                     className="form-control"
                 />
+                <br />
                 <input
                     type="number"
                     placeholder="Amount"
@@ -35,6 +57,8 @@ function Budget({ balance }) {
                 <br />
                 <button className="btn btn-primary" onClick={addItem}>Add Item</button>
             </div>
+            <br />
+            <h4>New Total Budget : ${budget.toFixed(2)}</h4>
             <ul>
                 {items.map((item, index) => (
                     <li key={index}>
@@ -42,8 +66,8 @@ function Budget({ balance }) {
                     </li>
                 ))}
             </ul>
-            <h2>Total Budget: ${totalBudget.toFixed(2)}</h2>
-            <h2>Balance: ${balance}</h2>
+            {/* <h2>Total Budget: ${totalBudget.toFixed(2)}</h2> */}
+            {/* <h2>Balance: ${balance}</h2> */}
         </div>
     );
 }

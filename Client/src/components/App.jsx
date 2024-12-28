@@ -10,7 +10,7 @@ import '/src/App.css'
 function App() {
   const [transactions, setTransactions] = useState([]);
   const [balance, setBalance] = useState("");
-
+  const [budget, setBudget] = useState(0);
   const [darkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -50,18 +50,18 @@ function App() {
                 <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/transactions'>Transactions</NavLink>
               </li>
               <li className='nav-item'>
-                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/add'>Add Transaction</NavLink>
+                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/add'>X-Penses</NavLink>
               </li>
             </ul>
         </div>
         </nav>
         <Routes>
           <Route path='/' element={<div><Outlet /></div>}>
-            <Route index element ={<Balance balance={balance} setBalance={setBalance} transactions={transactions} darkMode={darkMode} />}/>
+            <Route index element ={<Balance balance={balance} setBalance={setBalance} transactions={transactions} budget={budget} darkMode={darkMode} />}/>
             <Route path='/transactions' element ={<Transactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} />}/>
             <Route path='/add' element ={<AddTransactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} />}/>
-            <Route path='/budget' element ={<Budget balance={balance} darkMode={darkMode} />}/>
-            <Route path='/dashboard' element = {<Dashboard />} />
+            <Route path='/budget' element ={<Budget balance={balance} budget={budget} setBudget={setBudget} darkMode={darkMode} />}/>
+            <Route path='/dashboard' element = {<Dashboard transactions={transactions} balance={balance} budget={budget}  />} />
           </Route>
         </Routes>
       </div>
