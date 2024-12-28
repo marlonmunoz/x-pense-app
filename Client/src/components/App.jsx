@@ -28,6 +28,7 @@ function App() {
       <div className={`container d-flex flex-column align-items-center ${darkMode ? 'dark-mode' : 'light-mode'}`}>
         <h1>X-PENSE</h1>
         <h6>A Budget Tracker At Your Fingertips </h6>
+        <br />
         <button onClick={toggleDarkMode} className='btn btn-secondary mb-3'>
           {darkMode ? 'Light': 'Dark'} Mode
         </button>

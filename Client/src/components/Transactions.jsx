@@ -47,7 +47,8 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                             {editIndex === index ? (
                                 <>
                                     <td><input type="text" name='category' value={editTransaction.category} onChange={handleEditChange} className="form-control" /></td>
-                                    <td><input type="date" name='date' value={editTransaction.date} onChange={handleEditChange} className='form-control' /></td>
+                                    <td><input type="date" name='date' value={editTransaction.date} onChange={handleEditChange} className="form-control"/></td>
+                                    {/* <td><input type="date" name='date' value={editTransaction.date ? new Date(editTransaction.date).toISOString().split('T')[0] : ''} onChange={handleEditChange} className="form-control"/></td> */}
                                     <td><input type="text" name='text' value={editTransaction.text} onChange={handleEditChange} className="form-control" /></td>
                                     <td><input type="number" name='amount' value={editTransaction.amount} onChange={handleEditChange} className="form-control" /></td>
                                     <td>
@@ -58,6 +59,7 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                             ) : (
                                 <>
                                     <td>{transaction.category}</td>
+                                    {/* <td>{new Date(transaction.date).toLocaleDateString()}</td> */}
                                     <td>{transaction.date}</td>
                                     <td>{transaction.text}</td>
                                     <td>$ {transaction.amount}</td>

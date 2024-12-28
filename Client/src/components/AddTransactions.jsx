@@ -15,11 +15,12 @@ function AddTransactions( {transactions, setTransactions} ) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const newTransaction = { text, amount, category};
+        const newTransaction = { text, amount, category, date};
         setTransactions([...transactions, newTransaction]);
         setText('');
         setAmount(0);
         setCategory('');
+        setDate('');
         navigate('/transactions')
     };
 
