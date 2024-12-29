@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import axios from 'axios'
 import { BrowserRouter as Router, Routes, Route, NavLink, Outlet }  from 'react-router-dom';
 import AddTransactions from '../components/AddTransactions';
 import Balance from '../components/Balance'
 import Budget from '../components/Budget'
 import Dashboard from '../components/Dashboard'
 import Transactions from '../components/Transactions';
+import Login from '../components/Login';
 import '/src/App.css'
 
 function App() {
@@ -12,6 +14,8 @@ function App() {
   const [balance, setBalance] = useState("");
   const [budget, setBudget] = useState(0);
   const [darkMode, setDarkMode] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     if (!darkMode) {
@@ -21,17 +25,34 @@ function App() {
       document.body.classList.add('light-mode');
       document.body.classList.remove('dark-mode');
     }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/logout');
+      if (response.status === 200) {
+        setLoggedIn(false)
+      }
+    } catch (err) {
+      console.log('Logout failed');
+    }
+  };
+
+  if (!loggedIn) {
+    return <Login setLoggedIn={setLoggedIn} />
   }
 
   return (
     <Router>
       <div className={`container d-flex flex-column align-items-center ${darkMode ? 'dark-mode' : 'light-mode'}`}>
+        {/* LOGOUT */}
+        <button onClick={handleLogout}className='btn btn-secondary mb-3 ml-auto' >Logout</button>
         <h1>X-PENSE</h1>
         <h6>A Budget Tracker At Your Fingertips </h6>
-        <br />
         <button onClick={toggleDarkMode} className='btn btn-secondary mb-3'>
           {darkMode ? 'Light': 'Dark'} Mode
         </button>
+
         <nav className={`navbar navbar-expand-lg ${darkMode ? 'navbar-dark-mode' : 'navbar-light-mode'}`}>
           <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toogle navigation'>
             <span className='navbar-toggler-icon'></span>
