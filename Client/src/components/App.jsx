@@ -7,6 +7,8 @@ import Budget from '../components/Budget'
 import Dashboard from '../components/Dashboard'
 import Transactions from '../components/Transactions';
 import Login from '../components/Login';
+import Goals from '../components/Goals';
+import Investments from '../components/Investments';
 import '/src/App.css'
 
 function App() {
@@ -74,6 +76,12 @@ function App() {
               <li className='nav-item'>
                 <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/add'>X-Penses</NavLink>
               </li>
+              <li className='nav-item'>
+                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/goals'>Goals</NavLink>
+              </li>
+              <li className='nav-item'>
+                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/investments'>Investments</NavLink>
+              </li>
             </ul>
         </div>
         </nav>
@@ -83,7 +91,9 @@ function App() {
             <Route path='/transactions' element ={<Transactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} />}/>
             <Route path='/add' element ={<AddTransactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} />}/>
             <Route path='/budget' element ={<Budget balance={balance} budget={budget} setBudget={setBudget} darkMode={darkMode} />}/>
-            <Route path='/dashboard' element = {<Dashboard transactions={transactions} balance={balance} budget={budget}  />} />
+            <Route path='/dashboard' element ={<Dashboard transactions={transactions} balance={balance} budget={budget}  />} />
+            <Route path='/goals' element ={<Goals />} />
+            <Route path='/investments' element ={<Investments />}/>
           </Route>
         </Routes>
       </div>

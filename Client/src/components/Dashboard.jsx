@@ -16,7 +16,7 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
         <div>
             {/* <h2>Dashboard</h2> */}
             <div className="summary">
-                <h3>Recent Transactions</h3>
+                <h5>Recent Transactions</h5>
                 <ul className="list-unstyled">
                     {recentTransactions.map((transaction, index) => (
                         <li key={index}>
@@ -28,13 +28,13 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
             </div>
             <br />
             <div className="balance-overview">
-                <h4>Balance Overview</h4>
+                <h5>Balance Overview</h5>
                 <p>Current Balance: ${balance}</p>
                 <p>Total Investments: ${totalInvestments}</p>
                 <p>Budget: ${budget}</p>
             </div>
             <div className="goals-progress">
-                <h4>Goals Progress</h4>
+                <h5>Goals Progress</h5>
                 <ul>
                     {goalsProgress.map((goal, index) => (
                         <li key={index}>
@@ -44,7 +44,7 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
                 </ul>
             </div>
             <div className="charts">
-                <h4>Spending Over Time</h4>
+                <h5>Spending Over Time</h5>
                 <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={transactions}>
                         <CartesianGrid strokeDasharray="3 3" />

@@ -23,7 +23,7 @@ function Budget({ balance, budget, setBudget }) {
 
     return (
         <div>
-            <h4>Set Budget</h4>
+            <h5>Set Budget</h5>
             <div>
                 <label htmlFor="budget"> Set Amount: </label>
                 <input 
@@ -37,7 +37,7 @@ function Budget({ balance, budget, setBudget }) {
                 <button className="btn btn-primary" onClick={handleSetBudget} >Set Budget</button>
             </div>
             <br />
-            <h4>Add New Budget</h4>
+            <h5>Add New Budget</h5>
             <div>
                 <input
                     type="text"
@@ -58,7 +58,7 @@ function Budget({ balance, budget, setBudget }) {
                 <button className="btn btn-primary" onClick={addItem}>Add Item</button>
             </div>
             <br />
-            <h4>New Total Budget : ${budget.toFixed(2)}</h4>
+            <h5>New Total Budget : ${budget.toFixed(2)}</h5>
             <ul>
                 {items.map((item, index) => (
                     <li key={index}>
