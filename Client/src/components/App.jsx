@@ -39,7 +39,7 @@ function App() {
   };
 
   if (!loggedIn) {
-    return <Login setLoggedIn={setLoggedIn} />
+    return <Login setLoggedIn={setLoggedIn} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
   }
 
   return (

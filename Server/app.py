@@ -2,7 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app) # Enables CORS for all routes
+# CORS(app) # Enables CORS for all routes
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 users = {
     "user1": "password1",
@@ -12,8 +13,17 @@ users = {
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json 
+    
+    # Server-side validation
+    if not data:
+        return jsonify({"message": "No input data provided"}), 400
+    
     username = data.get('username')
-    password  = data.get('password')
+    password = data.get('password')
+    
+    if not username or not password:
+        return jsonify({"message": "Username and password are required"}), 400
+    
     
     if username in users and users[username] == password:
         return jsonify({"message": "Login Successful"}), 200

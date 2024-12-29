@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function Login( {setLoggedIn} ) {
+function Login( {setLoggedIn, darkMode, toggleDarkMode} ) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -30,7 +30,7 @@ function Login( {setLoggedIn} ) {
         }
     };
     return (
-        <div className="container mt-5">
+        <div className={`container mt-5 ${darkMode ? 'dark-mode' : 'light-mode'}`}>
             <h2 className="text-center">Login</h2>
             <form onSubmit={handleSubmit} className="w-50 mx-auto">
                 <div className="form-group">
@@ -40,6 +40,7 @@ function Login( {setLoggedIn} ) {
                         className="form-control"
                         value={username} 
                         onChange={(e) => setUsername(e.target.value)} 
+                        // required
                     />
                 </div>
                 <div className="form-group">
@@ -50,6 +51,7 @@ function Login( {setLoggedIn} ) {
                             className="form-control"
                             value={password} 
                             onChange={(e) => setPassword(e.target.value)} 
+                            // required
                         />
                         <div className="input-group-append">
                             <button
@@ -79,6 +81,9 @@ function Login( {setLoggedIn} ) {
                 <div className="text-center mt-3">
                     <a href="/forgot-password">Forgot Password?</a>
                 </div>
+                <button onClick={toggleDarkMode} className="btn btn-secondary mt-3">
+                    {darkMode ? 'Light' : 'Dark'} Mode
+                </button>
             </form>
         </div>
     );
