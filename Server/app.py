@@ -7,7 +7,8 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 users = {
     "user1": "password1",
-    "user2": "password2"
+    "user2": "password2",
+    "mago24": "mija2024"
 }
 
 @app.route('/login', methods=['POST'])
