@@ -9,6 +9,7 @@ import Transactions from '../components/Transactions';
 import Login from '../components/Login';
 import Goals from '../components/Goals';
 import Investments from '../components/Investments';
+import Footer from '../components/Footer';
 import '/src/App.css'
 
 function App() {
@@ -96,6 +97,7 @@ function App() {
             <Route path='/investments' element ={<Investments />}/>
           </Route>
         </Routes>
+        <Footer />
       </div>
     </Router>
   )

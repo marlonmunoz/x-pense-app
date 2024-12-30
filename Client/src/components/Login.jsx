@@ -31,9 +31,9 @@ function Login( {setLoggedIn, darkMode, toggleDarkMode} ) {
     };
     return (
         <div className={`container mt-5 ${darkMode ? 'dark-mode' : 'light-mode'}`}>
-            <h2 className="text-center">Login</h2>
+            <h2 className="text-center mb-4">Login</h2>
             <form onSubmit={handleSubmit} className="w-50 mx-auto">
-                <div className="form-group">
+                <div className="form-group mb-3">
                     <label>Username :</label>
                     <input 
                         type="text" 
@@ -43,7 +43,7 @@ function Login( {setLoggedIn, darkMode, toggleDarkMode} ) {
                         // required
                     />
                 </div>
-                <div className="form-group">
+                <div className="form-group mb-3">
                     <label>Password :</label>
                     <div className="input-group">
                         <input 
@@ -86,6 +86,7 @@ function Login( {setLoggedIn, darkMode, toggleDarkMode} ) {
                 </button>
             </form>
         </div>
+        
     );
 }
 
