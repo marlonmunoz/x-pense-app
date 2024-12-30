@@ -34,23 +34,29 @@ function Login( {setLoggedIn, darkMode, toggleDarkMode} ) {
             <h2 className="text-center mb-4">Login</h2>
             <form onSubmit={handleSubmit} className="w-50 mx-auto">
                 <div className="form-group mb-3">
-                    <label>Username :</label>
+                    <label htmlFor="username">Username :</label>
                     <input 
                         type="text" 
+                        id="username"
+                        name="username"
                         className="form-control"
                         value={username} 
                         onChange={(e) => setUsername(e.target.value)} 
+                        autoComplete="on"
                         // required
                     />
                 </div>
                 <div className="form-group mb-3">
-                    <label>Password :</label>
+                    <label htmlFor="password">Password :</label>
                     <div className="input-group">
                         <input 
                             type={showPassword ? "text" : "password" }
+                            id="password"
+                            name="password"
                             className="form-control"
                             value={password} 
                             onChange={(e) => setPassword(e.target.value)} 
+                            autoComplete="on"
                             // required
                         />
                         <div className="input-group-append">
@@ -69,13 +75,19 @@ function Login( {setLoggedIn, darkMode, toggleDarkMode} ) {
                         type="checkbox"
                         className="form-check-input" 
                         id="rememberMe"
+                        name="rememberMe"
                         checked={rememberMe}
                         onChange={(e) => setRememberMe(e.target.value)}
+                        autoComplete="on"
                     />
                     <label className="form-checked-label" htmlFor="rememberMe">Remember Me</label>
                 </div>
                 {error && <p className="text-danger">{error}</p>}
-                <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+                <button 
+                    type="submit" 
+                    className="btn btn-primary btn-block" 
+                    disabled={loading}
+                >
                     {loading ? 'Logging in ...' : 'Login'}
                 </button>
                 <div className="text-center mt-3">

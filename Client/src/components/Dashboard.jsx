@@ -2,6 +2,7 @@ import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts'
 
+
 function Dashboard({ transactions =[], balance =0, goals =[], investments= [], budget = 0 }) {
     const navigate = useNavigate();
 
@@ -14,7 +15,6 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
 
     return (
         <div>
-            {/* <h2>Dashboard</h2> */}
             <div className="summary">
                 <h5>Recent Transactions</h5>
                 <ul className="list-unstyled">
@@ -28,10 +28,11 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
             </div>
             <br />
             <div className="balance-overview">
-                <h5>Balance Overview</h5>
+                <h5>Overview</h5>
                 <p>Current Balance: ${balance}</p>
                 <p>Total Investments: ${totalInvestments}</p>
                 <p>Budget: ${budget}</p>
+                <p>X-penses: $</p>
             </div>
             <div className="goals-progress">
                 <h5>Goals Progress</h5>

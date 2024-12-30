@@ -78,6 +78,8 @@ body.dark-mode {
   flex-grow: 0; /* Prevent the collapse from taking up extra space */
 }
 
+
+
 .navbar-light-mode {
   background-color: transparent; /* Make the navbar background transparent */
 }
@@ -126,4 +128,13 @@ body.dark-mode {
 .dark-mode .btn-outline-secondary {
   border-color: white;
   color: white;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table-responsive table {
+  width: 100%;
+  min-width: 100px; /* Adjust this value as needed */
 }

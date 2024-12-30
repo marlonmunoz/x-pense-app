@@ -15,7 +15,7 @@ function AddTransactions( {transactions, setTransactions} ) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const newTransaction = { text, amount, category, date};
+        const newTransaction = { text, amount, category, date };
         setTransactions([...transactions, newTransaction]);
         setText('');
         setAmount(0);
@@ -24,14 +24,13 @@ function AddTransactions( {transactions, setTransactions} ) {
         navigate('/transactions')
     };
 
-
-
     return (
         <form onSubmit={handleSubmit}>
             <div className="form-group">
                 <label htmlFor="category"><h5>Category :</h5></label>
                 <select 
                     id="category"
+                    name="category"
                     className="form-control" 
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
@@ -61,6 +60,7 @@ function AddTransactions( {transactions, setTransactions} ) {
                     type="text" 
                     className="form-control"
                     id="text" 
+                    name="text"
                     value={text} 
                     onChange={(e) => setText(e.target.value)}
                 />
@@ -70,6 +70,7 @@ function AddTransactions( {transactions, setTransactions} ) {
                 <input 
                     type="text" 
                     id="amount" 
+                    name="amount"
                     className="form-control" 
                     value={amount} 
                     onChange={handleAmountChange}
@@ -80,6 +81,7 @@ function AddTransactions( {transactions, setTransactions} ) {
                 <input 
                     type="date" 
                     id="date"
+                    name="date"
                     className="form-control"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}

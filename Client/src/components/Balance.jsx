@@ -13,6 +13,8 @@ function Balance({ balance, setBalance, transactions, budget }) {
       {/* <h1>Balance</h1> */}
       <input
         type="number"
+        id="balance"
+        name="balance"
         value={balance}
         onChange={handleChange}
         placeholder="Enter balance"

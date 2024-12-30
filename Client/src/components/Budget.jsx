@@ -45,6 +45,8 @@ function Budget({ balance, budget, setBudget }) {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="form-control"
+                    id="item-name"
+                    name="item-name"
                 />
                 <br />
                 <input
@@ -53,6 +55,8 @@ function Budget({ balance, budget, setBudget }) {
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     className="form-control"
+                    id="item-amount"
+                    name="item-amount"
                 />
                 <br />
                 <button className="btn btn-primary" onClick={addItem}>Add Item</button>

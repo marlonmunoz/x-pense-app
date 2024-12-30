@@ -1,14 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 
 function Goals() {
+    const [goalAmount, setGoalAmount] = useState(1000000); // This is an example amount
+    const [currentAmount, setCurrentAmount] = useState(0); // This is an example of current amount
+    const [inputAmount, setInputAmount] = useState('');
+    
+    const handleAddAmount = () => {
+        setCurrentAmount(currentAmount + Number(inputAmount));
+        setInputAmount('');
+    };
+    
+    const progressPercentage = (currentAmount / goalAmount) * 100;
+
     return (
         <div>
             <h5>Goals</h5>
+
             <div className="mb-3">
-                <p>Irynkita's Savings Account</p>
+                <h6>Irynkita's Savings Account: $1,000,000</h6>
                 <div className="progress">
-                    <div className="progress-bar" role="progressbar" style={{width: "10%"}} aria-valuemin="0" aria-valuemax="100">10%</div>
+                    <div className="progress-bar bg-success" role="progressbar" style={{width: `${progressPercentage}%`}} aria-valuemin="0" aria-valuemax="100">
+                        {progressPercentage.toFixed(2)}%
+                    </div>
                 </div>
+                <input 
+                    type="number" 
+                    id="inputAmount"
+                    name="inputAmount"
+                    value={inputAmount}
+                    onChange={(e) => setInputAmount(e.target.value)}
+                    className="form-control mt-3"
+                    placeholder="Enter amount"
+                />
+                <button onClick={() => handleAddAmount(100)} className="btn btn-primary mt-3">Add Amount</button>
             </div>
         </div>
     )
@@ -16,6 +40,3 @@ function Goals() {
 
 export default Goals;
 
-{/* <p>New Home</p>
-<p>New Car</p>
-<p>Vacations</p> */}

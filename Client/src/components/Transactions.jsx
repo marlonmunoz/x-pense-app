@@ -30,53 +30,55 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
     return (
         <div>
             <h5>New Transactions Added</h5>
-            <table className={`table ${darkMode ? 'table-dark' : 'table-light'}`}>
-                <thead>
-                    <tr>
-                        <th>Category</th>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Amount</th>
-                        <th>Actions</th>
-                        
-                    </tr>
-                </thead>
-                <tbody>
-                    {transactions.map((transaction, index) => (
-                        <tr key={index}>
-                            {editIndex === index ? (
-                                <>
-                                    <td><input type="text" name='category' value={editTransaction.category} onChange={handleEditChange} className="form-control" /></td>
-                                    <td><input type="date" name='date' value={editTransaction.date} onChange={handleEditChange} className="form-control"/></td>
-                                    {/* <td><input type="date" name='date' value={editTransaction.date ? new Date(editTransaction.date).toISOString().split('T')[0] : ''} onChange={handleEditChange} className="form-control"/></td> */}
-                                    <td><input type="text" name='text' value={editTransaction.text} onChange={handleEditChange} className="form-control" /></td>
-                                    <td><input type="number" name='amount' value={editTransaction.amount} onChange={handleEditChange} className="form-control" /></td>
-                                    <td>
-                                        <button onClick={() => handleEditSave(index)} className="btn btn-success">Save</button>
-                                        <button onClick={() => setEditIndex(null)} className="btn btn-secondary">Cancel</button>
-                                    </td>
-                                </>
-                            ) : (
-                                <>
-                                    <td>{transaction.category}</td>
-                                    {/* <td>{new Date(transaction.date).toLocaleDateString()}</td> */}
-                                    <td>{transaction.date}</td>
-                                    <td>{transaction.text}</td>
-                                    <td>$ {transaction.amount}</td>
-                                    <td>
-                                        <button onClick={() => { setEditIndex(index); setEditTransaction(transaction); }} className="btn btn-primary">Edit</button>
-                                        <button onClick={() => handleDelete(index)} className="btn btn-danger">Delete</button>
-                                    </td>
-                                </>
-                            )}
-                        </tr>  
-                    ))}
-                    <tr>
-                        <td colSpan="4"><strong>Total</strong></td>
-                        <td>$ {totalAmount}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div className="table-responsive">
+                <table className={`table ${darkMode ? 'table-dark' : 'table-light'}`}>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Actions</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {transactions.map((transaction, index) => (
+                            <tr key={index}>
+                                {editIndex === index ? (
+                                    <>
+                                        <td><input type="text" name='category' value={editTransaction.category} onChange={handleEditChange} className="form-control" /></td>
+                                        <td><input type="date" name='date' value={editTransaction.date} onChange={handleEditChange} className="form-control"/></td>
+                                        {/* <td><input type="date" name='date' value={editTransaction.date ? new Date(editTransaction.date).toISOString().split('T')[0] : ''} onChange={handleEditChange} className="form-control"/></td> */}
+                                        <td><input type="text" name='text' value={editTransaction.text} onChange={handleEditChange} className="form-control" /></td>
+                                        <td><input type="number" name='amount' value={editTransaction.amount} onChange={handleEditChange} className="form-control" /></td>
+                                        <td>
+                                            <button onClick={() => handleEditSave(index)} className="btn btn-success">Save</button>
+                                            <button onClick={() => setEditIndex(null)} className="btn btn-secondary">Cancel</button>
+                                        </td>
+                                    </>
+                                ) : (
+                                    <>
+                                        <td>{transaction.category}</td>
+                                        {/* <td>{new Date(transaction.date).toLocaleDateString()}</td> */}
+                                        <td>{transaction.date}</td>
+                                        <td>{transaction.text}</td>
+                                        <td>$ {transaction.amount}</td>
+                                        <td>
+                                            <button onClick={() => { setEditIndex(index); setEditTransaction(transaction); }} className="btn btn-primary">Edit</button>
+                                            <button onClick={() => handleDelete(index)} className="btn btn-danger">Delete</button>
+                                        </td>
+                                    </>
+                                )}
+                            </tr>  
+                        ))}
+                        <tr>
+                            <td colSpan="4"><strong>Total</strong></td>
+                            <td>$ {totalAmount}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };
