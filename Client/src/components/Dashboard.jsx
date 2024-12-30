@@ -53,7 +53,7 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
                         <YAxis/>
                         <Tooltip/>
                         <Legend />
-                        <Line type="monotone" dataKey="amount" stroke="8884d8" activeDot={{ r: 8 }}/>
+                        <Line type="monotone" dataKey="amount" stroke="#8884d8" activeDot={{ r: 8 }}/>
                     </LineChart>
                 </ResponsiveContainer>
             </div>
