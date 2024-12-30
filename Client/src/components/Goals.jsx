@@ -4,6 +4,7 @@ function Goals() {
     const [goalAmount, setGoalAmount] = useState(1000000); // This is an example amount
     const [currentAmount, setCurrentAmount] = useState(0); // This is an example of current amount
     const [inputAmount, setInputAmount] = useState('');
+    const [progPercentage, setProgPercentage] = useState(0)
     
     const handleAddAmount = () => {
         setCurrentAmount(currentAmount + Number(inputAmount));
@@ -11,6 +12,12 @@ function Goals() {
     };
     
     const progressPercentage = (currentAmount / goalAmount) * 100;
+
+    const handleResetAmount = () => {
+        setInputAmount('');
+        setCurrentAmount(0);
+        setProgPercentage(0);
+    }
 
     return (
         <div>
@@ -32,7 +39,9 @@ function Goals() {
                     className="form-control mt-3"
                     placeholder="Enter amount"
                 />
-                <button onClick={() => handleAddAmount(100)} className="btn btn-primary mt-3">Add Amount</button>
+                <br />
+                <button onClick={() => handleAddAmount(100)} className="btn btn-primary">Add Amount</button>
+                <button onClick={handleResetAmount} className="btn btn-secondary ml-2">Reset Amount</button>
             </div>
         </div>
     )
