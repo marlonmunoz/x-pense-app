@@ -10,7 +10,7 @@ function Balance({ balance, setBalance, transactions, budget }) {
 
   return (
     <div className="container">
-      {/* <h1>Balance</h1> */}
+      <label htmlFor="amount" className="form-label"></label>    
       <input
         type="number"
         id="balance"

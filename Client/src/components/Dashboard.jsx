@@ -3,7 +3,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts'
 
 
-function Dashboard({ transactions =[], balance =0, goals =[], investments= [], budget = 0 }) {
+function Dashboard({ transactions =[], balance =0, goals =[], investments= [], budget = 0, totalAmount }) {
     const navigate = useNavigate();
 
     const recentTransactions = transactions.slice(-5);
@@ -17,13 +17,13 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
         <div>
             <div className="summary">
                 <h5>Recent Transactions</h5>
-                <ul className="list-unstyled">
+                {/* <ul className="list-unstyled">
                     {recentTransactions.map((transaction, index) => (
                         <li key={index}>
                             {transaction.category}: ${transaction.amount} - {transaction.text}
                         </li>
                     ))}
-                </ul>
+                </ul> */}
                 <button onClick={() => navigate('/transactions')} className="btn btn-primary"> View All Transactions</button>
             </div>
             <br />
@@ -32,7 +32,7 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
                 <p>Current Balance: ${balance}</p>
                 <p>Total Investments: ${totalInvestments}</p>
                 <p>Budget: ${budget}</p>
-                <p>X-penses: $</p>
+                <p>X-penses: ${totalAmount}</p>
             </div>
             <div className="goals-progress">
                 <h5>Goals Progress</h5>
@@ -50,10 +50,10 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
                     <LineChart data={transactions}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="date"/>
-                        <YAxis/>
+                        <YAxis />
                         <Tooltip/>
                         <Legend />
-                        <Line type="monotone" dataKey="amount" stroke="#8884d8" activeDot={{ r: 8 }}/>
+                        <Line type="monotone" dataKey="amount" stroke="#08fa00" activeDot={{ r: 8 }}/>
                     </LineChart>
                 </ResponsiveContainer>
             </div>

@@ -45,6 +45,7 @@ function AddTransactions( {transactions, setTransactions} ) {
                     <option value="Housing">Housing</option>
                     <option value="Insurance">Insurance</option>
                     <option value="Medical & Healthcare">Medical & Healthcare</option>
+                    <option value="Mortgage">Mortgage</option>
                     <option value="Personal Care">Personal Care</option>
                     <option value="Pets">Pets</option>
                     <option value="Restaurants">Restaurants</option>

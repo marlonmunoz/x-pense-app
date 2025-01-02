@@ -4,7 +4,7 @@ import React, { useState } from "react";
 function Budget({ balance, budget, setBudget }) {
     const [items, setItems] = useState([]);
     const [name, setName] = useState("");
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState();
     const [newBudget, setNewBudget] = useState(budget)
 
     const addItem = () => {
