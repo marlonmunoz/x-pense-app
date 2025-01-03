@@ -46,7 +46,7 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
             </div>
             <div className="charts">
                 <h5>Spending Over Time</h5>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="101%" height={300}>
                     <LineChart data={transactions}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="date"/>

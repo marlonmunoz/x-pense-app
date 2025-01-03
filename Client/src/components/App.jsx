@@ -88,7 +88,7 @@ function App() {
         </div>
         </nav>
         <Routes>
-          <Route path='/' element={<div><Outlet /></div>}>
+          <Route path='/' element={<div><Outlet darkMode={darkMode}/></div>}>
             <Route index element ={<Balance balance={balance} setBalance={setBalance} transactions={transactions} budget={budget} darkMode={darkMode} />}/>
             <Route path='/transactions' element ={<Transactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} />}/>
             <Route path='/add' element ={<AddTransactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} />}/>

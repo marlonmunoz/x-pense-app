@@ -31,7 +31,7 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
         <div>
             <h5>New Transactions Added</h5>
             <div className="table-responsive">
-                <table className={`table ${darkMode ? 'table-dark' : 'table-light'}`}>
+                <table className={`table table-striped table-hover table-responsive ${darkMode ? 'table-dark' : 'table-light'}`}>
                     <thead>
                         <tr>
                             <th>Category</th>
@@ -47,11 +47,22 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                             <tr key={index}>
                                 {editIndex === index ? (
                                     <>
-                                        <td><input type="text" name='category' value={editTransaction.category} onChange={handleEditChange} className="form-control" /></td>
-                                        <td><input type="date" name='date' value={editTransaction.date} onChange={handleEditChange} className="form-control"/></td>
-                                        {/* <td><input type="date" name='date' value={editTransaction.date ? new Date(editTransaction.date).toISOString().split('T')[0] : ''} onChange={handleEditChange} className="form-control"/></td> */}
-                                        <td><input type="text" name='text' value={editTransaction.text} onChange={handleEditChange} className="form-control" /></td>
-                                        <td><input type="number" name='amount' value={editTransaction.amount} onChange={handleEditChange} className="form-control" /></td>
+                                        <td>
+                                            <label htmlFor={`category-${index}`}>Category</label>
+                                            <input type="text" id={`category-${index}`} name='category' value={editTransaction.category} onChange={handleEditChange} className="form-control" />
+                                        </td>
+                                        <td>
+                                            <label htmlFor={`date-${index}`}></label>
+                                            <input type="date" id={`date-${index}`} name='date' value={editTransaction.date} onChange={handleEditChange} className="form-control"/>
+                                        </td>
+                                        <td>
+                                            <label htmlFor={`text-${index}`}></label>
+                                            <input type="text" id={`text-${index}`} name='text' value={editTransaction.text} onChange={handleEditChange} className="form-control" />
+                                        </td>
+                                        <td>
+                                            <label htmlFor={`amount-${index}`}></label>
+                                            <input type="number" id={`amount-${index}`} name='amount' value={editTransaction.amount} onChange={handleEditChange} className="form-control" />
+                                        </td>
                                         <td>
                                             <button onClick={() => handleEditSave(index)} className="btn btn-success">Save</button>
                                             <button onClick={() => setEditIndex(null)} className="btn btn-secondary">Cancel</button>
@@ -60,7 +71,6 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                                 ) : (
                                     <>
                                         <td>{transaction.category}</td>
-                                        {/* <td>{new Date(transaction.date).toLocaleDateString()}</td> */}
                                         <td>{transaction.date}</td>
                                         <td>{transaction.text}</td>
                                         <td>$ {transaction.amount}</td>
