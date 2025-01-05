@@ -24,10 +24,10 @@ function Investments({ darkMode }) {
 
     return (
         <div>
-            <h5>Investments</h5>
+            <h5>Set Your Investments</h5>
             <h6>CRYPTO</h6>
             <div className="table-responsive">
-                <table className={`table table-striped table-hover table-responsive ${darkMode ? 'table-dark' : 'table-light'}`}>
+                <table className={`table table-striped table-hover ${darkMode ? 'table-dark' : 'table-light'}`}>
                     <thead>
                         <tr>
                             <th>Coin</th>

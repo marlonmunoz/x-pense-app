@@ -1,9 +1,9 @@
 import React from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts'
 
 
-function Dashboard({ transactions =[], balance =0, goals =[], investments= [], budget = 0, totalAmount }) {
+function Dashboard({ transactions =[], balance =0, goals =[], investments= [], budget = 0, totalAmount, darkMode }) {
     const navigate = useNavigate();
     
     const recentTransactions = transactions.slice(-5);
@@ -18,26 +18,11 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
         <div>
             <div className="summary">
                 <h5>Recent Transactions</h5>
-                {/* <ul className="list-unstyled">
-                    {recentTransactions.map((transaction, index) => (
-                        <li key={index}>
-                            {transaction.category}: ${transaction.amount} - {transaction.text}
-                        </li>
-                    ))}
-                </ul> */}
                 <button onClick={() => navigate('/transactions')} className="btn btn-primary"> View All Transactions</button>
             </div>
             <br />
-            {/* <div className="balance-overview">
-                <h5>Overview</h5>
-                <p>Current Balance: ${balance}</p>
-                <p>Total Investments: ${totalInvestments}</p>
-                <p>Budget: ${budget}</p>
-                <p>X-penses: ${totalAmount}</p>
-                <h6>Overview Total: ${overviewTotal}</h6>
-            </div> */}
             <div className="table-responsive">
-                <table className="table table-bordered">
+                <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light'}`}>
                     <tbody>
                         <tr>
                             <th scope="row">Current Balance</th>

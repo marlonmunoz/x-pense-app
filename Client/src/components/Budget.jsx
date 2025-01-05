@@ -21,6 +21,14 @@ function Budget({ balance, budget, setBudget }) {
         setBudget(newBudget);
     }
 
+    const  resetBudget = () => {
+        setItems([]);
+        setName("");
+        setAmount("");
+        setBudget(0);
+        setNewBudget(0);
+    }
+
     return (
         <div>
             <h5>Set Budget</h5>
@@ -35,6 +43,7 @@ function Budget({ balance, budget, setBudget }) {
                 />
                 <br />
                 <button className="btn btn-primary" onClick={handleSetBudget} >Set Budget</button>
+                <button className="btn btn-danger ml-2" onClick={resetBudget}>Reset</button>
             </div>
             <br />
             <h5>Add New Budget</h5>

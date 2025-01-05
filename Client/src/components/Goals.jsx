@@ -21,7 +21,7 @@ function Goals() {
 
     return (
         <div>
-            <h5>Goals</h5>
+            <h5>Set Your Goals</h5>
 
             <div className="mb-3">
                 <h6>Irynkita's Savings Account: $1,000,000</h6>
@@ -41,7 +41,7 @@ function Goals() {
                 />
                 <br />
                 <button onClick={() => handleAddAmount(100)} className="btn btn-primary">Add Amount</button>
-                <button onClick={handleResetAmount} className="btn btn-secondary ml-2">Reset Amount</button>
+                <button onClick={handleResetAmount} className="btn btn-danger ml-2">Reset Amount</button>
             </div>
         </div>
     )

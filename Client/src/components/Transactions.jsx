@@ -64,8 +64,8 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                                             <input type="number" id={`amount-${index}`} name='amount' value={editTransaction.amount} onChange={handleEditChange} className="form-control" />
                                         </td>
                                         <td>
-                                            <button onClick={() => handleEditSave(index)} className="btn btn-success">Save</button>
-                                            <button onClick={() => setEditIndex(null)} className="btn btn-secondary">Cancel</button>
+                                            <button onClick={() => handleEditSave(index)} className="btn btn-success ">Save</button>
+                                            <button onClick={() => setEditIndex(null)} className="btn btn-secondary ">Cancel</button>
                                         </td>
                                     </>
                                 ) : (
@@ -75,8 +75,8 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                                         <td>{transaction.text}</td>
                                         <td>$ {transaction.amount}</td>
                                         <td>
-                                            <button onClick={() => { setEditIndex(index); setEditTransaction(transaction); }} className="btn btn-primary">Edit</button>
-                                            <button onClick={() => handleDelete(index)} className="btn btn-danger">Delete</button>
+                                            <button onClick={() => { setEditIndex(index); setEditTransaction(transaction); }} className="btn btn-primary ml-2">Edit</button>
+                                            <button onClick={() => handleDelete(index)} className="btn btn-danger ml-2">Delete</button>
                                         </td>
                                     </>
                                 )}
