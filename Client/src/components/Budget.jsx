@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-// import Balance from "./Balance";
 
 function Budget({ balance, budget, setBudget }) {
     const [items, setItems] = useState([]);
     const [name, setName] = useState("");
-    const [amount, setAmount] = useState();
-    const [newBudget, setNewBudget] = useState(budget)
+    const [amount, setAmount] = useState("");
+    const [newBudget, setNewBudget] = useState("")
 
     const addItem = () => {
         const itemAmount = parseFloat(amount);
@@ -26,19 +25,20 @@ function Budget({ balance, budget, setBudget }) {
         setName("");
         setAmount("");
         setBudget(0);
-        setNewBudget(0);
+        setNewBudget("");
     }
 
     return (
         <div>
             <h5>Set Budget</h5>
             <div>
-                <label htmlFor="budget"> Set Amount: </label>
+                <label htmlFor="budget">Amount: </label>
                 <input 
                     type="number"
                     id="budget"
                     value={newBudget} 
                     onChange={(e) => setNewBudget(parseFloat(e.target.value))}
+                    placeholder="Enter amount"
                     className="form-control"
                 />
                 <br />
@@ -71,11 +71,11 @@ function Budget({ balance, budget, setBudget }) {
                 <button className="btn btn-primary" onClick={addItem}>Add Item</button>
             </div>
             <br />
-            <h5>New Total Budget : ${budget.toFixed(2)}</h5>
+            <h5>New Total Budget : $ {budget.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
             <ul>
                 {items.map((item, index) => (
                     <li key={index}>
-                        {item.name}: $ {item.amount.toFixed(2)}
+                        {item.name}: $ {item.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </li>
                 ))}
             </ul>

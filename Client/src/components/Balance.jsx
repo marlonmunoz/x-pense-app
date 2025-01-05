@@ -6,6 +6,10 @@ function Balance({ balance, setBalance, transactions, budget }) {
     setBalance(event.target.value);
   };
 
+  const formatAmount = (amount) => {
+    return parseFloat(amount).toLocaleString();''
+  }
+
   const totalTransactions = transactions.reduce((total, transaction) => total + transaction.amount, 0);
   const remainingBalance = balance - totalTransactions;
 
@@ -64,11 +68,11 @@ function Balance({ balance, setBalance, transactions, budget }) {
           className="form-control"
         />
         <br />
-        <p>Your total balance is: $ {totalBalance}</p>
+        <p>Your total balance is: $ {formatAmount(totalBalance)}</p>
         {/* <p>Your balance is: $ {balance}</p> */}
-        <p>Total transactions: $ {totalTransactions}</p>
-        <p>Remaining balance: $ {remainingBalance}</p>
-        <p>Budget: $ {budget}</p>
+        <p>Total transactions: $ {formatAmount(totalTransactions)}</p>
+        <p>Remaining balance: $ {formatAmount(remainingBalance)}</p>
+        <p>Budget: $ {formatAmount(budget)}</p>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 function AddTransactions( {transactions, setTransactions} ) {
     const [text, setText] = useState('');
-    const [amount , setAmount] = useState(0);
+    const [amount , setAmount] = useState();
     const [category, setCategory] = useState('');
     const [date, setDate] = useState('');
     const navigate = useNavigate();
@@ -65,6 +65,7 @@ function AddTransactions( {transactions, setTransactions} ) {
                         id="text" 
                         name="text"
                         value={text} 
+                        placeholder="Description"
                         onChange={(e) => setText(e.target.value)}
                     />
                 </div>
@@ -76,6 +77,7 @@ function AddTransactions( {transactions, setTransactions} ) {
                         name="amount"
                         className="form-control" 
                         value={amount} 
+                        placeholder="Amount"
                         onChange={handleAmountChange}
                     />
                 </div>

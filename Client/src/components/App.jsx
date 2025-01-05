@@ -19,6 +19,10 @@ function App() {
   const [budget, setBudget] = useState(0);
   const [darkMode, setDarkMode] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  
+  const formatAmount = (amount) => {
+    return parseFloat(amount).toLocaleString();
+  }
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -93,9 +97,9 @@ function App() {
             <Route path='/transactions' element ={<Transactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} />}/>
             <Route path='/add' element ={<AddTransactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} />}/>
             <Route path='/budget' element ={<Budget balance={balance} budget={budget} setBudget={setBudget} darkMode={darkMode} />}/>
-            <Route path='/dashboard' element ={<Dashboard transactions={transactions} balance={balance} budget={budget} totalAmount={totalAmount} darkMode={darkMode}  />} />
+            <Route path='/dashboard' element ={<Dashboard transactions={transactions} balance={balance} budget={budget} totalAmount={totalAmount} darkMode={darkMode} formatAmount={formatAmount} />} />
             <Route path='/goals' element ={<Goals />} />
-            <Route path='/investments' element ={<Investments />}/>
+            <Route path='/investments' element ={<Investments formatAmount={formatAmount}/>}/>
           </Route>
         </Routes>
         <Footer />

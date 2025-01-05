@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBitcoin, faEthereum } from '@fortawesome/free-brands-svg-icons';
 
-function Investments({ darkMode }) {
+function Investments({ darkMode, formatAmount }) {
     const [investments, setInvestments] = useState([]);
+
+    
 
     useEffect(() => {
         const fetchInvestments = async () => {
@@ -22,23 +26,38 @@ function Investments({ darkMode }) {
         fetchInvestments();
     }, []);
 
+    const getCryptoIcon = (name) => {
+        switch (name) {
+            case 'Bitcoin':
+                return <FontAwesomeIcon icon={faBitcoin} />;
+            case 'Ethereum':
+                return <FontAwesomeIcon icon={faEthereum} />;
+            default:
+                return null;
+        }
+    };
+
     return (
         <div>
             <h5>Set Your Investments</h5>
-            <h6>CRYPTO</h6>
+            <p> Crypto Updates <span className="badge bg-danger">Live</span></p>
             <div className="table-responsive">
-                <table className={`table table-striped table-hover ${darkMode ? 'table-dark' : 'table-light'}`}>
+                <table className={`table table-striped table-hover table-responsive ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
                     <thead>
                         <tr>
-                            <th>Coin</th>
+                            <th>Type</th>
+                            <th>Cryptocurrency</th>
                             <th>Amount</th>
+                            <th>Price</th>
                         </tr>
                     </thead>
                     <tbody>
                         {investments.map((investment, index) => (
                             <tr key={index}>
+                                <td>{getCryptoIcon(investment.name)} {investment.name}</td>
                                 <td>{investment.type}</td>
-                                <td>${investment.amount.toFixed(2)}</td>
+                                <td>{investment.name}</td>
+                                <td>$ {formatAmount(investment.amount)}</td>
                             </tr>
                         ))}
                     </tbody>

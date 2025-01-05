@@ -22,7 +22,7 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
             </div>
             <br />
             <div className="table-responsive">
-                <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light'}`}>
+                <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
                     <tbody>
                         <tr>
                             <th scope="row">Current Balance</th>

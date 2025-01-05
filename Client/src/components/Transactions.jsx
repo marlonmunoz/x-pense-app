@@ -5,6 +5,10 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
     const [editIndex, setEditIndex] = useState(null);
     const [editTransaction, setEditTransaction] = useState({ category: '', text: '', amount:'', date:'' });
 
+    const formatAmount = (amount) => {
+        return parseFloat(amount).toLocaleString();
+    }
+
     // DELETE 
     const handleDelete = (index) => {
         const newTransactions = transactions.filter((_, i) => i !== index);
@@ -31,7 +35,7 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
         <div>
             <h5>New Transactions Added</h5>
             <div className="table-responsive">
-                <table className={`table table-striped table-hover table-responsive ${darkMode ? 'table-dark' : 'table-light'}`}>
+                <table className={`table table-striped table-hover table-responsive ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
                     <thead>
                         <tr>
                             <th>Category</th>
@@ -52,15 +56,15 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                                             <input type="text" id={`category-${index}`} name='category' value={editTransaction.category} onChange={handleEditChange} className="form-control" />
                                         </td>
                                         <td>
-                                            <label htmlFor={`date-${index}`}></label>
+                                            <label htmlFor={`date-${index}`}>Date</label>
                                             <input type="date" id={`date-${index}`} name='date' value={editTransaction.date} onChange={handleEditChange} className="form-control"/>
                                         </td>
                                         <td>
-                                            <label htmlFor={`text-${index}`}></label>
+                                            <label htmlFor={`text-${index}`}>Description</label>
                                             <input type="text" id={`text-${index}`} name='text' value={editTransaction.text} onChange={handleEditChange} className="form-control" />
                                         </td>
                                         <td>
-                                            <label htmlFor={`amount-${index}`}></label>
+                                            <label htmlFor={`amount-${index}`}>Amount</label>
                                             <input type="number" id={`amount-${index}`} name='amount' value={editTransaction.amount} onChange={handleEditChange} className="form-control" />
                                         </td>
                                         <td>
@@ -73,7 +77,7 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                                         <td>{transaction.category}</td>
                                         <td>{transaction.date}</td>
                                         <td>{transaction.text}</td>
-                                        <td>$ {transaction.amount}</td>
+                                        <td>$ {formatAmount(transaction.amount)}</td>
                                         <td>
                                             <button onClick={() => { setEditIndex(index); setEditTransaction(transaction); }} className="btn btn-primary ml-2">Edit</button>
                                             <button onClick={() => handleDelete(index)} className="btn btn-danger ml-2">Delete</button>
@@ -84,7 +88,8 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                         ))}
                         <tr>
                             <td colSpan="4"><strong>Total</strong></td>
-                            <td>$ {totalAmount}</td>
+                            {/* <td>$ {totalAmount}</td> */}
+                            <td>$ {formatAmount(totalAmount)}</td>
                         </tr>
                     </tbody>
                 </table>

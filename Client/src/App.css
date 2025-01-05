@@ -130,6 +130,8 @@ body.dark-mode {
   color: white;
 }
 
+
+/* TABLES  */
 .table-responsive {
   overflow-x: auto;
 }
@@ -137,4 +139,19 @@ body.dark-mode {
 .table-responsive table {
   width: 100%;
   min-width: 100px; /* Adjust this value as needed */
+}
+
+.table-dark {
+  background-color: #343a40;
+  color: #fff;
+}
+
+.table-light {
+  background-color: #fff;
+  color: #000;
+}
+
+.table-rounded {
+  border-radius: 10px; /* Adjust the value as needed */
+  overflow: hidden; /* Ensure the border radius is applied correctly */
 }
