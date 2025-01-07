@@ -155,3 +155,13 @@ body.dark-mode {
   border-radius: 10px; /* Adjust the value as needed */
   overflow: hidden; /* Ensure the border radius is applied correctly */
 }
+
+
+/* CRYPTOS */
+.bitcoin-icon {
+  color: #f7931a; /* Bitcoin orange color */
+}
+
+.ethereum-icon {
+  color: #626295; /* Ethereum dark gray color */
+}

@@ -3,16 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts'
 
 
-function Dashboard({ transactions =[], balance =0, goals =[], investments= [], budget = 0, totalAmount, darkMode }) {
+function Dashboard({ transactions =[], balance =0, goals =[], investments= [], budget = 0, totalAmount, darkMode, addedInvestments }) {
     const navigate = useNavigate();
     
     const recentTransactions = transactions.slice(-5);
-    const totalInvestments = investments.reduce((total, investment) => total + investment.amount, 0);
+    // const totalInvestments = investments.reduce((total, investment) => total + investment.amount, 0);
+    const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0).toFixed(2);
     const goalsProgress = goals.map(goal => ({
         ...goal,
         progress: (goal.saved / goal.target) * 100
     }));
-    const overviewTotal = budget + totalInvestments - balance - totalAmount;
+    const overviewTotal = budget + parseFloat(totalInvestments) - balance - totalAmount;
 
     return (
         <div>
@@ -30,22 +31,32 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
                         </tr>
                         <tr>
                             <th scope="row">Total Investments</th>
-                            <td>${totalInvestments}</td>
+                            <td>$ {totalInvestments.toLocaleString()}</td>
                         </tr>
                         <tr>
                             <th scope="row">Budget</th>
-                            <td>${budget}</td>
+                            <td>$ {budget.toLocaleString()}</td>
                         </tr>
                         <tr>
                             <th scope="row">X-penses</th>
-                            <td>${totalAmount}</td>
+                            <td>$ {totalAmount.toLocaleString()}</td>
                         </tr>
                         <tr>
                             <th scope="row">Overview Total</th>
-                            <td>${overviewTotal}</td>
+                            <td>$ {overviewTotal.toLocaleString()}</td>
                         </tr>
                     </tbody>
                  </table>
+            </div>
+            <div>
+                <h6>Added Investments</h6>
+                <ul>
+                    {addedInvestments.map((investment, index) => (
+                        <li key={index}>
+                            {investment.name} - {investment.amount} units - ${investment.totalPrice}
+                        </li>
+                    ))}
+                </ul>
             </div>
             <div className="goals-progress">
                 <h5>Goals Progress</h5>
