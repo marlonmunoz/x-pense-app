@@ -27,10 +27,19 @@ function Investments({ darkMode, onAddInvestment }) {
         fetchInvestments();
     }, []);
     
+    // const handleAmountChange = (index, value) => {
+    //     const newAmounts = [...amounts];
+    //     newAmounts[index] = parseFloat(value) || 0;
+    //     setAmounts(newAmounts); 
+    // };
+    
     const handleAmountChange = (index, value) => {
         const newAmounts = [...amounts];
-        newAmounts[index] = parseFloat(value) || 0;
-        setAmounts(newAmounts); 
+        const parsedValue = parseFloat(value);
+        if (!isNaN(parsedValue)) {
+            newAmounts[index] = parsedValue;
+            setAmounts(newAmounts);
+        }
     };
 
     const calculatePrice = (amount, pricePerUnit) => {
