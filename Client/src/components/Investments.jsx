@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { debounce } from "lodash";
 import axios from "axios";
 import { FaBitcoin, FaEthereum } from 'react-icons/fa';
 
 function Investments({ darkMode, onAddInvestment }) {
     const [investments, setInvestments] = useState([]);
-    // const [amounts, setAmounts] = useState(investments.map(() => 0));
     const [amounts, setAmounts] = useState([]);
-
     
     useEffect(() => {
         const fetchInvestments = async () => {
@@ -26,21 +25,15 @@ function Investments({ darkMode, onAddInvestment }) {
         
         fetchInvestments();
     }, []);
-
-    // const handleAmountChange = (index, value) => {
-    //     const newAmounts = [...amounts];
-    //     newAmounts[index] = parseFloat(value) || 0;
-    //     setAmounts(newAmounts); 
-    // };
     
-    const handleAmountChange = (index, value) => {
+    const handleAmountChange = debounce((index, value) => {
         const newAmounts = [...amounts];
         const parsedValue = parseFloat(value);
         if (!isNaN(parsedValue)) {
             newAmounts[index] = parsedValue;
             setAmounts(newAmounts);
         }
-    };
+    }, 300);
 
     const calculatePrice = (amount, pricePerUnit) => {
         const price = amount * pricePerUnit;
@@ -105,7 +98,7 @@ function Investments({ darkMode, onAddInvestment }) {
                                 </td>
                                 <td>
                                     <button
-                                        className="btn btn-success"
+                                        className="btn btn-success ml-2"
                                         onClick={() => handleAddClick(index)}
                                     >
                                         Add
