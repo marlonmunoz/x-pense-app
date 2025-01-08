@@ -26,7 +26,7 @@ function Investments({ darkMode, onAddInvestment }) {
         
         fetchInvestments();
     }, []);
-    
+
     // const handleAmountChange = (index, value) => {
     //     const newAmounts = [...amounts];
     //     newAmounts[index] = parseFloat(value) || 0;
@@ -71,8 +71,9 @@ function Investments({ darkMode, onAddInvestment }) {
                 return null;
             }
     };
+
                 
-                return (
+     return (
         <div>
             <h5>Set Your Investments</h5>
             <h6><span className="badge bg-danger">Live</span> Crypto Price Updates</h6>
