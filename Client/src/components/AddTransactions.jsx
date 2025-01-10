@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 function AddTransactions( {transactions, setTransactions} ) {
     const [text, setText] = useState('');
-    const [amount , setAmount] = useState();
+    const [amount , setAmount] = useState(0);
     const [category, setCategory] = useState('');
     const [date, setDate] = useState('');
     const navigate = useNavigate();
