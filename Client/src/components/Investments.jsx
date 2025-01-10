@@ -1,11 +1,34 @@
 import React, { useState, useEffect } from "react";
+import { Line } from 'react-chartjs-2';
 import { debounce } from "lodash";
 import axios from "axios";
 import { FaBitcoin, FaEthereum } from 'react-icons/fa';
+import CryptoGraph from "./CryptoGraph";
 
-function Investments({ darkMode, onAddInvestment }) {
+const fetchCryptoData = async (setCryptoData) => {
+    try {
+        const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
+            params: {
+                vs_currency: 'usd',
+                ids: 'bitcoin,ethereum'
+            }
+        });
+        setCryptoData(response.data);
+    } catch (error) {
+        console.error('Error fetching crypto data:', error);
+    }
+};
+
+const Investments = ({ darkMode, onAddInvestment }) => {
     const [investments, setInvestments] = useState([]);
     const [amounts, setAmounts] = useState([]);
+    const [cryptoData, setCryptoData] = useState([]);
+
+    useEffect(() => {
+        fetchCryptoData(setCryptoData);
+        const interval = setInterval(() => fetchCryptoData(setCryptoData), 60000); // Fetch data every minute
+        return () => clearInterval(interval)
+    }, []);
     
     useEffect(() => {
         const fetchInvestments = async () => {
@@ -26,6 +49,7 @@ function Investments({ darkMode, onAddInvestment }) {
         fetchInvestments();
     }, []);
     
+
     const handleAmountChange = debounce((index, value) => {
         const newAmounts = [...amounts];
         const parsedValue = parseFloat(value);
@@ -64,7 +88,6 @@ function Investments({ darkMode, onAddInvestment }) {
                 return null;
             }
     };
-
                 
      return (
         <div>
@@ -75,6 +98,7 @@ function Investments({ darkMode, onAddInvestment }) {
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Live Graph</th>
                             <th>Type</th>
                             <th>Price</th>
                             <th>Amount</th>
@@ -84,6 +108,11 @@ function Investments({ darkMode, onAddInvestment }) {
                         {investments.map((investment, index) => (
                             <tr key={index}>
                                 <td>{getCryptoIcon(investment.name)} {investment.name}</td>
+                                    <td>
+                                        {cryptoData && cryptoData.length > 0 && (
+                                            <CryptoGraph data={cryptoData}/>
+                                        )}
+                                    </td>
                                 <td>{investment.type}</td>
                                 <td>$ {calculatePrice(amounts[index], investment.pricePerUnit)}</td>
                                 <td>
