@@ -7,7 +7,6 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
     const navigate = useNavigate();
     
     const recentTransactions = transactions.slice(-5);
-    // const totalInvestments = investments.reduce((total, investment) => total + investment.amount, 0);
     const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0).toFixed(2);
     const goalsProgress = goals.map(goal => ({
         ...goal,
