@@ -6,14 +6,11 @@
 //     const [validated, setValidated] = useState(false);
 //     const [goals, setGoals] = useState([]);
 //     const [inputAmounts, setInputAmounts] = useState({});
-//     const [currentAmount, setCurrentAmount] = useState(0);
-//     const [goalAmount, setGoalAmount] = useState(0);
-//     const [progPercentage, setProgPercentage] = useState(0);
-
 
 //     // Retrieve goals from local storage when the component mounts
 //     useEffect(() => {
 //         const storedGoals = JSON.parse(localStorage.getItem('goals'));
+//         console.log('Retrieved goals from local storage:', storedGoals); // Debug log
 //         if (storedGoals) {
 //             setGoals(storedGoals);
 //         }
@@ -21,6 +18,7 @@
 
 //     // Save goals to local storage whenever they are updated
 //     useEffect(() => {
+//         console.log('Saving goals to local storage:', goals); // Debug log
 //         localStorage.setItem('goals', JSON.stringify(goals));
 //     }, [goals]);
 
@@ -33,25 +31,15 @@
 //                 target: Number(newGoalAmount),
 //                 saved: 0
 //             };
+//             console.log('Adding new goal:', newGoal); // Debug log
 //             setGoals([...goals, newGoal]);
 //             setNewGoalName('');
 //             setNewGoalAmount('');
 //             setValidated(false);
 //         } else {
-//             setValidated(true);
+//             console.log('Goal name or amount is missing'); // Debug log
 //         }
 //     };
-
-//     // const handleAddAmount = (goalName) => {
-//     //     const amountToAdd = Number(inputAmounts);
-//     //     setInputAmounts('');
-
-//     //     // Update the goals array
-//     //     const updatedGoals = goals.map(goal => 
-//     //         goal.name === goalName ? { ...goal, saved: goal.saved + amountToAdd } : goal
-//     //     );
-//     //     setGoals(updatedGoals);
-//     // };
 
 //     const handleAddAmount = (goalId) => {
 //         const amountToAdd = Number(inputAmounts[goalId] || 0);
@@ -63,18 +51,6 @@
 //         );
 //         setGoals(updatedGoals);
 //     };
-
-//     const progressPercentage = (currentAmount / goalAmount) * 100;
-
-//     // const handleResetAmount = () => {
-//     //     setInputAmount('');
-//     //     setCurrentAmount(0);
-//     //     setProgPercentage(0);
-
-//     //     // Reset the goals array
-//     //     const updatedGoals = goals.map(goal => ({ ...goal, saved: 0 }));
-//     //     setGoals(updatedGoals);
-//     // };
 
 //     const handleResetAmount = () => {
 //         setInputAmounts({});
@@ -119,40 +95,39 @@
 //                     <div className="invalid-feedback">
 //                         Please provide a goal amount
 //                     </div>
-//                     <button type="submit" className="btn btn-primary mt-3">Add Goal</button>
 //                 </div>
+//                 <button type="submit" className="btn btn-primary mt-3">Add Goal</button>
 //             </form>
-//             <br />
-//             <h5>Your Goals List Here:</h5>
-//             {goals.map((goal) => (
-//                 <div key={goal.id} className="mb-3">
-//                     <h6>{goal.name}: ${goal.target.toLocaleString()}</h6>
-//                     <div className="progress">
-//                         <div className="progress-bar bg-success" role="progressbar" style={{width: `${(goal.saved / goal.target) * 100}%`}} aria-valuemin="0" aria-valuemax="100">
-//                             {(goal.saved / goal.target * 100).toFixed(2)}%
+//             <div className="mt-4">
+//                 {goals.map(goal => (
+//                     <div key={goal.id} className="mb-3">
+//                         <h6>{goal.name}: ${goal.target.toLocaleString()}</h6>
+//                         <div className="progress">
+//                             <div className="progress-bar bg-success" role="progressbar" style={{width: `${(goal.saved / goal.target) * 100}%`}} aria-valuemin="0" aria-valuemax="100">
+//                                 {(goal.saved / goal.target * 100).toFixed(2)}%
+//                             </div>
 //                         </div>
+//                         <input 
+//                             type="number" 
+//                             id={`inputAmount-${goal.id}`}
+//                             name="inputAmount"
+//                             value={inputAmounts[goal.id] || ''}
+//                             onChange={(e) => setInputAmounts({ ...inputAmounts, [goal.id]: e.target.value })}
+//                             className="form-control mt-3"
+//                             placeholder="Enter amount"
+//                         />
+//                         <br />
+//                         <button onClick={() => handleAddAmount(goal.id)} className="btn btn-primary">Add Amount</button>
+//                         <button onClick={handleResetAmount} className="btn btn-warning ml-2">Reset Amount</button>
+//                         <button onClick={() => handleDeleteGoal(goal.id)} className="btn btn-danger ml-2">Delete</button>
 //                     </div>
-//                     <input 
-//                         type="number" 
-//                         id={`inputAmount-${goal.id}`}
-//                         name="inputAmount"
-//                         value={inputAmounts[goal.id] || ''}
-//                         onChange={(e) => setInputAmounts({ ...inputAmounts, [goal.id]: e.target.value })}
-//                         className="form-control mt-3"
-//                         placeholder="Enter amount"
-//                     />
-//                     <br />
-//                     <button onClick={() => handleAddAmount(goal.name)} className="btn btn-primary">Add Amount</button>
-//                     <button onClick={handleResetAmount} className="btn btn-warning ml-2">Reset Amount</button>
-//                     <button onClick={() => handleDeleteGoal(goal.id)} className="btn btn-danger ml-2">Delete</button>
-//                 </div>
-//             ))}
+//                 ))}
+//             </div>
 //         </div>
 //     );
 // };
 
 // export default Goals;
-
 
 import React, { useState, useEffect } from 'react';
 
@@ -163,35 +138,41 @@ const Goals = () => {
     const [goals, setGoals] = useState([]);
     const [inputAmounts, setInputAmounts] = useState({});
 
-    // Retrieve goals from local storage when the component mounts
+    // Retrieve goals from the backend when the component mounts
     useEffect(() => {
-        const storedGoals = JSON.parse(localStorage.getItem('goals'));
-        console.log('Retrieved goals from local storage:', storedGoals); // Debug log
-        if (storedGoals) {
-            setGoals(storedGoals);
-        }
+        fetch('http://localhost:5001/goals')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Retrieved goals from backend:', data); // Debug log
+                setGoals(data);
+            })
+            .catch(error => console.error('Error fetching goals:', error));
     }, []);
-
-    // Save goals to local storage whenever they are updated
-    useEffect(() => {
-        console.log('Saving goals to local storage:', goals); // Debug log
-        localStorage.setItem('goals', JSON.stringify(goals));
-    }, [goals]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         if (newGoalName && newGoalAmount) {
             const newGoal = {
-                id: goals.length + 1,
                 name: newGoalName,
                 target: Number(newGoalAmount),
                 saved: 0
             };
             console.log('Adding new goal:', newGoal); // Debug log
-            setGoals([...goals, newGoal]);
-            setNewGoalName('');
-            setNewGoalAmount('');
-            setValidated(false);
+            fetch('http://localhost:5001/goals', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newGoal)
+            })
+            .then(response => response.json())
+            .then(data => {
+                setGoals([...goals, data]);
+                setNewGoalName('');
+                setNewGoalAmount('');
+                setValidated(false);
+            })
+            .catch(error => console.error('Error adding goal:', error));
         } else {
             console.log('Goal name or amount is missing'); // Debug log
         }
@@ -206,6 +187,17 @@ const Goals = () => {
             goal.id === goalId ? { ...goal, saved: goal.saved + amountToAdd } : goal
         );
         setGoals(updatedGoals);
+
+        // Update the goal in the backend
+        const goalToUpdate = updatedGoals.find(goal => goal.id === goalId);
+        fetch(`http://localhost:5001/goals/${goalId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(goalToUpdate)
+        })
+        .catch(error => console.error('Error updating goal:', error));
     };
 
     const handleResetAmount = () => {
@@ -214,11 +206,29 @@ const Goals = () => {
         // Reset the goals array
         const updatedGoals = goals.map(goal => ({ ...goal, saved: 0 }));
         setGoals(updatedGoals);
+
+        // Update all goals in the backend
+        updatedGoals.forEach(goal => {
+            fetch(`http://localhost:5001/goals/${goal.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(goal)
+            })
+            .catch(error => console.error('Error resetting goal amount:', error));
+        });
     };
 
     const handleDeleteGoal = (goalId) => {
         const updateGoals = goals.filter(goal => goal.id !== goalId);
         setGoals(updateGoals);
+
+        // Delete the goal from the backend
+        fetch(`http://localhost:5001/goals/${goalId}`, {
+            method: 'DELETE'
+        })
+        .catch(error => console.error('Error deleting goal:', error));
     };
 
     return (
