@@ -117,7 +117,16 @@ function App() {
             <Route index element ={<Balance balance={balance} setBalance={setBalance} transactions={transactions} budget={budget} darkMode={darkMode} validated={validated} setValidated={setValidated} />}/>
             <Route path='/transactions' element ={<Transactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} validated={validated} setValidated={setValidated} />}/>
             <Route path='/add' element ={<AddTransactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} validated={validated} setValidated={setValidated}/>}/>
-            <Route path='/budget' element ={<Budget balance={balance} budget={budget} setBudget={setBudget} darkMode={darkMode} validated={validated} setValidated={setValidated} />}/>
+            <Route path='/budget' element ={
+              <Budget 
+                balance={balance} 
+                budget={budget} 
+                setBudget={setBudget} 
+                darkMode={darkMode} 
+                validated={validated} 
+                setValidated={setValidated} 
+              />}
+            />
             <Route path='/dashboard' element ={
               <Dashboard 
                 transactions={transactions} 

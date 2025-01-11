@@ -50,7 +50,7 @@ function Goals({ goalAmount, currentAmount, inputAmount, progPercentage, setGoal
         <div>
             <h5>Set Your Goals</h5>
             <div className="mt-4">
-                <label htmlFor="goalName">Goal Name</label>
+                {/* <label htmlFor="goalName">Goal Name</label> */}
                 <input 
                     type="text" 
                     id="goalName"
@@ -59,12 +59,12 @@ function Goals({ goalAmount, currentAmount, inputAmount, progPercentage, setGoal
                     className={`form-control ${validated && !newGoalName ? 'is-invalid' : ''}`}
                     placeholder="Goal Name"
                 />
-                <br />
+                
                 <div className="invalid-feedback">
                     Please provide a goal name
                 </div>
 
-                <label htmlFor="goalAmount">Goal Amount</label>
+                {/* <label htmlFor="goalAmount">Goal Amount</label> */}
                 <input 
                     type="number" 
                     id="goalAmount"

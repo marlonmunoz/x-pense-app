@@ -1,24 +1,41 @@
 import React, { useState } from "react";
 
-function Budget({ balance, budget, setBudget }) {
+function Budget({ budget, setBudget, validated, setValidated }) {
     const [items, setItems] = useState([]);
     const [name, setName] = useState("");
-    const [amount, setAmount] = useState("");
+    const [amount, setAmount] = useState(0);
     const [newBudget, setNewBudget] = useState("")
+    const [error, setError] = useState("");
+
 
     const addItem = () => {
         const itemAmount = parseFloat(amount);
-        setItems([...items, { name, amount: itemAmount }]);
-        setName("");
-        setAmount("");
-        setBudget(prevBudget => prevBudget + itemAmount);
+        if (isNaN(itemAmount) || itemAmount <= 0) {
+            setError("Please enter a valid amount.");
+            setValidated(false); //
+            return;
+        }
+        setError("");
+        setValidated(true); //
+        const newItem = { name, amount: itemAmount };
+        setItems([...items, newItem]);
+        setBudget(budget + newItem.amount);
+        setName('');
+        setAmount(0);
     };
 
-    // const totalBudget = items.reduce((total, item) => total + item.amount, 0);
 
     const handleSetBudget = () => {
-        setBudget(newBudget);
-    }
+        const budgetAmount = parseFloat(newBudget);
+        if (isNaN(budgetAmount) || budgetAmount <= 0) {
+            setError("Please enter a valid budget.");
+            setValidated(false);
+            return;
+        }
+        setError("");
+        setValidated(true);
+        setBudget(budgetAmount);
+    };
 
     const  resetBudget = () => {
         setItems([]);
@@ -26,25 +43,26 @@ function Budget({ balance, budget, setBudget }) {
         setAmount("");
         setBudget(0);
         setNewBudget("");
+        setError("");
+        setValidated(false);
     }
 
     return (
         <div>
             <h5>Set Budget</h5>
             <div>
-                <label htmlFor="budget">Amount: </label>
                 <input 
                     type="number"
-                    id="budget"
+                    id="Set budget"
                     value={newBudget} 
                     onChange={(e) => setNewBudget(parseFloat(e.target.value))}
-                    placeholder="Enter amount"
-                    className="form-control"
+                    className={`form-control ${validated ? 'is-valid' : 'is-invalid'}`}
                 />
                 <br />
                 <button className="btn btn-primary" onClick={handleSetBudget} >Set Budget</button>
                 <button className="btn btn-danger ml-2" onClick={resetBudget}>Reset</button>
             </div>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <br />
             <h5>Add New Budget</h5>
             <div>
@@ -70,6 +88,7 @@ function Budget({ balance, budget, setBudget }) {
                 <br />
                 <button className="btn btn-primary" onClick={addItem}>Add Item</button>
             </div>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <br />
             <h5>New Total Budget : $ {budget.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
             <ul>
