@@ -70,8 +70,8 @@ function Balance({ balance, setBalance, transactions, budget }) {
         <br />
         <p>Your total balance is: $ {formatAmount(totalBalance)}</p>
         {/* <p>Your balance is: $ {balance}</p> */}
-        <p>Total transactions: $ {formatAmount(totalTransactions)}</p>
-        <p>Remaining balance: $ {formatAmount(remainingBalance)}</p>
+        {/* <p>Total transactions: $ {formatAmount(totalTransactions)}</p> */}
+        {/* <p>Remaining balance: $ {formatAmount(remainingBalance)}</p> */}
         <p>Budget: $ {formatAmount(budget)}</p>
       </div>
     </div>

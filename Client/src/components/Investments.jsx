@@ -1,34 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Line } from 'react-chartjs-2';
 import { debounce } from "lodash";
 import axios from "axios";
 import { FaBitcoin, FaEthereum } from 'react-icons/fa';
-import CryptoGraph from "./CryptoGraph";
-
-const fetchCryptoData = async (setCryptoData) => {
-    try {
-        const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
-            params: {
-                vs_currency: 'usd',
-                ids: 'bitcoin,ethereum'
-            }
-        });
-        setCryptoData(response.data);
-    } catch (error) {
-        console.error('Error fetching crypto data:', error);
-    }
-};
+import { useNavigate } from 'react-router-dom'
 
 const Investments = ({ darkMode, onAddInvestment }) => {
+    const navigate = useNavigate();
     const [investments, setInvestments] = useState([]);
-    const [amounts, setAmounts] = useState([]);
-    const [cryptoData, setCryptoData] = useState([]);
-
-    useEffect(() => {
-        fetchCryptoData(setCryptoData);
-        const interval = setInterval(() => fetchCryptoData(setCryptoData), 60000); // Fetch data every minute
-        return () => clearInterval(interval)
-    }, []);
+    const [amounts, setAmounts] = useState([]);  
     
     useEffect(() => {
         const fetchInvestments = async () => {
@@ -48,7 +27,6 @@ const Investments = ({ darkMode, onAddInvestment }) => {
         
         fetchInvestments();
     }, []);
-    
 
     const handleAmountChange = debounce((index, value) => {
         const newAmounts = [...amounts];
@@ -69,6 +47,7 @@ const Investments = ({ darkMode, onAddInvestment }) => {
         const amount = amounts[index];
         const totalPrice = calculatePrice(amount, investment.pricePerUnit);
         onAddInvestment({...investment, amount, totalPrice})
+        navigate('/dashboard')
     };
 
     const handleResetClick = (index) => {
@@ -92,13 +71,13 @@ const Investments = ({ darkMode, onAddInvestment }) => {
      return (
         <div>
             <h5>Set Your Investments</h5>
-            <h6><span className="badge bg-danger">Live</span> Crypto Price Updates</h6>
+            <h6><span className="badge bg-danger" style={{ color: 'white' }} >Live</span> Crypto Price Updates</h6>
+           
             <div className="table-responsive">
                 <table className={`table table-striped table-hover table-responsive ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Live Graph</th>
                             <th>Type</th>
                             <th>Price</th>
                             <th>Amount</th>
@@ -108,11 +87,7 @@ const Investments = ({ darkMode, onAddInvestment }) => {
                         {investments.map((investment, index) => (
                             <tr key={index}>
                                 <td>{getCryptoIcon(investment.name)} {investment.name}</td>
-                                    <td>
-                                        {cryptoData && cryptoData.length > 0 && (
-                                            <CryptoGraph data={cryptoData}/>
-                                        )}
-                                    </td>
+                                
                                 <td>{investment.type}</td>
                                 <td>$ {calculatePrice(amounts[index], investment.pricePerUnit)}</td>
                                 <td>
@@ -144,6 +119,7 @@ const Investments = ({ darkMode, onAddInvestment }) => {
                     </tbody>
                 </table>
             </div>
+           
         </div>
     );
 };

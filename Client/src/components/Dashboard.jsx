@@ -62,9 +62,14 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
                 <h5>Goals Progress</h5>
                 <ul>
                     {goalsProgress.map((goal, index) => (
-                        <li key={index}>
-                            {goal.name}: {goal.progress.toFixed(2)}%
-                        </li>
+                      <li key={index} className="d-flex align-items-center mb-2" style={{ width: '100%' }}>
+                      <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
+                      <div className="progress flex-grow-1" >
+                        <div className="progress-bar bg-success" role="progressbar" style={{ width: `${goal.progress}%`}} aria-valuemin="0" aria-valuemax="100">
+                          {goal.progress.toFixed(2)}%
+                        </div>
+                      </div>
+                    </li>
                     ))}
                 </ul>
             </div>
