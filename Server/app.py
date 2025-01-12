@@ -14,7 +14,7 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///goals.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your secret key')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') # Load secret key from .env file
 db.init_app(app)
 
 with app.app_context():
