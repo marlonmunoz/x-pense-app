@@ -1,5 +1,6 @@
 # x-pense-app
 Track your budget on the go! more 
+![Alt text](./Client/public/images/IRYNK-App.png)
 
 ## Features
 
