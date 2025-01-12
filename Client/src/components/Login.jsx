@@ -9,6 +9,8 @@ function Login( {setLoggedIn, darkMode, toggleDarkMode} ) {
     const [rememberMe, setRememberMe] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
+    // No Authetification
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!username || !password) {
@@ -17,7 +19,7 @@ function Login( {setLoggedIn, darkMode, toggleDarkMode} ) {
         }
         setLoading(true);
         try {
-            const response = await axios.post('http://127.0.0.1:5000/login', 
+            const response = await axios.post('http://127.0.0.1:5001/login', 
                 { username, password },
                 { headers: { 'Content-Type': 'application/json' } }
             );
@@ -105,3 +107,25 @@ function Login( {setLoggedIn, darkMode, toggleDarkMode} ) {
 export default Login;
 
 
+/*
+JWT (JSON Web Token) is a compact, URL-safe means of representing claims to be transferred between two parties. The claims in a JWT are encoded as a JSON object that is used as the payload of a JSON Web Signature (JWS) structure or as the plaintext of a JSON Web Encryption (JWE) structure, enabling the claims to be digitally signed or integrity protected with a Message Authentication Code (MAC) and/or encrypted.
+
+Structure of a JWT
+A JWT is composed of three parts:
+
+1. Header: Typically consists of two parts: the type of the token (JWT) and the signing algorithm being used (e.g., HMAC SHA256 or RSA).
+2. Payload: Contains the claims. Claims are statements about an entity (typically, the user) and additional data. There are three types of claims: registered, public, and private claims.
+3. Signature: To create the signature part, you have to take the encoded header, the encoded payload, a secret, the algorithm specified in the header, and sign that.
+
+Example of a JWT
+
+Header: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+Payload: eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ
+Signature: SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+How JWT Works
+Client Authentication: The client sends a request with credentials (e.g., username and password) to the server.
+Token Generation: The server verifies the credentials and generates a JWT, which is then sent back to the client.
+Token Storage: The client stores the JWT (typically in local storage or cookies).
+Authenticated Requests: For subsequent requests, the client sends the JWT in the Authorization header.
+Token Verification: The server verifies the JWT and processes the request if the token is valid.
+*/

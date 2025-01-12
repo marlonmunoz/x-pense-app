@@ -58,7 +58,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:5000/logout');
+      const response = await axios.post('http://127.0.0.1:5001/logout');
       if (response.status === 200) {
         setLoggedIn(false)
       }
