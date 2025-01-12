@@ -7,4 +7,4 @@ if 'SECRET_KEY' not in os.environ:
 else:
     secret_key = os.environ['SECRET_KEY']
     
-# tests passed
+# tests passed now
