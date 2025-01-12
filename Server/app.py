@@ -29,7 +29,7 @@ users = {
 def login():
     data = request.json 
     
-    # Server-side validation
+    # Server-side validation code
     if not data:
         return jsonify({"message": "No input data provided"}), 400
     
