@@ -10,6 +10,13 @@ convention = {
 
 db = SQLAlchemy()
 
+class Transactions(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(255), nullable=False)
+    amount =db.Column(db.Float, nullable=False)
+    category = db.Column(db.String(80), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+
 class Goal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
