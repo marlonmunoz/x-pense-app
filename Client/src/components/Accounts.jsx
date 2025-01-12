@@ -3,7 +3,7 @@ import React from "react";
 function Accounts() {
     return (
         <div>
-        <h1>ACC</h1>
+        <h1>ACCOUNTS TO ADDED LATER</h1>
         </div>
     )
 }
