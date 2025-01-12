@@ -1,14 +1,20 @@
+import jwt
+import datetime
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from models import db, Goal
+from dotenv import load_dotenv
+
+load_dotenv()  # Loads environment variables from .env file
 
 app = Flask(__name__)
-# CORS(app)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///goals.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your secret key')
 db.init_app(app)
 
 with app.app_context():
@@ -33,11 +39,28 @@ def login():
     if not username or not password:
         return jsonify({"message": "Username and password are required"}), 400
     
-    
     if username in users and users[username] == password:
-        return jsonify({"message": "Login Successful"}), 200
+        token = jwt.encode({
+            'username': username,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+        }, app.config['SECRET_KEY'], algorithm="HS256")
+        return jsonify({"message": "Login Successful", "token": token}), 200
     else:
         return jsonify({"message": "Invalid Credentials"}), 401
+
+@app.route('/verify-token', methods=['POST'])
+def verify_token():
+    token = request.json.get('token')
+    if not token:
+        return jsonify({"message": "Token is missing"}), 400
+    
+    try:
+        jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        return jsonify ({"message": "Token is valid"}), 200
+    except jwt.ExpiredSignatureError:
+        return jsonify({"message": "Token has expired"}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({"message": "Invalid token"}), 401
 
 @app.route('/logout', methods=['POST'])
 def logout():
