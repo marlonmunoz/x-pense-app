@@ -10,12 +10,21 @@ convention = {
 
 db = SQLAlchemy()
 
-class Transactions(db.Model):
+class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     category = db.Column(db.String(80), nullable=False)
     date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(255), nullable=False)
     amount =db.Column(db.Float, nullable=False)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'category': self.category,
+            'date': self.date,
+            'description': self.description,
+            'amount': self.amount
+        }
 
 class Goal(db.Model):
     id = db.Column(db.Integer, primary_key=True)

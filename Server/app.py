@@ -4,8 +4,10 @@ import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from models import db, Goal
+from sqlalchemy.orm import Session
+from models import db, Goal, Transaction
 from dotenv import load_dotenv
+from datetime import datetime, timedelta
 
 load_dotenv()  
 
@@ -25,6 +27,8 @@ users = {
     "mago": "1234"
 }
 
+# LOGIN ============>>>>>>>
+
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json 
@@ -42,7 +46,7 @@ def login():
     if username in users and users[username] == password:
         token = jwt.encode({
             'username': username,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+            'exp': datetime.utcnow() + timedelta(hours=1)
         }, app.config['SECRET_KEY'], algorithm="HS256")
         return jsonify({"message": "Login Successful", "token": token}), 200
     else:
@@ -66,6 +70,72 @@ def verify_token():
 def logout():
     return jsonify({"message": "Logout Successful"}), 200
 
+
+# TRANSACTIONS ============>>>>>>>
+# GET
+@app.route('/transactions', methods=['GET'])
+def get_transaction():
+    transactions = Transaction.query.all()
+    return jsonify([transaction.to_dict() for transaction in transactions])
+
+# POST
+@app.route('/transactions', methods=['POST'])
+def add_transaction():
+    data = request.json
+    print(data)
+    required_fields = ['category', 'date', 'description', 'amount']
+    for field in required_fields:
+        if field not in data:
+            return jsonify({'error': f'Missing field: {field}'}), 400
+    try:
+        date_obj = datetime.strptime(data['date'], '%Y-%m-%d').date()
+    except ValueError:
+        return jsonify({'error': 'Invalid date format, Use YYYY-MM-DD'}), 400
+    
+    new_transaction = Transaction(
+        category=data['category'],
+        date=date_obj,
+        description=data['description'],
+        amount=data['amount']
+    )
+    db.session.add(new_transaction)
+    db.session.commit()
+    return jsonify(new_transaction.to_dict()), 201
+
+# PUT
+@app.route('/transactions/<int:id>', methods=['PUT'])
+def update_transaction(id):
+    data = request.json
+    session: Session = db.session
+    transaction = session.get(Transaction, id)
+    if transaction is None:
+        return jsonify({'error': 'Transaction not found'}), 404
+    transaction.category = data['category']
+    try:
+        transaction.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
+    except ValueError:
+        return jsonify({'error': 'Invalid date format, Use YYYY-MM-DD'}), 400
+    transaction.description = data['description']
+    transaction.amount = data['amount']
+    session.commit()
+    return jsonify(transaction.to_dict())
+
+# DELETE
+@app.route('/transactions/<int:id>', methods=['DELETE'])
+def delete_transaction(id):
+    session: Session = db.session
+    transaction = session.get(Transaction, id)
+    if transaction is None:
+        return jsonify({'error': 'Transaction not found'}), 404
+    session.delete(transaction)
+    session.commit()
+    return '', 204
+
+
+
+
+
+# GOALS ============>>>>>>>
 # GET
 @app.route('/goals', methods=['GET'])
 def get_goals():
@@ -120,6 +190,8 @@ def delete_goal(goal_id):
     db.session.commit()
     return '', 204
 
+    
+    
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
     

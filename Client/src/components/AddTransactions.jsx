@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom'
 
@@ -6,6 +7,7 @@ function AddTransactions( {transactions, setTransactions} ) {
     const [amount , setAmount] = useState(0);
     const [category, setCategory] = useState('');
     const [date, setDate] = useState('');
+    const [description, setDescription] = useState('')
     const navigate = useNavigate();
 
     const handleAmountChange = (e) => {
@@ -13,16 +15,33 @@ function AddTransactions( {transactions, setTransactions} ) {
         setAmount(isNaN(value) ? 0 : value);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const newTransaction = { text, amount, category, date };
-        setTransactions([...transactions, newTransaction]);
-        setText('');
-        setAmount(0);
-        setCategory('');
-        setDate('');
-        navigate('/transactions')
+    const handleDateChange = (e) => {
+        setDate(e.target.value);
     };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const newTransaction = { 
+            category, 
+            date: new Date(date).toISOString().split('T')[0], // Format date to YYYY-MM-DD
+            description,
+            amount
+        };
+
+        try {
+            const response = await axios.post('http://127.0.0.1:5001/transactions', newTransaction);
+            console.log('Transaction added:', response.data);
+            // Reset form fields
+            setCategory('');
+            setDate('');
+            setDescription('');
+            setAmount(0);
+            navigate('/transactions')
+        } catch (error) {
+            console.error('Error adding transaction:', error);
+        }
+    };
+    
 
     return (
         <div>
@@ -64,9 +83,9 @@ function AddTransactions( {transactions, setTransactions} ) {
                         className="form-control"
                         id="text" 
                         name="text"
-                        value={text} 
+                        value={description} 
                         placeholder="Description"
-                        onChange={(e) => setText(e.target.value)}
+                        onChange={(e) => setDescription(e.target.value)}
                     />
                 </div>
                 <div className="form-group">
@@ -88,8 +107,8 @@ function AddTransactions( {transactions, setTransactions} ) {
                         id="date"
                         name="date"
                         className="form-control"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
+                        value={date ? new Date(date).toISOString().split('T')[0] : ''}
+                        onChange={handleDateChange}
                     />
 
                 </div>
