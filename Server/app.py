@@ -14,7 +14,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///goals.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///xpense.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') 
 db.init_app(app)
