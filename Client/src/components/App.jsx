@@ -21,7 +21,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [addedInvestments, setAddedInvestments] = useState([]);
 
-  // Goals
+  // Goals State ======>>>>>>
   const [goalAmount, setGoalAmount] = useState(0); // This is an example amount
   const [currentAmount, setCurrentAmount] = useState(0); // This is an example of current amount
   const [inputAmount, setInputAmount] = useState('');
@@ -29,22 +29,8 @@ function App() {
   const [newGoalAmount, setNewGoalAmount] = useState('');
   const [progPercentage, setProgPercentage] = useState(0);
   const [goals, setGoals] = useState([]);
-  const [validated, setValidated] = useState(false);
-  // const [goals, setGoals] = useState([
-  //   { name: "Daughter's Savings Account", target: 1000000, saved: currentAmount }
-  // ]);
 
-  const handleAddInvestment = (investment) => {
-    setAddedInvestments([...addedInvestments, investment]);
-    console.log('Added investment:', investment);
-    
-  }
-  
-  const formatAmount = (amount) => {
-    return parseFloat(amount).toLocaleString();
-  };
-
-
+  // Dark-Light MODE ======>>>>>>
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     if (!darkMode) {
@@ -56,6 +42,10 @@ function App() {
     }
   };
 
+  // Validation ======>>>>>>
+  const [validated, setValidated] = useState(false);
+
+  // LOGOUT ==========>>>>>>
   const handleLogout = async () => {
     try {
       const response = await axios.post('http://127.0.0.1:5001/logout');
@@ -71,13 +61,23 @@ function App() {
     return <Login setLoggedIn={setLoggedIn} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
   }
 
+  const handleAddInvestment = (investment) => {
+    setAddedInvestments([...addedInvestments, investment]);
+    console.log('Added investment:', investment);
+  }
+  
+  const formatAmount = (amount) => {
+    return parseFloat(amount).toLocaleString();
+  };
+
+
   return (
     <Router>
       <div className={`container d-flex flex-column align-items-center ${darkMode ? 'dark-mode' : 'light-mode'}`}>
         {/* LOGOUT */}
         <button onClick={handleLogout}className='btn btn-secondary mb-3 ml-auto' >Logout</button>
         <h1>X-PENSE</h1>
-        <h6>A Budget Tracker At Your Fingertips </h6>
+        <h6><span className='badge badge-info'>A Budget Tracker At Your Fingertips</span></h6>
         <button onClick={toggleDarkMode} className='btn btn-secondary mb-3'>
           {darkMode ? 'Light': 'Dark'} Mode
         </button>
@@ -88,35 +88,44 @@ function App() {
           </button>
           <div className='collapse navbar-collapse justify-content-center' id='navbarNav'>
             <ul className='nav nav-tabs nav-tabs-bg'>
-              <li className='nav-item'>
-                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/dashboard'>Dashboard</NavLink>
-              </li>
-              <li className='nav-item'>
-                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='budget'>Budget</NavLink>
-              </li>
-              <li className='nav-item'>
-                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/'>Balance</NavLink>
-              </li>
-              <li className='nav-item'>
-                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/add'><strong>X-PENSE</strong></NavLink>
-              </li>
-              <li className='nav-item'>
-                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/transactions'>Transaction</NavLink>
-              </li>
-              <li className='nav-item'>
-                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/goals'>Goals</NavLink>
-              </li>
-              <li className='nav-item'>
-                <NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/investments'>Investments</NavLink>
-              </li>
+              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/dashboard'>Dashboard</NavLink></li>
+              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='budget'>Budget</NavLink></li>
+              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/'>Balance</NavLink></li>
+              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/add'><strong>X-PENSE</strong></NavLink></li>
+              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/transactions'>Transaction</NavLink></li>
+              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/goals'>Goals</NavLink></li>
+              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/investments'>Investments</NavLink></li>
             </ul>
         </div>
         </nav>
         <Routes>
           <Route path='/' element={<div><Outlet darkMode={darkMode}/></div>}>
-            <Route index element ={<Balance balance={balance} setBalance={setBalance} transactions={transactions} budget={budget} darkMode={darkMode} validated={validated} setValidated={setValidated} />}/>
-            <Route path='/transactions' element ={<Transactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} validated={validated} setValidated={setValidated} />}/>
-            <Route path='/add' element ={<AddTransactions transactions={transactions} setTransactions={setTransactions} darkMode={darkMode} validated={validated} setValidated={setValidated}/>}/>
+            <Route index element ={
+              <Balance 
+                balance={balance}   
+                setBalance={setBalance}  
+                transactions={transactions} 
+                budget={budget} darkMode={darkMode} 
+                validated={validated} 
+                setValidated={setValidated} 
+              />}
+            />
+            <Route path='/transactions' element ={
+              <Transactions 
+                transactions={transactions} 
+                setTransactions={setTransactions} 
+                darkMode={darkMode} validated={validated} 
+                setValidated={setValidated} 
+              />}
+            />
+            <Route path='/add' element ={
+              <AddTransactions 
+                transactions={transactions} 
+                setTransactions={setTransactions} 
+                darkMode={darkMode} validated={validated} 
+                setValidated={setValidated}
+              />}
+            />
             <Route path='/budget' element ={
               <Budget 
                 balance={balance} 

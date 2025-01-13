@@ -32,48 +32,86 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
     // EDIT
     const handleEditChange = (e) => {
         const { name, value } = e.target;
-        setEditTransaction({ ...editTransaction, [name]: value });
+        setEditTransaction({ ...editTransaction, [name]: value || '' });
+    };
+
+    const validateTransaction = (transaction) => {
+        if (!transaction.date) {
+            console.error('Transaction date is missing');
+            return false;
+        }
+        return true;
     };
 
     
+
     const handleEditSave = async (transaction) => {
+        if (!validateTransaction(transaction)) {
+            return;
+        }
+    
         let formattedDate;
         try {
-            if (!transaction.date) {
-                throw new Error('Date is undefined');
-            }
-            // Check if the date is already in the correct format
-            if (isNaN(Date.parse(transaction.date))) {
-                throw new Error('Invalid date format');
-            }
-            formattedDate = new Date(transaction.date).toISOString().split('T')[0]; // Format date to YYYY-MM-DD
+            formattedDate = new Date(transaction.date).toISOString().split('T')[0];
         } catch (error) {
-            console.error('Error in date formatting:', error.message);
             console.error('Invalid date format:', transaction.date);
             return;
         }
-
-        const updatedTransaction = {
-            ...transaction,
-            date: formattedDate
-        };
-
+    
+        const updatedTransaction = { ...transaction, date: formattedDate };
+    
         try {
-            const response = await axios.put(`http://127.0.0.1:5001/transactions/${transaction.id}`, updatedTransaction);
-            console.log('Transaction updated:', response.data);
+            await axios.put(`http://127.0.0.1:5001/transactions/${transaction.id}`, updatedTransaction);
+            const newTransactions = transactions.map((t, index) => 
+                index === editIndex ? updatedTransaction : t
+            );
+            setTransactions(newTransactions);
+            setEditIndex(null);
+            setEditTransaction({ date: '' });
         } catch (error) {
-            console.error('Error updating transaction:', error.message);
-            if (error.response) {
-                console.error('Response data:', error.response.data);
-                console.error('Response status:', error.response.status);
-                console.error('Response headers:', error.response.headers);
-            } else if (error.request) {
-                console.error('Request data:', error.request);
-            } else {
-                console.error('Error message:', error.message);
-            }
+            console.error('Error updating transaction:', error);
         }
     };
+
+    
+    // const handleEditSave = async (transaction) => {
+    //     let formattedDate;
+    //     try {
+    //         if (!transaction.date) {
+    //             throw new Error('Date is undefined');
+    //         }
+    //         // Check if the date is already in the correct format
+    //         if (isNaN(Date.parse(transaction.date))) {
+    //             throw new Error('Invalid date format');
+    //         }
+    //         formattedDate = new Date(transaction.date).toISOString().split('T')[0]; // Format date to YYYY-MM-DD
+    //     } catch (error) {
+    //         console.error('Error in date formatting:', error.message);
+    //         console.error('Invalid date format:', transaction.date);
+    //         return;
+    //     }
+
+    //     const updatedTransaction = {
+    //         ...transaction,
+    //         date: formattedDate
+    //     };
+
+    //     try {
+    //         const response = await axios.put(`http://127.0.0.1:5001/transactions/${transaction.id}`, updatedTransaction);
+    //         console.log('Transaction updated:', response.data);
+    //     } catch (error) {
+    //         console.error('Error updating transaction:', error.message);
+    //         if (error.response) {
+    //             console.error('Response data:', error.response.data);
+    //             console.error('Response status:', error.response.status);
+    //             console.error('Response headers:', error.response.headers);
+    //         } else if (error.request) {
+    //             console.error('Request data:', error.request);
+    //         } else {
+    //             console.error('Error message:', error.message);
+    //         }
+    //     }
+    // };
 
 
     const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0); // the '' will remove the 0 the shows in front of every transaction.
