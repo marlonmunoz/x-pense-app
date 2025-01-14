@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { debounce } from "lodash";
 import axios from "axios";
-import { FaBitcoin, FaEthereum } from 'react-icons/fa';
+// import { FaBitcoin, FaEthereum, FaRegMoneyBillAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom'
+// CRYPTO Symbols
+import xrpIcon from '../assets/xrp.png'
+import ethereumIcon from '../assets/ethereum.png'
+import bitcoinIcon from '../assets/bitcoin.png'
 
 const Investments = ({ darkMode, onAddInvestment }) => {
     const navigate = useNavigate();
@@ -14,9 +18,12 @@ const Investments = ({ darkMode, onAddInvestment }) => {
             try {
                 const responseBitcoin = await axios.get('https://api.coindesk.com/v1/bpi/currentprice.json');
                 const responseEthereum = await axios.get('https://api.coinbase.com/v2/prices/ETH-USD/spot');
+                const responseXRP = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ripple&vs_currencies=usd');
+
                 const data = [
                     { name: 'Bitcoin', type: 'Cryptocurrency', pricePerUnit: responseBitcoin.data.bpi.USD.rate_float || 0},
-                    { name: 'Ethereum', type: 'Cryptocurrency', pricePerUnit: parseFloat(responseEthereum.data.data.amount) }
+                    { name: 'Ethereum', type: 'Cryptocurrency', pricePerUnit: parseFloat(responseEthereum.data.data.amount) },
+                    { name: 'Ripple', type: 'Cryptocurrency', pricePerUnit: responseXRP.data.ripple.usd || 0 } // Added XRP
                 ];
                 setInvestments(data);
                 setAmounts(data.map(() => 0))
@@ -60,9 +67,11 @@ const Investments = ({ darkMode, onAddInvestment }) => {
         if(!name) return null;
         switch (name.toLowerCase()) {
             case 'bitcoin':
-                return <FaBitcoin className="bitcoin-icon"/>;
+                return <img src={bitcoinIcon} alt="XRP" className="xrp-icon" style={{ width: '20px', height: '20px' }} />;
             case 'ethereum':
-                return <FaEthereum className="ethereum-icon"/>;
+                return <img src={ethereumIcon} alt="XRP" className="xrp-icon" style={{ width: '20px', height: '20px' }} />;
+            case 'ripple':
+                return <img src={xrpIcon} alt="XRP" className="xrp-icon" style={{ width: '20px', height: '20px' }} />;
             default:
                 return null;
             }
@@ -71,6 +80,7 @@ const Investments = ({ darkMode, onAddInvestment }) => {
      return (
         <div>
             <h5>Set Your Investments</h5>
+            <br />
             <h6><span className="badge bg-danger" style={{ color: 'white' }} >Live</span> Crypto Price Updates</h6>
            
             <div className="table-responsive">
@@ -78,6 +88,7 @@ const Investments = ({ darkMode, onAddInvestment }) => {
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Symbol</th>
                             <th>Type</th>
                             <th>Price</th>
                             <th>Amount</th>
@@ -86,7 +97,14 @@ const Investments = ({ darkMode, onAddInvestment }) => {
                     <tbody>
                         {investments.map((investment, index) => (
                             <tr key={index}>
-                                <td>{getCryptoIcon(investment.name)} {investment.name}</td>
+                                <td> 
+                                    <span className="investment-name">
+                                    {investment.name}  
+                                    </span>
+                                </td>
+                                <td>
+                                    {getCryptoIcon(investment.name)}
+                                </td>
                                 
                                 <td>{investment.type}</td>
                                 <td>$ {calculatePrice(amounts[index], investment.pricePerUnit)}</td>

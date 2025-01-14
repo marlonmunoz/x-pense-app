@@ -165,3 +165,9 @@ body.dark-mode {
 .ethereum-icon {
   color: #626295; /* Ethereum dark gray color */
 }
+
+.investment-name {
+  display: flex;
+  /* justify-content: space-between; */
+  /* align-items: center; */
+}
