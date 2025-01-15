@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { debounce } from "lodash";
 import axios from "axios";
-// import { FaBitcoin, FaEthereum, FaRegMoneyBillAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom'
 // CRYPTO Symbols
 import xrpIcon from '../assets/xrp.png'
@@ -12,6 +11,7 @@ const Investments = ({ darkMode, onAddInvestment }) => {
     const navigate = useNavigate();
     const [investments, setInvestments] = useState([]);
     const [amounts, setAmounts] = useState([]);  
+    const [marketCaps, setMarketCaps] = useState({})
     
     useEffect(() => {
         const fetchInvestments = async () => {
@@ -21,9 +21,9 @@ const Investments = ({ darkMode, onAddInvestment }) => {
                 const responseXRP = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ripple&vs_currencies=usd');
 
                 const data = [
-                    { name: 'Bitcoin', type: 'Cryptocurrency', pricePerUnit: responseBitcoin.data.bpi.USD.rate_float || 0},
-                    { name: 'Ethereum', type: 'Cryptocurrency', pricePerUnit: parseFloat(responseEthereum.data.data.amount) },
-                    { name: 'Ripple', type: 'Cryptocurrency', pricePerUnit: responseXRP.data.ripple.usd || 0 } // Added XRP
+                    { id: 'bitcoin', name: 'Bitcoin', type: 'Cryptocurrency', pricePerUnit: responseBitcoin.data.bpi.USD.rate_float || 0},
+                    { id: 'ethereum', name: 'Ethereum', type: 'Cryptocurrency', pricePerUnit: parseFloat(responseEthereum.data.data.amount) },
+                    { id: 'ripple', name: 'Ripple', type: 'Cryptocurrency', pricePerUnit: responseXRP.data.ripple.usd || 0 } // Added XRP
                 ];
                 setInvestments(data);
                 setAmounts(data.map(() => 0))
@@ -34,6 +34,30 @@ const Investments = ({ darkMode, onAddInvestment }) => {
         
         fetchInvestments();
     }, []);
+
+    useEffect(() => {
+        const fetchMarketCaps = async () => {
+            try {
+                const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
+                    params: {
+                        vs_currency: 'usd',
+                        ids: investments.map(investment => investment.id).join(',')
+                    }
+                });
+                const marketCapData = response.data.reduce((acc, coin) => {
+                    acc[coin.id] = coin.market_cap;
+                    return acc;
+                }, {});
+                setMarketCaps(marketCapData);
+            } catch (error) {
+                console.error('Error fetching market cap data:', error);
+            }
+        };
+
+        if (investments.length > 0) {
+            fetchMarketCaps();
+        }
+    }, [investments])
 
     const handleAmountChange = debounce((index, value) => {
         const newAmounts = [...amounts];
@@ -76,6 +100,16 @@ const Investments = ({ darkMode, onAddInvestment }) => {
                 return null;
             }
     };
+
+    const formatMarketCap = (marketCap) => {
+        if (marketCap >= 1e12) {
+            return `${(marketCap/ 1e12).toFixed(2)} Trillion`
+        } else if (marketCap >= 1e9) {
+            return `${(marketCap/ 1e9).toFixed(2)} Billion`
+        } else {
+            return marketCap.toLocaleString();
+        }
+    }
                 
      return (
         <div>
@@ -84,14 +118,16 @@ const Investments = ({ darkMode, onAddInvestment }) => {
             <h6><span className="badge bg-danger" style={{ color: 'white' }} >Live</span> Crypto Price Updates</h6>
            
             <div className="table-responsive">
-                <table className={`table table-striped table-hover table-responsive ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
+                <table className={`table table-striped table-hover ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
                     <thead>
                         <tr>
                             <th>Name</th>
                             <th>Symbol</th>
                             <th>Type</th>
+                            <th>Market Cap</th>
                             <th>Price</th>
                             <th>Amount</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -107,6 +143,7 @@ const Investments = ({ darkMode, onAddInvestment }) => {
                                 </td>
                                 
                                 <td>{investment.type}</td>
+                                <td>{marketCaps[investment.id] ? `$ ${formatMarketCap(marketCaps[investment.id])}` : 'Loading...'}</td>
                                 <td>$ {calculatePrice(amounts[index], investment.pricePerUnit)}</td>
                                 <td>
                                     <input 
@@ -116,6 +153,7 @@ const Investments = ({ darkMode, onAddInvestment }) => {
                                         placeholder="enter amount"
                                         name={`investment-amount-${index}`}
                                         onChange={(e) => handleAmountChange(index, e.target.value)}
+                                        style={{width: '60px'}} // Set your width here
                                     />
                                 </td>
                                 <td>
