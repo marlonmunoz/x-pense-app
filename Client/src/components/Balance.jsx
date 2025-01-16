@@ -1,24 +1,29 @@
 import React, {useState} from "react";
 
 
-function Balance({ balance, setBalance, transactions, budget }) {
-  const handleChange = (event) => {
-    setBalance(event.target.value);
-  };
+function Balance() {
+  const [cashOnHand, setCashOnHand] = useState(0);
+  const [bankAccountBalance , setBankAccountBalance] = useState(0);
+  const [savings, setSavings] = useState(0);
+  const [total , setTotal] = useState(0);
+  
+ 
 
   const formatAmount = (amount) => {
     return parseFloat(amount).toLocaleString();''
   }
 
-  const totalTransactions = transactions.reduce((total, transaction) => total + transaction.amount, 0);
-  const remainingBalance = balance - totalTransactions;
 
-  const [cashOnHand, setCashOnHand] = useState();
-  const [bankAccountBalance , setBankAccountBalance] = useState();
-  const [savings, setSavings] = useState();
-  const [investments, setInvestments] = useState();
+  const totalBalance = () => {
+    setTotal(cashOnHand + bankAccountBalance + savings);
+  }
 
-  const totalBalance = cashOnHand + bankAccountBalance + savings + investments;
+  const resetFields = () => {
+    setCashOnHand(0);
+    setBankAccountBalance(0);
+    setSavings(0);
+    setTotal(0);
+  }
 
   return (
     <div>
@@ -57,22 +62,12 @@ function Balance({ balance, setBalance, transactions, budget }) {
           className="form-control"
         />
         <br />
-        <label htmlFor="investments" className="form-label">Investments</label>
-        <input 
-          type="number" 
-          id="investments"
-          name="investments"
-          value={investments}
-          onChange={(e) => setInvestments(Number(e.target.value))}
-          placeholder="Enter investments"
-          className="form-control"
-        />
+        <button className="btn btn-primary " onClick={totalBalance} >Set Balance</button>
+        <button className="btn btn-danger ml-2 " onClick={resetFields} >Reset</button>
         <br />
-        <p>Your total balance is: $ {formatAmount(totalBalance)}</p>
-        {/* <p>Your balance is: $ {balance}</p> */}
-        {/* <p>Total transactions: $ {formatAmount(totalTransactions)}</p> */}
-        {/* <p>Remaining balance: $ {formatAmount(remainingBalance)}</p> */}
-        <p>Budget: $ {formatAmount(budget)}</p>
+        <br />
+        <h5>Total balance is: $ {isNaN(total) ? 0 : formatAmount(total)}</h5>
+       
       </div>
     </div>
   );

@@ -142,7 +142,7 @@ const Investments = ({ darkMode, onAddInvestment }) => {
                             <tr key={index}>
                                 <td> 
                                     <span className="investment-name">
-                                    {investment.name}  
+                                        {investment.name}  
                                     </span>
                                 </td>
                                 <td>
@@ -151,7 +151,7 @@ const Investments = ({ darkMode, onAddInvestment }) => {
                                 
                                 <td>{investment.type}</td>
                                 {/* <td>$ {calculatePrice(amounts[index], investment.pricePerUnit)}</td> */}
-                                {investment.pricePerUnit.toFixed(2).toLocaleString()}
+                                <td>{investment.pricePerUnit.toFixed(2).toLocaleString()}</td>
                                 <td>{marketCaps[investment.id] ? `$ ${formatMarketCap(marketCaps[investment.id])}` : 'Loading...'}</td>
                                 <td>
                                     <input 
@@ -166,13 +166,13 @@ const Investments = ({ darkMode, onAddInvestment }) => {
                                 </td>
                                 <td>
                                     <button
-                                        className="btn btn-success ml-2"
+                                        className="btn btn-success "
                                         onClick={() => handleAddClick(index)}
                                     >
                                         Add
                                     </button>
                                     <button
-                                        className="btn btn-secondary ml-2"
+                                        className="btn btn-danger ml-1"
                                         onClick={() => handleResetClick(index)}
                                     >
                                         Reset

@@ -21,6 +21,17 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
                 <button onClick={() => navigate('/transactions')} className="btn btn-primary"> View All Transactions</button>
             </div>
             <br />
+            <div>
+                <h6>Added Investments</h6>
+                <ul className={`list-group ${darkMode ? 'list-group-dark' : ''}`}>
+                    {addedInvestments.map((investment, index) => (
+                        <li key={index} className="list-group-item">
+                            {investment.name} - {investment.amount} units - ${investment.totalPrice}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            <br />
             <div className="table-responsive">
                 <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
                     <tbody>
@@ -47,16 +58,7 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
                     </tbody>
                  </table>
             </div>
-            <div>
-                <h6>Added Investments</h6>
-                <ul>
-                    {addedInvestments.map((investment, index) => (
-                        <li key={index}>
-                            {investment.name} - {investment.amount} units - ${investment.totalPrice}
-                        </li>
-                    ))}
-                </ul>
-            </div>
+            <br />
             <div className="goals-progress">
                 <h5>Goals Progress</h5>
                 <ul>

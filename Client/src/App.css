@@ -159,6 +159,10 @@ body.dark-mode {
   overflow: hidden; /* Ensure the border radius is applied correctly */
 }
 
+.list-group-dark .list-group-item {
+  background-color: #343a40;
+  color: #ffffff;
+}
 
 /* CRYPTOS */
 .bitcoin-icon {
