@@ -69,25 +69,47 @@ const Goals = () => {
         .catch(error => console.error('Error updating goal:', error));
     };
 
-    const handleResetAmount = () => {
-        setInputAmounts({});
-
-        // Reset the goals array
-        const updatedGoals = goals.map(goal => ({ ...goal, saved: 0 }));
+    const handleResetAmount = (goalId) => {
+        // Reset the input amount for the specific goal
+        setInputAmounts({ ...inputAmounts, [goalId]: '' });
+    
+        // Reset the saved amount for the specific goal
+        const updatedGoals = goals.map(goal => 
+            goal.id === goalId ? { ...goal, saved: 0 } : goal
+        );
         setGoals(updatedGoals);
-
-        // Update all goals in the backend
-        updatedGoals.forEach(goal => {
-            fetch(`http://localhost:5001/goals/${goal.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(goal)
-            })
-            .catch(error => console.error('Error resetting goal amount:', error));
-        });
+    
+        // Update the specific goal in the backend
+        const goalToUpdate = updatedGoals.find(goal => goal.id === goalId);
+        fetch(`http://localhost:5001/goals/${goalId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(goalToUpdate)
+        })
+        .catch(error => console.error('Error resetting goal amount:', error));
     };
+
+    // const handleResetAmount = () => {
+    //     setInputAmounts({});
+
+    //     // Reset the goals array
+    //     const updatedGoals = goals.map(goal => ({ ...goal, saved: 0 }));
+    //     setGoals(updatedGoals);
+
+    //     // Update all goals in the backend
+    //     updatedGoals.forEach(goal => {
+    //         fetch(`http://localhost:5001/goals/${goal.id}`, {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify(goal)
+    //         })
+    //         .catch(error => console.error('Error resetting goal amount:', error));
+    //     });
+    // };
 
     const handleDeleteGoal = (goalId) => {
         const updateGoals = goals.filter(goal => goal.id !== goalId);
@@ -152,8 +174,8 @@ const Goals = () => {
                             placeholder="Enter amount"
                         />
                         <br />
-                        <button onClick={() => handleAddAmount(goal.id)} className="btn btn-primary">Add Amount</button>
-                        <button onClick={handleResetAmount} className="btn btn-warning ml-2">Reset Amount</button>
+                        <button onClick={() => handleAddAmount(goal.id)} className="btn btn-primary ">Add Amount</button>
+                        <button onClick={() => handleResetAmount(goal.id)} className="btn btn-warning ml-2">Reset Amount</button>
                         <button onClick={() => handleDeleteGoal(goal.id)} className="btn btn-danger ml-2">Delete</button>
                     </div>
                 ))}
