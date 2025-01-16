@@ -23,15 +23,44 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
             <br />
             <div>
                 <h6>Added Investments</h6>
-                <ul className={`list-group ${darkMode ? 'list-group-dark' : ''}`}>
+                <ul className={`list-group ${darkMode ? 'list-group-dark' : ''} table-rounded`}>
                     {addedInvestments.map((investment, index) => (
                         <li key={index} className="list-group-item">
-                            {investment.name} - {investment.amount} units - ${investment.totalPrice}
+                            {investment.name} | {investment.amount} units | ${investment.totalPrice}
                         </li>
                     ))}
                 </ul>
             </div>
             <br />
+            <br />
+            <div className="goals-progress">
+                <h6>Goals Progress</h6>
+                <ul>
+                    {goalsProgress.map((goal, index) => (
+                      <li key={index} className="d-flex align-items-center mb-2" style={{ width: '100%' }}>
+                      <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
+                      <div className="progress flex-grow-1" >
+                        <div className="progress-bar bg-success" role="progressbar" style={{ width: `${goal.progress}%`}} aria-valuemin="0" aria-valuemax="100">
+                          {goal.progress.toFixed(2)}%
+                        </div>
+                      </div>
+                    </li>
+                    ))}
+                </ul>
+            </div>
+            <div className="charts">
+                <h6>Spending Over Time</h6>
+                <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={transactions}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date"/>
+                        <YAxis />
+                        <Tooltip/>
+                        <Legend />
+                        <Line type="monotone" dataKey="amount" stroke="#08fa00" activeDot={{ r: 8 }}/>
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
             <div className="table-responsive">
                 <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
                     <tbody>
@@ -57,35 +86,6 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
                         </tr>
                     </tbody>
                  </table>
-            </div>
-            <br />
-            <div className="goals-progress">
-                <h5>Goals Progress</h5>
-                <ul>
-                    {goalsProgress.map((goal, index) => (
-                      <li key={index} className="d-flex align-items-center mb-2" style={{ width: '100%' }}>
-                      <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
-                      <div className="progress flex-grow-1" >
-                        <div className="progress-bar bg-success" role="progressbar" style={{ width: `${goal.progress}%`}} aria-valuemin="0" aria-valuemax="100">
-                          {goal.progress.toFixed(2)}%
-                        </div>
-                      </div>
-                    </li>
-                    ))}
-                </ul>
-            </div>
-            <div className="charts">
-                <h5>Spending Over Time</h5>
-                <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={transactions}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="date"/>
-                        <YAxis />
-                        <Tooltip/>
-                        <Legend />
-                        <Line type="monotone" dataKey="amount" stroke="#08fa00" activeDot={{ r: 8 }}/>
-                    </LineChart>
-                </ResponsiveContainer>
             </div>
         </div>
     )

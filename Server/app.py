@@ -71,6 +71,9 @@ def logout():
     return jsonify({"message": "Logout Successful"}), 200
 
 
+# BALANCE
+
+
 # TRANSACTIONS ============>>>>>>>
 # GET
 @app.route('/transactions', methods=['GET'])
