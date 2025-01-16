@@ -78,8 +78,13 @@ function App() {
         <button onClick={handleLogout}className='btn btn-secondary mb-3 ml-auto' >Logout</button>
         <h1>X-PENSE</h1>
         <h6><span className='badge badge-info'>A Budget Tracker At Your Fingertips</span></h6>
-        <button onClick={toggleDarkMode} className='btn btn-secondary mb-3'>
-          {darkMode ? 'Light': 'Dark'} Mode
+
+
+        <button 
+          onClick={toggleDarkMode} 
+          className={`btn mb-3 ${darkMode ? 'btn-light' : 'btn-dark'}`}
+        >
+          {darkMode ? 'Light' : 'Dark'} Mode
         </button>
 
         <nav className={`navbar navbar-expand-lg ${darkMode ? 'navbar-dark-mode' : 'navbar-light-mode'}`}>
