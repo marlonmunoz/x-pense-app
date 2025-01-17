@@ -3,22 +3,35 @@ import axios from 'axios'
 import '/src/App.css'
 
 
-const Transactions = ({ transactions, setTransactions, darkMode }) => {
+const Transactions = ({ darkMode }) => {
+    const [transactions, setTransactions] = useState([]);
     const [editIndex, setEditIndex] = useState(null);
     const [editTransaction, setEditTransaction] = useState({ category:'', date:'', text:'', amount:'' });
+    const [totalAmount, setTotalAmount] = useState(0);
+    
     
     useEffect(() => {
         axios.get('http://127.0.0.1:5001/transactions')
         .then(response => {
             setTransactions(response.data)
-            console.log('Transactions retrieved:', response.data); // Debug log
         })
         .catch(error => console.log('Error fetching transactions', error));
     }, []);
     
+    useEffect(() => {
+        const total = transactions.reduce((total, transaction) => total + parseFloat(transaction.amount), 0);
+        setTotalAmount(total);
+    }, [transactions]);
+    
     const formatAmount = (amount) => {
         return parseFloat(amount).toLocaleString();
     };
+    
+    const formatDateTime = (dataString) => {
+        const date = new Date(dataString);
+        const formattedDate = date.toISOString().split('T')[0];
+        return formattedDate
+    }
 
     // DELETE 
     const handleDelete = (index) => {
@@ -36,73 +49,25 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
         setEditTransaction({ ...editTransaction,[name]: value || ''});
     };
 
-
-
-    // EDIT
-    // const handleEditChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setEditTransaction({ ...editTransaction, [name]: value || '' });
-    // };
-
-
-    
-    // const handleEditSave = async (transaction) => {
-        //     if (!validateTransaction(transaction)) {
-            //         return;
-            //     }
-            
-            //     let formattedDate;
-            //     let formattedTime;
-            //     try {
-                //         const { formattedDate: date, formatDateTime: time } = formatDateTime(editTransaction.date);
-                //         formattedDate = date;
-                //         formattedTime = time;
-                //     } catch (error) {
-                    //         console.error('Invalid date format:', editTransaction.date);
-                    //         return;
-                    //     }
-                    
-                    //     const updatedTransaction = { ...editTransaction, date: formattedDate };
-                    
-                    //     try {
-                        //         await axios.put(`http://127.0.0.1:5001/transactions/${transaction.id}`, updatedTransaction);
-                        //         const newTransactions = transactions.map((t, index) => 
-                            //             i === index ? { ...t, ...updatedTransaction , time: formattedTime } : t
-                        //         );
-                        //         setTransactions(newTransactions);
-                        //         setEditIndex(null);
-                        //         setEditTransaction({ date: '' });
-                        //     } catch (error) {
-                            //         console.error('Error updating transaction:', error);
-                            //     }
-                            // };
-                            
     const handleEditSave = async (index) => {
-        // if (!validateTransaction(editTransaction)) {
-        //     return;
-        // }
-        
         let formattedDate;
-        let formattedTime;
         try {
-            const { formattedDate: date, formattedTime: time } = formatDateTime(editTransaction.date);
-            formattedDate = date;
-            formattedTime = time;
+            formattedDate = formatDateTime(editTransaction.date);
         } catch (error) {
             console.error('Invalid date format:', editTransaction.date);
             return;
         }
-        
+
         const updatedTransaction = { ...editTransaction, date: formattedDate };
-        
+
         try {
             await axios.put(`http://127.0.0.1:5001/transactions/${transactions[index].id}`, updatedTransaction);
             const newTransactions = transactions.map((t, i) =>
-                i === index ? { ...t, ...updatedTransaction, time: formattedTime } : t
-        );
-        setTransactions(newTransactions);
-        setEditIndex(null);
-        setEditTransaction({ category: '', date: '', text: '', amount: '' });
+                i === index ? { ...t, ...updatedTransaction } : t
+            );
+            setTransactions(newTransactions);
+            setEditIndex(null);
+            setEditTransaction({ category: '', date: '', description: '', amount: '' });
         } catch (error) {
             console.error('Error updating transaction:', error);
         }
@@ -116,23 +81,19 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
         return true;
     };
     
-    const formatDateTime = (dataString) => {
-        const date = new Date(dataString);
-        const formattedDate = date.toISOString().split('T')[0];
-        const formattedTime = date.toTimeString().split(' ')[0];
-        return { formattedDate, formattedTime };
-    }
     
-    const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0); // the '' will remove the 0 the shows in front of every transaction.
+    // const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0); // the '' will remove the 0 the shows in front of every transaction.
+
     return (
         <div>
             <h5>New Transactions Added</h5>
+            <p style={{color: 'gray'}}> <sup>Tracking History</sup></p>
             <div className="table-responsive">
                 <table className={`table table-striped table-hover table-responsive ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
                     <thead>
                         <tr>
-                            <th>Category</th>
                             <th>Description</th>
+                            <th>Category</th>
                             <th>Date</th>
                             <th>Amount</th>
                             <th>Actions</th>
@@ -141,8 +102,8 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                     </thead>
                     <tbody>
                         {transactions.map((transaction, index) => {
-                            console.log(`Transaction ${index}:`, transaction); // Log the transaction.text value
-                            return (
+                             const  formattedDate  = formatDateTime(transaction.date)
+                             return (
                                 <tr key={index}>
                                     {editIndex === index ? (
                                         <>
@@ -169,13 +130,13 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                                         </>
                                     ) : (
                                         <>
-                                            <td>{transaction.category}</td>
                                             <td>{transaction.description || 'No Description'}</td>
-                                            <td>{transaction.date} </td>
+                                            <td>{transaction.category}</td>
+                                            <td>{formattedDate} </td>
                                             <td>$ {formatAmount(transaction.amount)}</td>
 
                                             <td>
-                                                <button onClick={() => { setEditIndex(index); setEditTransaction(transaction); }} className="btn btn-primary ml-2">Edit</button>
+                                                <button onClick={() => { setEditIndex(index); setEditTransaction({ ...transaction, date: formatDateTime(transaction.date) }); }} className="btn btn-primary ml-2">Edit</button>
                                                 <button onClick={() => handleDelete(index)} className="btn btn-danger ml-2">Delete</button>
                                             </td>
                                         </>
