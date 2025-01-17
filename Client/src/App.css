@@ -179,3 +179,43 @@ body.dark-mode {
   /* align-items: center; */
 }
 
+/* PROGRESS BARS */
+.custom-progress-height {
+  height: 20px; /* Ensure the progress bar fills the height of the progress container */
+}
+.custom-progress-height .progress-bar {
+  height: 100%; /* Adjust the height as needed */
+}
+
+/* .goals-progress ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.goals-progress li {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 140%;
+}
+
+.goals-progress .progress {
+  width: 100%;
+}
+
+.goals-progress .progress-bar {
+  text-align: center;
+} */
+
+
+/* CONTAINERS */
+/* .large-container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+} */

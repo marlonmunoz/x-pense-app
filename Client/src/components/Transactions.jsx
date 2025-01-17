@@ -23,10 +23,19 @@ const Transactions = ({ darkMode }) => {
         setTotalAmount(total);
     }, [transactions]);
     
+    // const formatAmount = (amount) => {
+    //     return parseFloat(amount).toLocaleString();
+    // };
+
     const formatAmount = (amount) => {
-        return parseFloat(amount).toLocaleString();
+        const [integerPart, decimalPart] = parseFloat(amount).toFixed(2).split('.');
+        return (
+            <>
+                {integerPart}
+                <sup>.{decimalPart}</sup>
+            </>
+        );
     };
-    
     const formatDateTime = (dataString) => {
         const date = new Date(dataString);
         const formattedDate = date.toISOString().split('T')[0];
@@ -130,8 +139,8 @@ const Transactions = ({ darkMode }) => {
                                         </>
                                     ) : (
                                         <>
-                                            <td>{transaction.description || 'No Description'}</td>
-                                            <td>{transaction.category}</td>
+                                            <td>{transaction.description || 'No Description'} </td>
+                                            <td>{transaction.category} </td>
                                             <td>{formattedDate} </td>
                                             <td>$ {formatAmount(transaction.amount)}</td>
 
@@ -145,7 +154,7 @@ const Transactions = ({ darkMode }) => {
                             )
                         })}
                         <tr>
-                            <td colSpan="4"><strong>Total</strong></td>
+                            <td colSpan="4"><strong>Total :</strong></td>
                             <td>$ {formatAmount(totalAmount)}</td>
                         </tr>
                     </tbody>

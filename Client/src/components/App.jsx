@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import { BrowserRouter as Router, Routes, Route, NavLink, Outlet }  from 'react-router-dom';
 import AddTransactions from '../components/AddTransactions';
@@ -15,7 +15,7 @@ import '/src/App.css'
 function App() {
   const [transactions, setTransactions] = useState([]);
   const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0)
-  const [balance, setBalance] = useState("");
+  const [balance, setBalance] = useState(0);
   const [budget, setBudget] = useState(0);
   const [darkMode, setDarkMode] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -29,6 +29,14 @@ function App() {
   const [newGoalAmount, setNewGoalAmount] = useState('');
   const [progPercentage, setProgPercentage] = useState(0);
   const [goals, setGoals] = useState([]);
+
+  // Fetch goals from the backend
+  useEffect(() => {
+    fetch('http://localhost:5001/goals')
+        .then(response => response.json())
+        .then(data => setGoals(data))
+        .catch(error => console.error('Error fetching goals:', error));
+}, []);
 
   // Dark-Light MODE ======>>>>>>
   const toggleDarkMode = () => {

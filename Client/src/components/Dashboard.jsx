@@ -1,21 +1,55 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts'
 
 
-function Dashboard({ transactions =[], balance =0, goals =[], investments= [], budget = 0, totalAmount, darkMode, addedInvestments }) {
+function Dashboard({ transactions =[], balance =0, goals =[], budget = 0, totalAmount, darkMode, addedInvestments }) {
     const navigate = useNavigate();
     
     const recentTransactions = transactions.slice(-5);
     const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0).toFixed(2);
-    const goalsProgress = goals.map(goal => ({
+    // const goalsProgress = goals.map(goal => ({
+    //     ...goal,
+    //     progress: (goal.saved / goal.target) * 100
+    // }));
+    const [goalsProgress, setGoalsProgress] = useState(goals.map(goal => ({
         ...goal,
         progress: (goal.saved / goal.target) * 100
-    }));
+      })));
     const overviewTotal = budget + parseFloat(totalInvestments) - balance - totalAmount;
+    
+  
+
+    useEffect(() => {
+        // Fetch goals from the backend
+        axios.get('http://localhost:5001/goals')
+          .then(response => {
+            const goals = response.data.map(goal => ({
+              ...goal,
+              progress: (goal.saved / goal.target) * 100
+            }));
+            setGoalsProgress(goals);
+          })
+          .catch(error => {
+            console.error('Error fetching goals:', error);
+          });
+    }, []);
+
+    // useEffect(() => {
+    //   console.log('Goals Progress updated:', goalsProgress);
+    // }, [goalsProgress]);
+
+    const addGoal = (newGoal) => {
+      setGoalsProgress([...goalsProgress, newGoal]);
+    };
+
+    const deleteGoal = (goalId) => {
+      setGoalsProgress(goalsProgress.filter(goal => goal.id !== goalId));
+    };
 
     return (
-        <div>
+        <div className="large-container">
             <div className="summary">
                 <h5>Recent Transactions</h5>
                 <button onClick={() => navigate('/transactions')} className="btn btn-primary"> View All Transactions</button>
@@ -35,15 +69,15 @@ function Dashboard({ transactions =[], balance =0, goals =[], investments= [], b
             <br />
             <div className="goals-progress">
                 <h6>Goals Progress</h6>
-                <ul>
+                <ul className="d-flex flex-column align-items-center">
                     {goalsProgress.map((goal, index) => (
-                      <li key={index} className="d-flex align-items-center mb-2" style={{ width: '100%' }}>
-                      <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
-                      <div className="progress flex-grow-1" >
-                        <div className="progress-bar bg-success" role="progressbar" style={{ width: `${goal.progress}%`}} aria-valuemin="0" aria-valuemax="100">
-                          {goal.progress.toFixed(2)}%
-                        </div>
+                    <li key={index} className="d-flex align-items-center mb-2" style={{ width: '150%'}}>
+                    <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
+                    <div className="progress flex-grow-1 custom-progress-height" >
+                      <div className="progress-bar bg-success custom-progress-height" role="progressbar" style={{ width: `${goal.progress}%`}} aria-valuemin="0" aria-valuemax="100">
+                        {goal.progress.toFixed(2)}%
                       </div>
+                    </div>
                     </li>
                     ))}
                 </ul>
