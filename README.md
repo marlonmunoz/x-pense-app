@@ -1,7 +1,7 @@
 # X-PENSE
-            A Budget Tracker At Your Fingertips!
 
-This Budget Tracker app can help manage your budget, set up future goals, adjust amount according to your needs and Keep history of expenses with an interactive graph that will reflect these amounts in the Dashboard. In addition, under Investments, the user can check a live crypto price update that can be added to the dashboard to calculate over all budget.
+
+X-PENSE App is a personal finance management application that allows users to track their cash on hand, bank account balances, savings, expenses and set financial goals. The application is built using Flask for the backend and React for the frontend. In addition, under Investments tab, the user can check a live crypto price update that can be added to the dashboard to calculate over all budget.
 ![Alt text](./Client/public/x-pense.png)
 
 ## CORE-Features
@@ -18,16 +18,35 @@ This Budget Tracker app can help manage your budget, set up future goals, adjust
 - Add, Delete, Edit, Save and Reset Buttons 
 - Input validation checks
 
-## SERVER - Backend Activation
-- Run these commands
-1. Run: `cd Server`
-1. Run: `python app.py`
+### SERVER - Backend Activation
+1. Navigate to the `Server` directory:
+```
+cd Server
+```
+1. Run the Flask application: 
+```
+python app.py
+```
 
-## CLIENT - Frontend Activation
-- Run these comands:
-1. Run: `nvm use 20.16`
-2. Run: `cd/Client`
-3. Run: `npm run dev`
+### CLIENT - Frontend Activation
+1. Navigate to the `Client` directory:
+```
+cd Client
+```
+2. Install the required dependencies: 
+```
+nvm use 20.16
+```
+3. Start the REact application:
+```
+npm run dev
+```
+## Usage
+
+- Use the frontend interface to input your cash on hand, bank account balance, savings, expenses, goals and investements.
+- The application will calculate and display the total balance.
+- You can also manage your financial goals and track transactions through the backend API.
+
 
 ## restfulAPIs
 - `GET`
