@@ -91,26 +91,6 @@ const Goals = () => {
         .catch(error => console.error('Error resetting goal amount:', error));
     };
 
-    // const handleResetAmount = () => {
-    //     setInputAmounts({});
-
-    //     // Reset the goals array
-    //     const updatedGoals = goals.map(goal => ({ ...goal, saved: 0 }));
-    //     setGoals(updatedGoals);
-
-    //     // Update all goals in the backend
-    //     updatedGoals.forEach(goal => {
-    //         fetch(`http://localhost:5001/goals/${goal.id}`, {
-    //             method: 'PUT',
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             body: JSON.stringify(goal)
-    //         })
-    //         .catch(error => console.error('Error resetting goal amount:', error));
-    //     });
-    // };
-
     const handleDeleteGoal = (goalId) => {
         const updateGoals = goals.filter(goal => goal.id !== goalId);
         setGoals(updateGoals);

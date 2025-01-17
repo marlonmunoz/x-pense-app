@@ -39,7 +39,7 @@ class Balance(db.Model):
     savings = db.Column(db.Float, nullable=False, default=0)
     
     def to_dict(self):
-        return{
+        return {
             'id': self.id,
             'cash_on_hand': self.cash_on_hand,
             'bank_account_balance': self.bank_account_balance,

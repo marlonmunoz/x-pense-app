@@ -9,7 +9,10 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
 
     useEffect(() => {
         axios.get('http://127.0.0.1:5001/transactions')
-        .then(response => setTransactions(response.data))
+        .then(response => {
+            console.log('Transactions retrieved:', response.data); // Debug log
+            setTransactions(response.data)
+        })
         .catch(error => console.log('Error fetching transactions', error));
     }, []);
 
@@ -42,8 +45,12 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
         }
         return true;
     };
-
-    
+    const formatDateTime = (dataString) => {
+        const date = new Date(dataString);
+        const formattedDate = date.toISOString().split('T')[0];
+        const formattedTime = date.toTimeString().split(' ')[0];
+        return { formattedDate, formattedTime };
+    }
 
     const handleEditSave = async (transaction) => {
         if (!validateTransaction(transaction)) {
@@ -51,19 +58,22 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
         }
     
         let formattedDate;
+        let formattedTime;
         try {
-            formattedDate = new Date(transaction.date).toISOString().split('T')[0];
+            const { formattedDate: date, formatDateTime: time } = formatDateTime(editTransaction.date);
+            formattedDate = date;
+            formattedTime = time;
         } catch (error) {
-            console.error('Invalid date format:', transaction.date);
+            console.error('Invalid date format:', editTransaction.date);
             return;
         }
     
-        const updatedTransaction = { ...transaction, date: formattedDate };
+        const updatedTransaction = { ...editTransaction, date: formattedDate };
     
         try {
             await axios.put(`http://127.0.0.1:5001/transactions/${transaction.id}`, updatedTransaction);
             const newTransactions = transactions.map((t, index) => 
-                index === editIndex ? updatedTransaction : t
+                i === index ? { ...t, ...updatedTransaction , time: formattedTime } : t
             );
             setTransactions(newTransactions);
             setEditIndex(null);
@@ -72,47 +82,6 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
             console.error('Error updating transaction:', error);
         }
     };
-
-    
-    // const handleEditSave = async (transaction) => {
-    //     let formattedDate;
-    //     try {
-    //         if (!transaction.date) {
-    //             throw new Error('Date is undefined');
-    //         }
-    //         // Check if the date is already in the correct format
-    //         if (isNaN(Date.parse(transaction.date))) {
-    //             throw new Error('Invalid date format');
-    //         }
-    //         formattedDate = new Date(transaction.date).toISOString().split('T')[0]; // Format date to YYYY-MM-DD
-    //     } catch (error) {
-    //         console.error('Error in date formatting:', error.message);
-    //         console.error('Invalid date format:', transaction.date);
-    //         return;
-    //     }
-
-    //     const updatedTransaction = {
-    //         ...transaction,
-    //         date: formattedDate
-    //     };
-
-    //     try {
-    //         const response = await axios.put(`http://127.0.0.1:5001/transactions/${transaction.id}`, updatedTransaction);
-    //         console.log('Transaction updated:', response.data);
-    //     } catch (error) {
-    //         console.error('Error updating transaction:', error.message);
-    //         if (error.response) {
-    //             console.error('Response data:', error.response.data);
-    //             console.error('Response status:', error.response.status);
-    //             console.error('Response headers:', error.response.headers);
-    //         } else if (error.request) {
-    //             console.error('Request data:', error.request);
-    //         } else {
-    //             console.error('Error message:', error.message);
-    //         }
-    //     }
-    // };
-
 
     const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0); // the '' will remove the 0 the shows in front of every transaction.
     return (
@@ -159,7 +128,7 @@ const Transactions = ({ transactions, setTransactions, darkMode }) => {
                                 ) : (
                                     <>
                                         <td>{transaction.category}</td>
-                                        <td>{transaction.date}</td>
+                                        <td>{transaction.date} <sup>{transaction.time}</sup> </td>
                                         <td>{transaction.text}</td>
                                         <td>$ {formatAmount(transaction.amount)}</td>
                                         <td>
