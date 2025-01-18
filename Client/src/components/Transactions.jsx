@@ -3,11 +3,11 @@ import axios from 'axios'
 import '/src/App.css'
 
 
-const Transactions = ({ darkMode }) => {
-    const [transactions, setTransactions] = useState([]);
+const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, setTotalAmount }) => {
+    // const [transactions, setTransactions] = useState([]);
     const [editIndex, setEditIndex] = useState(null);
     const [editTransaction, setEditTransaction] = useState({ category:'', date:'', text:'', amount:'' });
-    const [totalAmount, setTotalAmount] = useState(0);
+    // const [totalAmount, setTotalAmount] = useState(0);
     
     
     useEffect(() => {

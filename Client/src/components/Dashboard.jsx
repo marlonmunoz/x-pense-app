@@ -91,10 +91,16 @@ function Dashboard({ transactions =[], balance =0, goals =[], budget = 0, totalA
                         <YAxis />
                         <Tooltip/>
                         <Legend />
-                        <Line type="monotone" dataKey="amount" stroke="#08fa00" activeDot={{ r: 8 }}/>
+                        <Line 
+                            type="monotone"     
+                            dataKey="amount"    
+                            stroke="#08fa00" 
+                            activeDot={{ r: 8 }}
+                        />
                     </LineChart>
                 </ResponsiveContainer>
             </div>
+            <br />
             <div className="table-responsive">
                 <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
                     <tbody>

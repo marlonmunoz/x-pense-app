@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-
+import React, {useState, useEffect} from "react";
+import axios from "axios";
 
 function Balance() {
   const [cashOnHand, setCashOnHand] = useState(0);
@@ -7,15 +7,43 @@ function Balance() {
   const [savings, setSavings] = useState(0);
   const [total , setTotal] = useState(0);
   
- 
+  useEffect(() => {
+    axios.get('http://localhost:5001/balance')
+    .then(response => {
+      const balance = response.data;
+      setCashOnHand(balance.cash_on_hand);
+      setBankAccountBalance(balance.bank_account_balance);
+      setSavings(balance.savings);
+      setTotal(balance.cash_on_hand + balance.bank_account_balance + balance.savings);
+    })
+    .catch(error => {
+      if (error.response && error.response.status === 404) {
+        console.log('No balance found, initializing with the default value.');
+      } else {
+        console.error('There was an error fetching the balance', error);
+      }
+    });
+  }, []);
 
   const formatAmount = (amount) => {
     return parseFloat(amount).toLocaleString();''
   }
 
-
   const totalBalance = () => {
-    setTotal(cashOnHand + bankAccountBalance + savings);
+    const newTotal = cashOnHand + bankAccountBalance + savings;
+    setTotal(newTotal);
+
+    axios.post('http://localhost:5001/balance',{
+      cash_on_hand: cashOnHand,
+      bank_account_balance: bankAccountBalance,
+      savings: savings
+    })
+    .then(response => {
+      console.log('Balance  saved:', response.data);
+    })
+    .catch(error => {
+      console.error('There was an error saving your balance!', error);
+    })
   }
 
   const resetFields = () => {

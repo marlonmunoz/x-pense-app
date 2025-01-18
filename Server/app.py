@@ -5,7 +5,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import Session
-from models import db, Goal, Transaction
+from models import db, Goal, Transaction, Balance
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 
@@ -72,8 +72,41 @@ def logout():
 
 
 # BALANCE
+# GET
+@app.route('/balance', methods=['GET'])
+def get_balance():
+    balance = Balance.query.first()
+    if balance:
+        return jsonify(balance.to_dict())
+    else:
+        return jsonify({'message': 'No balance found'}), 404
+#POST
+@app.route('/balance', methods=['POST'])
+def add_balance():
+    data = request.json
+    new_balance = Balance(
+        cash_on_hand=data['cash_on_hand'],
+        bank_account_balance=data['bank_account_balance'],
+        savings=data['savings']        
+    )
+    db.session.add(new_balance)
+    db.session.commit()
+    return jsonify(new_balance.to_dict()), 201
 
-
+# PUT
+@app.route('/balance/<int:id>', methods=['PUT'])
+def update_balance() :
+    data = request.json
+    balance = Balance.query.get(id)
+    if balance is None:
+        return jsonify({'message': 'Balance not found'}), 404
+    balance.cash_on_hand = data['']
+    balance.bank_account_balance = data['bank_account_balance']
+    balance.savings = data['savings']
+    db.session.commit()
+    return jsonify(balance.to_dict())
+    
+    
 # TRANSACTIONS ============>>>>>>>
 # GET
 @app.route('/transactions', methods=['GET'])

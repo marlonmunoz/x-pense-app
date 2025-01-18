@@ -14,13 +14,13 @@ import '/src/App.css'
 
 function App() {
   const [transactions, setTransactions] = useState([]);
-  const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0)
   const [balance, setBalance] = useState(0);
   const [budget, setBudget] = useState(0);
   const [darkMode, setDarkMode] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [addedInvestments, setAddedInvestments] = useState([]);
-
+  const [totalAmount, setTotalAmount] = useState(0);
+  
   // Goals State ======>>>>>>
   const [goalAmount, setGoalAmount] = useState(0); // This is an example amount
   const [currentAmount, setCurrentAmount] = useState(0); // This is an example of current amount
@@ -29,6 +29,14 @@ function App() {
   const [newGoalAmount, setNewGoalAmount] = useState('');
   const [progPercentage, setProgPercentage] = useState(0);
   const [goals, setGoals] = useState([]);
+  
+  // const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0)
+
+
+  useEffect(() => {
+    const total = transactions.reduce((total, transaction) => total + parseFloat(transaction.amount), 0)
+    setTotalAmount(total);
+  }, [transactions])
 
   // Fetch goals from the backend
   useEffect(() => {
@@ -115,44 +123,41 @@ function App() {
           <Route path='/' element={<div><Outlet darkMode={darkMode}/></div>}>
             <Route index element ={
               <Balance 
-                balance={balance}   
-                setBalance={setBalance}  
+                balance={balance} setBalance={setBalance}  
                 transactions={transactions} 
-                budget={budget} darkMode={darkMode} 
-                validated={validated} 
-                setValidated={setValidated} 
+                budget={budget} 
+                darkMode={darkMode} 
+                validated={validated} setValidated={setValidated} 
               />}
             />
             <Route path='/transactions' element ={
               <Transactions 
-                transactions={transactions} 
-                setTransactions={setTransactions} 
-                darkMode={darkMode} validated={validated} 
-                setValidated={setValidated} 
+                transactions={transactions} setTransactions={setTransactions} 
+                darkMode={darkMode} 
+                validated={validated} setValidated={setValidated} 
+                totalAmount={totalAmount} setTotalAmount={setTotalAmount}
               />}
             />
             <Route path='/add' element ={
               <AddTransactions 
-                transactions={transactions} 
-                setTransactions={setTransactions} 
-                darkMode={darkMode} validated={validated} 
-                setValidated={setValidated}
+                transactions={transactions} setTransactions={setTransactions} 
+                darkMode={darkMode} 
+                validated={validated} setValidated={setValidated}
               />}
             />
             <Route path='/budget' element ={
               <Budget 
                 balance={balance} 
-                budget={budget} 
-                setBudget={setBudget} 
+                budget={budget} setBudget={setBudget} 
                 darkMode={darkMode} 
-                validated={validated} 
-                setValidated={setValidated} 
+                validated={validated} setValidated={setValidated} 
               />}
             />
             <Route path='/dashboard' element ={
               <Dashboard 
                 transactions={transactions} 
-                balance={balance} budget={budget} 
+                balance={balance} 
+                budget={budget} 
                 totalAmount={totalAmount} 
                 darkMode={darkMode} 
                 formatAmount={formatAmount} 
@@ -162,25 +167,24 @@ function App() {
             />
             <Route path='/goals' element ={
               <Goals 
-                goalAmount={goalAmount} 
-                setGoalAmount={setGoalAmount} 
-                currentAmount={currentAmount} 
-                setCurrentAmount={setCurrentAmount} 
-                inputAmount={inputAmount} 
-                setInputAmount={setInputAmount} 
-                newGoalName={newGoalName}
-                setNewGoalName={setNewGoalName}
-                newGoalAmount={newGoalAmount}
-                setNewGoalAmount={setNewGoalAmount}
-                progPercentage={progPercentage} 
-                setProgPercentage={setProgPercentage} 
-                goals={goals} 
-                setGoals={setGoals}
-                validated={validated}
-                setValidated={setValidated}
+                goalAmount={goalAmount} setGoalAmount={setGoalAmount} 
+                currentAmount={currentAmount} setCurrentAmount={setCurrentAmount} 
+                inputAmount={inputAmount} setInputAmount={setInputAmount} 
+                newGoalName={newGoalName} setNewGoalName={setNewGoalName}
+                newGoalAmount={newGoalAmount} setNewGoalAmount={setNewGoalAmount}
+                progPercentage={progPercentage} setProgPercentage={setProgPercentage} 
+                goals={goals} setGoals={setGoals}
+                validated={validated} setValidated={setValidated}
               />}
             />
-            <Route path='/investments' element ={<Investments formatAmount={formatAmount} darkMode={darkMode} onAddInvestment={handleAddInvestment} validated={validated} setValidated={setValidated} />}/>
+            <Route path='/investments' element ={
+              <Investments 
+                formatAmount={formatAmount} 
+                darkMode={darkMode} 
+                onAddInvestment={handleAddInvestment} 
+                validated={validated} setValidated={setValidated} 
+              />}
+            />
           </Route>
         </Routes>
         <Footer />
