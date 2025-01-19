@@ -139,7 +139,7 @@ const Goals = () => {
             <div className="mt-4">
                 {goals.map(goal => (
                     <div key={goal.id} className="mb-3">
-                        <h6>{goal.name}: ${goal.target.toLocaleString()}</h6>
+                        <h6>{goal.name}: $ {goal.target.toLocaleString()}</h6>
                         <div className="progress">
                             <div className="progress-bar bg-success" role="progressbar" style={{width: `${(goal.saved / goal.target) * 100}%`}} aria-valuemin="0" aria-valuemax="100">
                                 {(goal.saved / goal.target * 100).toFixed(2)}%

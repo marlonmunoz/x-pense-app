@@ -233,29 +233,15 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 
 function Balance({ darkMode }) {
-  const [cashOnHand, setCashOnHand] = useState(0);
-  const [bankAccountBalance , setBankAccountBalance] = useState(0);
-  const [savings, setSavings] = useState(0);
+  const [cashOnHand, setCashOnHand] = useState('');
+  const [bankAccountBalance , setBankAccountBalance] = useState('');
+  const [savings, setSavings] = useState('');
   const [total , setTotal] = useState(0);
   const [balanceId, setBalanceId] = useState(null)
   const [balances, setBalances] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [editBalance, setEditBalance] = useState({cash_on_hand: 0, bank_account_balance: 0, savings:0, total: 0});
   
-  // useEffect(() => {
-  //   axios.get('http://localhost:5001/balance')
-  //   .then(response => {
-  //     const balance = response.data;
-  //     setBalanceId(balance.id)
-  //     setCashOnHand(balance.cash_on_hand);
-  //     setBankAccountBalance(balance.bank_account_balance);
-  //     setSavings(balance.savings);
-  //     setTotal(balance.cash_on_hand + balance.bank_account_balance + balance.savings);
-  //   })
-  //   .catch(error => {
-  //     console.error('There was an error fetching the balance!', error);
-  //   });
-  // },[]);
   useEffect(() => {
     axios.get('http://localhost:5001/balance')
       .then(response => {
@@ -289,9 +275,11 @@ function Balance({ darkMode }) {
     };
 
     try {
-      await axios.put(`http://localhost:5001/balance/${balances[index].id}`, updatedBalance);
-      const newBalances = balances.map((b, i) => (i === index ? { ...b, ...updateBalance} : b));
-      setBalances(newBalances);
+      // await axios.put(`http://localhost:5001/balance/${balances[index].id}`, updatedBalance);
+      // const newBalances = balances.map((b, i) => (i === index ? { ...b, ...updateBalance} : b));
+      const response = await axios.put(`http://localhost:5001/balance/${balances[index].id}`, updatedBalance);
+      const updatedBalances = balances.map((balance, i) => (i === index ? response.data : balance));
+      setBalances(updatedBalances);
       setEditIndex(null);
       setEditBalance({ cash_on_hand: 0, bank_account_balance: 0, savings: 0, total: 0 });
     } catch (error) {

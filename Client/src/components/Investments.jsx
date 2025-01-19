@@ -38,32 +38,6 @@ const Investments = ({ darkMode, onAddInvestment }) => {
         fetchInvestments();
     }, []);
 
-    // useEffect(() => {
-    //     const fetchMarketCaps = async () => {
-    //         try {
-    //             const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
-    //                 params: {
-    //                     vs_currency: 'usd',
-    //                     ids: investments.map(investment => investment.id).join(',')
-    //                 }
-    //             });
-    //             console.log('Market cap response:', response.data); // Log the response data
-    //             const marketCapData = response.data.reduce((acc, coin) => {
-    //                 acc[coin.id] = coin.market_cap;
-    //                 return acc;
-    //             }, {});
-    //             console.log('Market cap data:', marketCapData); // Log the market cap data
-    //             setMarketCaps(marketCapData);
-    //         } catch (error) {
-    //             console.error('Error fetching market cap data:', error);
-    //         }
-    //     };
-
-    //     if (investments.length > 0) {
-    //         fetchMarketCaps();
-    //     }
-    // }, [investments])
-
     useEffect(() => {
         const fetchMarketCaps = async () => {
             try {
@@ -174,7 +148,6 @@ const Investments = ({ darkMode, onAddInvestment }) => {
                                 </td>
                                 
                                 <td>{investment.type}</td>
-                                {/* <td>$ {calculatePrice(amounts[index], investment.pricePerUnit)}</td> */}
                                 <td>{investment.pricePerUnit.toFixed(2).toLocaleString()}</td>
                                 <td>{marketCaps[investment.id] ? `$ ${formatMarketCap(marketCaps[investment.id])}` : 'Loading...'}</td>
                                 <td>
