@@ -38,14 +38,38 @@ const Investments = ({ darkMode, onAddInvestment }) => {
         fetchInvestments();
     }, []);
 
+    // useEffect(() => {
+    //     const fetchMarketCaps = async () => {
+    //         try {
+    //             const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
+    //                 params: {
+    //                     vs_currency: 'usd',
+    //                     ids: investments.map(investment => investment.id).join(',')
+    //                 }
+    //             });
+    //             console.log('Market cap response:', response.data); // Log the response data
+    //             const marketCapData = response.data.reduce((acc, coin) => {
+    //                 acc[coin.id] = coin.market_cap;
+    //                 return acc;
+    //             }, {});
+    //             console.log('Market cap data:', marketCapData); // Log the market cap data
+    //             setMarketCaps(marketCapData);
+    //         } catch (error) {
+    //             console.error('Error fetching market cap data:', error);
+    //         }
+    //     };
+
+    //     if (investments.length > 0) {
+    //         fetchMarketCaps();
+    //     }
+    // }, [investments])
+
     useEffect(() => {
         const fetchMarketCaps = async () => {
             try {
-                const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
-                    params: {
-                        vs_currency: 'usd',
-                        ids: investments.map(investment => investment.id).join(',')
-                    }
+                const ids = investments.map(investment => investment.id).join(',');
+                const response = await axios.get(`http://localhost:5001/api/coins/markets`, {
+                    params: { ids }
                 });
                 console.log('Market cap response:', response.data); // Log the response data
                 const marketCapData = response.data.reduce((acc, coin) => {
@@ -62,7 +86,7 @@ const Investments = ({ darkMode, onAddInvestment }) => {
         if (investments.length > 0) {
             fetchMarketCaps();
         }
-    }, [investments])
+    }, [investments]);
 
     const handleAmountChange = debounce((index, value) => {
         const newAmounts = [...amounts];
@@ -121,7 +145,7 @@ const Investments = ({ darkMode, onAddInvestment }) => {
      return (
         <div>
             <h5>Set Your Investments</h5>
-            <br />
+            <p style={{color: 'gray'}}> <sup>Make Informed Decisions With Live Crypto Updates</sup></p>
             <h6><span className="badge bg-danger" style={{ color: 'white' }} >Live</span> Updates</h6>
            
             <div className="table-responsive">

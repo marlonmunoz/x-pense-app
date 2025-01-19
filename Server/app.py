@@ -8,6 +8,8 @@ from sqlalchemy.orm import Session
 from models import db, Goal, Transaction, Balance
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
+import requests
+# print(requests.__version__)
 
 load_dotenv()  
 
@@ -70,6 +72,17 @@ def verify_token():
 def logout():
     return jsonify({"message": "Logout Successful"}), 200
 
+# Add the proxy route for CoinGecko API
+@app.route('/api/coins/markets', methods=['GET'])
+def get_market_caps():
+    try:
+        response = requests.get('https://api.coingecko.com/api/v3/coins/markets', params={
+            'vs_currency': 'usd',
+            'ids': 'bitcoin,ethereum,usd-coin'
+        })
+        return jsonify(response.json())
+    except requests.exceptions.RequestException as e:
+        return jsonify({'error': 'Error fetching market cap data'}), 500
 
 # BALANCE
 # GET
@@ -184,7 +197,8 @@ def delete_transaction(id):
     session.commit()
     return '', 204
 
-
+# Market Cap Data Fetch
+@app.route 
 
 
 
