@@ -20,6 +20,14 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [addedInvestments, setAddedInvestments] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
+
+  // BALANCE
+  const [cashOnHand, setCashOnHand] = useState(0);
+  const [bankAccountBalance , setBankAccountBalance] = useState(0);
+  const [savings, setSavings] = useState(0);
+  const [total , setTotal] = useState(0);
+
+  const totalBalance = cashOnHand + bankAccountBalance + savings;
   
   // Goals State ======>>>>>>
   const [goalAmount, setGoalAmount] = useState(0); // This is an example amount
@@ -30,7 +38,6 @@ function App() {
   const [progPercentage, setProgPercentage] = useState(0);
   const [goals, setGoals] = useState([]);
   
-  // const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0)
 
 
   useEffect(() => {
@@ -128,6 +135,12 @@ function App() {
                 budget={budget} 
                 darkMode={darkMode} 
                 validated={validated} setValidated={setValidated} 
+                cashOnHand={cashOnHand} setCashOnHand={setCashOnHand}
+                bankAccountBalance={bankAccountBalance} setBankAccountBalance={setBankAccountBalance}
+                savings={savings} setSavings={setSavings}
+                total={total} 
+                setTotal={setTotal}
+
               />}
             />
             <Route path='/transactions' element ={
@@ -156,7 +169,7 @@ function App() {
             <Route path='/dashboard' element ={
               <Dashboard 
                 transactions={transactions} 
-                balance={balance} 
+                balance={totalBalance} 
                 budget={budget} 
                 totalAmount={totalAmount} 
                 darkMode={darkMode} 

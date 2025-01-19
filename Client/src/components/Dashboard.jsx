@@ -4,22 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts'
 
 
-function Dashboard({ transactions =[], balance =0, goals =[], budget = 0, totalAmount, darkMode, addedInvestments }) {
+function Dashboard({ transactions =[], balance = 0, goals =[], budget = 0, totalAmount, darkMode, addedInvestments }) {
     const navigate = useNavigate();
     
     const recentTransactions = transactions.slice(-5);
     const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0).toFixed(2);
-    // const goalsProgress = goals.map(goal => ({
-    //     ...goal,
-    //     progress: (goal.saved / goal.target) * 100
-    // }));
     const [goalsProgress, setGoalsProgress] = useState(goals.map(goal => ({
         ...goal,
         progress: (goal.saved / goal.target) * 100
       })));
-    const overviewTotal = budget + parseFloat(totalInvestments) - balance - totalAmount;
-    
-  
+    const overviewTotal = budget + parseFloat(totalInvestments) + balance - totalAmount;
+    console.log('THIS IS THE TOTAL BALANCE OVERview', overviewTotal);
 
     useEffect(() => {
         // Fetch goals from the backend
@@ -35,10 +30,6 @@ function Dashboard({ transactions =[], balance =0, goals =[], budget = 0, totalA
             console.error('Error fetching goals:', error);
           });
     }, []);
-
-    // useEffect(() => {
-    //   console.log('Goals Progress updated:', goalsProgress);
-    // }, [goalsProgress]);
 
     const addGoal = (newGoal) => {
       setGoalsProgress([...goalsProgress, newGoal]);
@@ -102,10 +93,12 @@ function Dashboard({ transactions =[], balance =0, goals =[], budget = 0, totalA
             </div>
             <br />
             <div className="table-responsive">
+                <h6>Overview</h6>
                 <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
                     <tbody>
                         <tr>
                             <th scope="row">Current Balance</th>
+                            {console.log('THIS IS THE TOTAL BALANCE', balance)} 
                             <td>${balance}</td>
                         </tr>
                         <tr>
@@ -128,7 +121,7 @@ function Dashboard({ transactions =[], balance =0, goals =[], budget = 0, totalA
                  </table>
             </div>
         </div>
-    )
+    );
 }
 
 export default Dashboard;
