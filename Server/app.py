@@ -80,6 +80,7 @@ def get_balance():
         return jsonify(balance.to_dict())
     else:
         return jsonify({'message': 'No balance found'}), 404
+    
 #POST
 @app.route('/balance', methods=['POST'])
 def add_balance():
@@ -95,16 +96,32 @@ def add_balance():
 
 # PUT
 @app.route('/balance/<int:id>', methods=['PUT'])
-def update_balance() :
+def update_balance(id) :
     data = request.json
-    balance = Balance.query.get(id)
+    balance = db.session.get(Balance, id)
     if balance is None:
         return jsonify({'message': 'Balance not found'}), 404
-    balance.cash_on_hand = data['']
-    balance.bank_account_balance = data['bank_account_balance']
-    balance.savings = data['savings']
+    balance.cash_on_hand = data.get('cash_on_hand', balance.cash_on_hand)
+    balance.bank_account_balance = data.get('bank_account_balance', balance.bank_account_balance)
+    balance.savings = data.get('savings', balance.savings)
     db.session.commit()
     return jsonify(balance.to_dict())
+
+# DELETE
+@app.route('/balance/<int:id>', methods=['DELETE'])
+def delete_balance(id):
+    balance = db.session.get(Balance, id)
+    if balance is None:
+        return jsonify({'message': 'Balance not found'}), 404
+    db.session.delete(balance)
+    db.session.commit()
+    return jsonify({'message': 'Balance deleted successfully'}), 200
+
+# GET all balances
+@app.route('/balances', methods=['GET'])
+def get_balances():
+    balances = Balance.query.all()
+    return jsonify([balances.to_dict() for balance in balances])
     
     
 # TRANSACTIONS ============>>>>>>>
