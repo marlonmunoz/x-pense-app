@@ -184,7 +184,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated }) {
                         )}
                         <tr>
                             <td><strong>Total</strong></td>
-                            <td><strong>$ {(budget + items.reduce((acc, item) => acc + item.amount, 0)).toFixed(2)}</strong></td>
+                            <td><strong>$ {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(budget + items.reduce((acc, item) => acc + item.amount, 0))}</strong></td>
                             <td></td>
                         </tr>
                     </tbody>

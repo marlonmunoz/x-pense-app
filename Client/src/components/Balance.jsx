@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 
-function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setBankAccountBalance, savings, setSavings, total, setTotal }) {
+function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setBankAccountBalance, savings, setSavings, total, setTotal, formatCurrency }) {
   const [balanceId, setBalanceId] = useState(null)
   const [balances, setBalances] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
@@ -136,9 +136,9 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       });
   }
   
-  const formatAmount = (amount) => {
-    return parseFloat(amount).toLocaleString();
-  };
+  // const formatAmount = (amount) => {
+  //   return parseFloat(amount).toLocaleString();
+  // };
 
   return (
     <div>
@@ -230,11 +230,11 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                   ) : (
                     <>
                       <td>{index + 1}</td>
-                      <td>${balance.cash_on_hand}</td>
-                      <td>${balance.bank_account_balance}</td>
-                      <td>${balance.savings}</td>
+                      <td>{formatCurrency(balance.cash_on_hand)}</td>
+                      <td>{formatCurrency(balance.bank_account_balance)}</td>
+                      <td>{formatCurrency(balance.savings)}</td>
                       {console.log('TOTAL', total)}
-                      <td>${balance.total !== undefined ? balance.total : 0}</td>
+                      <td>{formatCurrency(balance.total !== undefined ? balance.total : 0)}</td>
                       
                       <td>
                         <button onClick={() => { setEditIndex(index); setEditBalance(balance); }} className="btn btn-sm btn-primary">Edit</button>

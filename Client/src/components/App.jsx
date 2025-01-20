@@ -28,6 +28,10 @@ function App() {
   const [total , setTotal] = useState(0);
 
   const totalBalance = cashOnHand + bankAccountBalance + savings;
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+  };
   
   // Goals State ======>>>>>>
   const [goalAmount, setGoalAmount] = useState(0); // This is an example amount
@@ -140,6 +144,7 @@ function App() {
                 savings={savings} setSavings={setSavings}
                 total={total} 
                 setTotal={setTotal}
+                formatCurrency={formatCurrency}
 
               />}
             />
