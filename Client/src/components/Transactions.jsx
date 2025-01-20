@@ -98,7 +98,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
             <h5>New Transactions Added</h5>
             <p style={{color: 'gray'}}> <sup>Tracking History</sup></p>
             <div className="table-responsive">
-                <table className={`table table-striped table-hover table-bordered table-responsive ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
+                <table className={`table table-striped table-hover table-bordered table-responsive ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                     <thead>
                         <tr>
                             <th>Description</th>

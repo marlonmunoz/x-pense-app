@@ -144,7 +144,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
     <div>
       <h5>Set Balance</h5>
       <div className="container">
-        <label htmlFor="cashOnHand" className="form-label">Cash on Hand : </label>
+        <label htmlFor="cashOnHand" className="form-label">Cash on Hand</label>
           <div className="input-group mb-3">
           <input 
             type="number" 
@@ -195,7 +195,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
         <h5>Account Overview</h5>
 
         <div className="table-responsive">
-        <table className={`table table-striped table-hover table-responsive ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
+        <table className={`table table-striped table-hover table-responsive ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
             <thead>
               <tr>
                 <th>ACC#</th>

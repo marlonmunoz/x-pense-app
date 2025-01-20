@@ -164,6 +164,19 @@ body.dark-mode {
   color: #ffffff;
 }
 
+
+.table-light-bordered {
+  border: 1px solid #ccc;
+  background: rgb(227, 226, 226);
+}
+
+.table-light-bordered th,
+.table-light-bordered td {
+  border: 1px solid #ccc;
+}
+
+
+
 /* CRYPTOS */
 .bitcoin-icon {
   color: #f7931a; /* Bitcoin orange color */

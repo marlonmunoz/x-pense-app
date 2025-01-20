@@ -68,7 +68,7 @@ function Dashboard({ transactions =[], balance = 0, goals =[], budget = 0, total
                   <LineChart data={transactions}>
                     <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#444' : '#ccc'} />
                     <XAxis dataKey="date" stroke={darkMode ? '#fff' : '#000'} />
-                    <YAxis stroke={darkMode ? '#fff' : '#000'} />
+                    <YAxis dataKey="amount" vstroke={darkMode ? '#fff' : '#000'} />
                     {/* <Tooltip contentStyle={{ backgroundColor: darkMode ? '#333' : '#fff', color: darkMode ? '#fff' : '#000' }} /> */}
                     <Tooltip content={<CustomTooltip />}/>
                     <Legend wrapperStyle={{ color: darkMode ? '#fff' : '#000' }} />
@@ -99,26 +99,26 @@ function Dashboard({ transactions =[], balance = 0, goals =[], budget = 0, total
             </div>
             <br />
             <br />
-            <div className="goals-progress">
-                <h6>Goals Progress</h6>
+            <div className="goals-progress text-center mx-auto" style={{ maxWidth: '600px'}}>
+                <h6 >Goals Progress</h6>
                 <p style={{color: 'gray'}}><sup>Tracking </sup></p>
                 <ul className="d-flex flex-column align-items-center">
                     {goalsProgress.map((goal, index) => (
-                    <li key={index} className="d-flex align-items-center mb-2" style={{ width: '150%'}}>
-                    <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
-                    <div className="progress flex-grow-1 custom-progress-height" >
-                      <div className="progress-bar bg-success custom-progress-height" role="progressbar" style={{ width: `${goal.progress}%`}} aria-valuemin="0" aria-valuemax="100">
-                        {goal.progress.toFixed(2)}%
-                      </div>
-                    </div>
-                    </li>
+                        <li key={index} className="d-flex align-items-center mb-2 border p-2 rounded " style={{ width: '150%'}}>
+                            <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
+                            <div className="progress flex-grow-1 custom-progress-height border" style={{color: 'black'}}>
+                                <div className="progress-bar bg-success custom-progress-height" role="progressbar" style={{ width: `${goal.progress}%`}} aria-valuemin="0" aria-valuemax="100">
+                                    {goal.progress.toFixed(2)}%
+                                </div>
+                            </div>
+                        </li>
                     ))}
                 </ul>
             </div>
             <br />
             <div className="table-responsive">
                 <h6>Overview</h6>
-                <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
+                <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                     <tbody>
                         <tr>
                             <th scope="row">Balance</th>

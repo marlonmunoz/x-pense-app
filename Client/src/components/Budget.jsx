@@ -111,7 +111,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
             <br />
             <h5>Budget Types</h5>
             <div className="table-responsive">
-            <table className={`table table-striped table-hover table-bordered table-responsive ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
+            <table className={`table table-striped table-hover table-bordered table-responsive ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                     <thead>
                         <tr>
                             <th>Item Name</th>
