@@ -179,7 +179,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated }) {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="3">No items available</td>
+                                <td colSpan="3">No items added yet</td>
                             </tr>
                         )}
                         <tr>

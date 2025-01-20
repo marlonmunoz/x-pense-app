@@ -143,6 +143,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                             <td>{transaction.category} </td>
                                             <td>{formattedDate} </td>
                                             <td>$ {formatAmount(transaction.amount)}</td>
+                                            
 
                                             <td>
                                                 <button onClick={() => { setEditIndex(index); setEditTransaction({ ...transaction, date: formatDateTime(transaction.date) }); }} className="btn btn-sm  btn-primary ml-2">Edit</button>
