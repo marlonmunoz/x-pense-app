@@ -223,8 +223,8 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                       </td>
                       <td>{editBalance.total}</td>
                       <td>
-                        <button onClick={() => handleEditSave(index)} className="btn btn-success">Save</button>
-                        <button onClick={() => setEditIndex(null)} className="btn btn-secondary">Cancel</button>
+                        <button onClick={() => handleEditSave(index)} className="btn btn-sm btn-success">Save</button>
+                        <button onClick={() => setEditIndex(null)} className="btn btn-sm btn-secondary ml-2">Cancel</button>
                       </td>
                     </>
                   ) : (
@@ -237,8 +237,8 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                       <td>${balance.total !== undefined ? balance.total : 0}</td>
                       
                       <td>
-                        <button onClick={() => { setEditIndex(index); setEditBalance(balance); }} className="btn btn-primary">Edit</button>
-                        <button onClick={() => handleDelete(index)} className="btn btn-danger ml-2">Delete</button>
+                        <button onClick={() => { setEditIndex(index); setEditBalance(balance); }} className="btn btn-sm btn-primary">Edit</button>
+                        <button onClick={() => handleDelete(index)} className="btn btn-sm btn-danger ml-2">Delete</button>
                       </td>
                     </>
                   )}

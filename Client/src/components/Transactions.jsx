@@ -98,7 +98,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
             <h5>New Transactions Added</h5>
             <p style={{color: 'gray'}}> <sup>Tracking History</sup></p>
             <div className="table-responsive">
-                <table className={`table table-striped table-hover table-responsive ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
+                <table className={`table table-striped table-hover table-bordered table-responsive ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
                     <thead>
                         <tr>
                             <th>Description</th>
@@ -133,8 +133,8 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                                 <input type="number" id={`amount-${index}`} name='amount' value={editTransaction.amount} onChange={handleEditChange} className="form-control" />
                                             </td>
                                             <td>
-                                                <button onClick={() => handleEditSave(index)} className="btn btn-success ">Save</button>
-                                                <button onClick={() => setEditIndex(null)} className="btn btn-secondary ">Cancel</button>
+                                                <button onClick={() => handleEditSave(index)} className="btn btn-sm btn-success ">Save</button>
+                                                <button onClick={() => setEditIndex(null)} className="btn btn-sm btn-secondary ml-2 ">Cancel</button>
                                             </td>
                                         </>
                                     ) : (
@@ -145,8 +145,8 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                             <td>$ {formatAmount(transaction.amount)}</td>
 
                                             <td>
-                                                <button onClick={() => { setEditIndex(index); setEditTransaction({ ...transaction, date: formatDateTime(transaction.date) }); }} className="btn btn-primary ml-2">Edit</button>
-                                                <button onClick={() => handleDelete(index)} className="btn btn-danger ml-2">Delete</button>
+                                                <button onClick={() => { setEditIndex(index); setEditTransaction({ ...transaction, date: formatDateTime(transaction.date) }); }} className="btn btn-sm  btn-primary ml-2">Edit</button>
+                                                <button onClick={() => handleDelete(index)} className="btn btn-sm btn-danger ml-2">Delete</button>
                                             </td>
                                         </>
                                     )}

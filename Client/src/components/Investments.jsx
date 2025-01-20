@@ -123,7 +123,7 @@ const Investments = ({ darkMode, onAddInvestment }) => {
             <h6><span className="badge bg-danger" style={{ color: 'white' }} >Live</span> Updates</h6>
            
             <div className="table-responsive">
-                <table className={`table table-striped table-hover ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
+                <table className={`table table-striped table-hover table-bordered ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -163,13 +163,13 @@ const Investments = ({ darkMode, onAddInvestment }) => {
                                 </td>
                                 <td>
                                     <button
-                                        className="btn btn-success "
+                                        className="btn btn-sm btn-success "
                                         onClick={() => handleAddClick(index)}
                                     >
                                         Add
                                     </button>
                                     <button
-                                        className="btn btn-danger ml-1"
+                                        className="btn btn-sm btn-danger ml-1"
                                         onClick={() => handleResetClick(index)}
                                     >
                                         Reset
