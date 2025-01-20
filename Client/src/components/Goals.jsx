@@ -137,6 +137,7 @@ const Goals = () => {
                 <button type="submit" className="btn btn-primary mt-3">Add Goal</button>
             </form>
             <div className="mt-4">
+            <p style={{color: 'gray'}}><sup>Add All Your Goals Here</sup></p>
                 {goals.map(goal => (
                     <div key={goal.id} className="mb-3">
                         <h6>{goal.name}: $ {goal.target.toLocaleString()}</h6>

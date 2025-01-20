@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Budget({ darkMode, budget, setBudget, validated, setValidated }) {
+function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCurrency }) {
     const [items, setItems] = useState([]);
     const [name, setName] = useState("");
     const [amount, setAmount] = useState("");
@@ -159,7 +159,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated }) {
                                                 onChange={(e) => setEditAmount(e.target.value)}
                                             />
                                         ) : (
-                                            `$ ${item.amount.toFixed(2)}`
+                                            formatCurrency(item.amount)
                                         )}
                                     </td>
                                     <td>
@@ -184,7 +184,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated }) {
                         )}
                         <tr>
                             <td><strong>Total</strong></td>
-                            <td><strong>$ {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(budget + items.reduce((acc, item) => acc + item.amount, 0))}</strong></td>
+                            <td><strong>{formatCurrency(budget + items.reduce((acc, item) => acc + item.amount, 0))} </strong></td>
                             <td></td>
                         </tr>
                     </tbody>

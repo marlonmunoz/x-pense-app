@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts'
 
 
-function Dashboard({ transactions =[], balance = 0, goals =[], budget = 0, totalAmount, darkMode, addedInvestments }) {
+function Dashboard({ transactions =[], balance = 0, goals =[], budget = 0, totalAmount, darkMode, addedInvestments,formatCurrency }) {
     const navigate = useNavigate();
     
     const recentTransactions = transactions.slice(-5);
@@ -14,7 +14,21 @@ function Dashboard({ transactions =[], balance = 0, goals =[], budget = 0, total
         progress: (goal.saved / goal.target) * 100
       })));
     const overviewTotal = budget + parseFloat(totalInvestments) + balance - totalAmount;
-    console.log('THIS IS THE TOTAL BALANCE OVERview', overviewTotal);
+    // console.log('THIS IS THE TOTAL BALANCE OVERview', overviewTotal);
+
+    const CustomTooltip = ({ active, payload}) => {
+        if (active && payload && payload.length) {
+            const { date, amount, description } = payload[0].payload;
+            return (
+                <div style={{ backgroundColor: darkMode ? '#333' : '#fff', color: darkMode ? '#fff' : '#000', padding: '10px', border: '1px solid #ccc'}} >
+                    <p>{`Date: ${date}`}</p>
+                    <p>{`Amount: ${amount}`}</p>
+                    <p>{`Description: ${description}`}</p>
+                </div>
+            );
+        }
+        return null;
+    }
 
     useEffect(() => {
         // Fetch goals from the backend
@@ -43,23 +57,51 @@ function Dashboard({ transactions =[], balance = 0, goals =[], budget = 0, total
         <div className="large-container">
             <div className="summary">
                 <h5>Recent Transactions</h5>
-                <button onClick={() => navigate('/transactions')} className="btn btn-primary"> View All Transactions</button>
+                <br />
+                <button onClick={() => navigate('/transactions')} className="btn btn-info"> View All Transactions</button>
+            </div>
+            <br />
+            <div className="charts">
+                <h6>Spending Over Time</h6>
+                <p style={{color: 'gray'}}><sup>Tracking All X-PENSE Transactions</sup></p>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={transactions}>
+                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#444' : '#ccc'} />
+                    <XAxis dataKey="date" stroke={darkMode ? '#fff' : '#000'} />
+                    <YAxis stroke={darkMode ? '#fff' : '#000'} />
+                    {/* <Tooltip contentStyle={{ backgroundColor: darkMode ? '#333' : '#fff', color: darkMode ? '#fff' : '#000' }} /> */}
+                    <Tooltip content={<CustomTooltip />}/>
+                    <Legend wrapperStyle={{ color: darkMode ? '#fff' : '#000' }} />
+                    <Line 
+                      type="monotone"     
+                      dataKey="amount"    
+                      stroke={darkMode ? '#08fa00' : '#8884d8'} 
+                      activeDot={{ r: 8 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
             </div>
             <br />
             <div>
-                <h6>Added Investments</h6>
-                <ul className={`list-group ${darkMode ? 'list-group-dark' : ''} table-rounded`}>
-                    {addedInvestments.map((investment, index) => (
-                        <li key={index} className="list-group-item">
-                            {investment.name} | {investment.amount} units | ${investment.totalPrice}
-                        </li>
-                    ))}
-                </ul>
+              <h6>Added Investments</h6>
+              <p style={{ color: 'gray' }}><sup>Tracking All CRYPTO Transactions</sup></p>
+              <ul className={`list-group ${darkMode ? 'list-group-dark' : ''} table-rounded`}>
+                {addedInvestments.length === 0 ? (
+                  <li className="list-group-item">No Investments Have Been Added</li>
+                ) : (
+                  addedInvestments.map((investment, index) => (
+                    <li key={index} className="list-group-item">
+                      {investment.name} | {investment.amount} units | ${investment.totalPrice}
+                    </li>
+                  ))
+                )}
+              </ul>
             </div>
             <br />
             <br />
             <div className="goals-progress">
                 <h6>Goals Progress</h6>
+                <p style={{color: 'gray'}}><sup>Tracking </sup></p>
                 <ul className="d-flex flex-column align-items-center">
                     {goalsProgress.map((goal, index) => (
                     <li key={index} className="d-flex align-items-center mb-2" style={{ width: '150%'}}>
@@ -73,49 +115,31 @@ function Dashboard({ transactions =[], balance = 0, goals =[], budget = 0, total
                     ))}
                 </ul>
             </div>
-            <div className="charts">
-                <h6>Spending Over Time</h6>
-                <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={transactions}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="date"/>
-                        <YAxis />
-                        <Tooltip/>
-                        <Legend />
-                        <Line 
-                            type="monotone"     
-                            dataKey="amount"    
-                            stroke="#08fa00" 
-                            activeDot={{ r: 8 }}
-                        />
-                    </LineChart>
-                </ResponsiveContainer>
-            </div>
             <br />
             <div className="table-responsive">
                 <h6>Overview</h6>
                 <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
                     <tbody>
                         <tr>
-                            <th scope="row">Current Balance</th>
-                            {console.log('THIS IS THE TOTAL BALANCE', balance)} 
-                            <td>${balance}</td>
+                            <th scope="row">Balance</th>
+                            {/* {console.log('THIS IS THE TOTAL BALANCE', balance)}  */}
+                            <td>${formatCurrency(balance)}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Total Investments</th>
-                            <td>$ {totalInvestments.toLocaleString()}</td>
+                            <th scope="row">Investments</th>
+                            <td>$ {formatCurrency(totalInvestments)}</td>
                         </tr>
                         <tr>
                             <th scope="row">Budget</th>
-                            <td>$ {budget.toLocaleString()}</td>
+                            <td>$ {formatCurrency(budget)}</td>
                         </tr>
                         <tr>
                             <th scope="row">X-penses</th>
-                            <td>$ {totalAmount.toLocaleString()}</td>
+                            <td>$ {formatCurrency(totalAmount)}</td>
                         </tr>
                         <tr>
                             <th scope="row">Overview Total</th>
-                            <td>$ {overviewTotal.toLocaleString()}</td>
+                            <td>$ {formatCurrency(overviewTotal)}</td>
                         </tr>
                     </tbody>
                  </table>

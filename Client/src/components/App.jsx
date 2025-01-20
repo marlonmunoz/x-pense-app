@@ -169,6 +169,7 @@ function App() {
                 budget={budget} setBudget={setBudget} 
                 darkMode={darkMode} 
                 validated={validated} setValidated={setValidated} 
+                formatCurrency={formatCurrency}
               />}
             />
             <Route path='/dashboard' element ={
@@ -181,6 +182,7 @@ function App() {
                 formatAmount={formatAmount} 
                 addedInvestments={addedInvestments} 
                 goals={goals}
+                formatCurrency={formatCurrency}
               />} 
             />
             <Route path='/goals' element ={

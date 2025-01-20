@@ -194,7 +194,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
 
         <h5>Account Overview</h5>
 
-        <div>
+        <div className="table-responsive">
         <table className={`table table-striped table-hover table-responsive ${darkMode ? 'table-dark' : 'table-light'} table-rounded`}>
             <thead>
               <tr>
@@ -233,7 +233,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                       <td>{formatCurrency(balance.cash_on_hand)}</td>
                       <td>{formatCurrency(balance.bank_account_balance)}</td>
                       <td>{formatCurrency(balance.savings)}</td>
-                      {console.log('TOTAL', total)}
+                      {/* {console.log('TOTAL', total)} */}
                       <td>{formatCurrency(balance.total !== undefined ? balance.total : 0)}</td>
                       
                       <td>
@@ -247,7 +247,6 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
             </tbody>
           </table>
         </div>
-       
       </div>
     </div>
   );
