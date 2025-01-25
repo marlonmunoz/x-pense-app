@@ -8,7 +8,7 @@ import bitcoinIcon from '../assets/bitcoin.png'
 import ethereumIcon from '../assets/ethereum.png'
 import usdcIcon from '../assets/usdc.png'
 
-const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, amounts, setAmounts, marketCaps, setMarketCaps }) => {
+const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, amounts, setAmounts, marketCaps, setMarketCaps, formatCurrency }) => {
     const navigate = useNavigate();
     // const [investments, setInvestments] = useState([]);
     // const [amounts, setAmounts] = useState([]);  
@@ -46,17 +46,22 @@ const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, a
                     params: { ids }
                 });
                 console.log('Market cap response:', response.data); // Log the response data
-                const marketCapData = response.data.reduce((acc, coin) => {
-                    acc[coin.id] = coin.market_cap;
-                    return acc;
-                }, {});
-                console.log('Market cap data:', marketCapData); // Log the market cap data
-                setMarketCaps(marketCapData);
+    
+                if (Array.isArray(response.data)) {
+                    const marketCapData = response.data.reduce((acc, coin) => {
+                        acc[coin.id] = coin.market_cap;
+                        return acc;
+                    }, {});
+                    console.log('Market cap data:', marketCapData); // Log the market cap data
+                    setMarketCaps(marketCapData);
+                } else {
+                    console.error('Expected an array but got:', response.data);
+                }
             } catch (error) {
                 console.error('Error fetching market cap data:', error);
             }
         };
-
+    
         if (investments.length > 0) {
             fetchMarketCaps();
         }
@@ -148,7 +153,8 @@ const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, a
                                 </td>
                                 
                                 <td>{investment.type}</td>
-                                <td>{investment.pricePerUnit.toFixed(2).toLocaleString()}</td>
+                                {/* <td>{investment.pricePerUnit.toFixed(2).toLocaleString()}</td> */}
+                                <td>{formatCurrency(investment.pricePerUnit)}</td>
                                 <td>{marketCaps[investment.id] ? `$ ${formatMarketCap(marketCaps[investment.id])}` : 'Loading...'}</td>
                                 <td>
                                     <input 

@@ -3,7 +3,7 @@ import axios from 'axios'
 import '/src/App.css'
 
 
-const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, setTotalAmount, editIndex, setEditIndex, editTransaction, setEditTransaction }) => {
+const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, setTotalAmount, editIndex, setEditIndex, editTransaction, setEditTransaction, formatCurrency }) => {
     // const [transactions, setTransactions] = useState([]);
     // const [editIndex, setEditIndex] = useState(null);
     // const [editTransaction, setEditTransaction] = useState({ category:'', date:'', text:'', amount:'' });
@@ -142,7 +142,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                             <td>{transaction.description || 'No Description'} </td>
                                             <td>{transaction.category} </td>
                                             <td>{formattedDate} </td>
-                                            <td>$ {formatAmount(transaction.amount)}</td>
+                                            <td>{formatCurrency(transaction.amount)}</td>
                                             
 
                                             <td>
@@ -156,7 +156,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                         })}
                         <tr>
                             <td colSpan="4"><strong>Total :</strong></td>
-                            <td>$ {formatAmount(totalAmount)}</td>
+                            <td>{formatCurrency(totalAmount)}</td>
                         </tr>
                     </tbody>
                 </table>

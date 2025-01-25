@@ -196,6 +196,7 @@ function App() {
                 transactions={transactions} setTransactions={setTransactions} 
                 darkMode={darkMode} 
                 validated={validated} setValidated={setValidated}
+                formatCurrency={formatCurrency}
 
                 totalAmount={totalAmount} setTotalAmount={setTotalAmount}
                 editIndex={editIndex} setEditIndex={setEditIndex}
@@ -265,6 +266,7 @@ function App() {
             <Route path='/investments' element ={
               <Investments 
                 formatAmount={formatAmount} 
+                formatCurrency={formatCurrency}
                 darkMode={darkMode} 
                 onAddInvestment={handleAddInvestment} 
                 validated={validated} setValidated={setValidated} 
