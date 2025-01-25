@@ -111,7 +111,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
             <br />
             <h5>Budget Types</h5>
             <div className="table-responsive">
-            <table className={`table table-striped table-hover table-bordered table-responsive ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
+            <table className={`table table-striped table-hover table-bordered  ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                     <thead>
                         <tr>
                             <th>Item Name</th>
@@ -121,8 +121,8 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Set Budget</td>
-                            <td>
+                            <td data-label="Item Name">Set Budget</td>
+                            <td data-label="Amount">
                                 {editingIndex === 'set' ? (
                                     <input
                                         type="number"
@@ -133,15 +133,15 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                     `$ ${budget.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
                                 )}
                             </td>
-                            <td>
+                            <td data-label="Actions">
                                 {editingIndex === 'set' ? (
                                     <>
-                                        <button className="btn btn-sm btn-success" onClick={() => saveBudget('set')}>Save</button>
+                                        <button className="btn btn-sm btn-success ml-2" onClick={() => saveBudget('set')}>Save</button>
                                         <button className="btn btn-sm btn-secondary ml-2" onClick={cancelEdit}>Cancel</button>
                                     </>
                                 ) : (
                                     <>
-                                    <button className="btn btn-sm btn-primary" onClick={() => editBudget('set')}>Edit</button>
+                                    <button className="btn btn-sm btn-primary ml-2 " onClick={() => editBudget('set')}>Edit</button>
                                     <button className="btn btn-sm btn-warning ml-2" onClick={resetBudget}>Reset</button>
                                     </>
                                 )}
@@ -150,7 +150,9 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                         {items.length > 0 ? (
                             items.map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item.name}</td>
+                                    <td >
+                                        {item.name}
+                                    </td>
                                     <td>
                                         {editingIndex === index ? (
                                             <input
@@ -165,12 +167,12 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                     <td>
                                         {editingIndex === index ? (
                                             <>
-                                                <button className="btn btn-sm btn-success" onClick={() => saveBudget(index)}>Save</button>
-                                                <button className="btn btn-sm btn-secondary" onClick={cancelEdit}>Cancel</button>
+                                                <button className="btn btn-sm btn-success ml-2" onClick={() => saveBudget(index)}>Save</button>
+                                                <button className="btn btn-sm btn-secondary ml-2" onClick={cancelEdit}>Cancel</button>
                                             </>
                                         ) : (
                                             <>
-                                            <button className="btn btn-sm btn-primary" onClick={() => editBudget(index)}>Edit</button>
+                                            <button className="btn btn-sm btn-primary ml-2" onClick={() => editBudget(index)}>Edit</button>
                                             <button className="btn btn-sm btn-danger ml-2">Delete</button>
                                             </>
                                         )}

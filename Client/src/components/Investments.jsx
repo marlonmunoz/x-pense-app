@@ -143,19 +143,24 @@ const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, a
                     <tbody>
                         {investments.map((investment, index) => (
                             <tr key={index}>
-                                <td> 
+                                <td data-label="Name" className="investment-name-cell text-end"> 
                                     <span className="investment-name">
                                         {investment.name}  
                                     </span>
                                 </td>
-                                <td>
+                                <td data-label="Symbol">
                                     {getCryptoIcon(investment.name)}
                                 </td>
                                 
-                                <td>{investment.type}</td>
-                                {/* <td>{investment.pricePerUnit.toFixed(2).toLocaleString()}</td> */}
-                                <td>{formatCurrency(investment.pricePerUnit)}</td>
-                                <td>{marketCaps[investment.id] ? `$ ${formatMarketCap(marketCaps[investment.id])}` : 'Loading...'}</td>
+                                <td data-label="Type">
+                                    {investment.type}
+                                </td>
+                                <td data-label="Price">
+                                    {formatCurrency(investment.pricePerUnit)}
+                                </td>
+                                <td data-label="Market Cap">
+                                    {marketCaps[investment.id] ? `$ ${formatMarketCap(marketCaps[investment.id])}` : 'Loading...'}
+                                </td>
                                 <td>
                                     <input 
                                         type="number" 
@@ -167,9 +172,9 @@ const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, a
                                         style={{width: '60px'}} // Set your width here
                                     />
                                 </td>
-                                <td>
+                                <td data-label="Actions">
                                     <button
-                                        className="btn btn-sm btn-success "
+                                        className="btn btn-sm btn-success ml-1 "
                                         onClick={() => handleAddClick(index)}
                                     >
                                         Add

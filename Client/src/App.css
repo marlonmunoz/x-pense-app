@@ -175,7 +175,124 @@ body.dark-mode {
   border: 1px solid #ccc;
 }
 
+/* BALANCE Table */
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 
+  .table thead th {
+    display: none;
+  }
+
+  .table tbody td {
+    display: block;
+    width: 100%;
+    text-align: right;
+    border: none;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  .table tbody td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 50%;
+    padding-left: 15px;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .table tbody td:last-child {
+    border-bottom: 1px solid #dee2e6;
+  }
+}
+
+/* DASHBAORD */
+/* Custom styles for mobile compatibility */
+@media (max-width: 768px) {
+  .summary, .charts, .list-group {
+      padding: 10px;
+  }
+
+  .btn {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+
+  .list-group-item {
+      font-size: 14px;
+  }
+  /* Goals Progress */
+  .goals-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .goals-progress .goal {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* Overview Table */
+  .overview-table {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .overview-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .overview-table th, .overview-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #dee2e6;
+  }
+
+  .overview-table th {
+    background-color: #f8f9fa;
+  }
+}
+
+/* INVESTMENTS */
+/* Investments.jsx */
+
+@media (max-width: 768px) {
+  .table thead {
+      display: none;
+  }
+
+  .table tbody td {
+      display: block;
+      width: 100%;
+      text-align: right;
+      position: relative;
+      padding-left: 50%;
+  }
+
+  .table tbody td::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 0;
+      width: 50%;
+      padding-left: 15px;
+      font-weight: bold;
+      text-align: left;
+  }
+
+  .table tbody td:last-child {
+      border-bottom: 1px solid #dee2e6;
+  }
+
+  .investment-name-cell {
+      text-align: right !important;
+  }
+}
 
 /* CRYPTOS */
 .bitcoin-icon {
@@ -188,6 +305,7 @@ body.dark-mode {
 
 .investment-name {
   display: flex;
+  justify-content: flex-end;
   /* justify-content: space-between; */
   /* align-items: center; */
 }
@@ -200,35 +318,12 @@ body.dark-mode {
   height: 100%; /* Adjust the height as needed */
 }
 
-/* .goals-progress ul {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+/* GOALS */
+/* Goals.jsx */
+
+@media (max-width: 768px) {
+  .d-flex {
+    /* flex-direction: column !important; */
+    align-items: center !important;
+  }
 }
-
-.goals-progress li {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  max-width: 140%;
-}
-
-.goals-progress .progress {
-  width: 100%;
-}
-
-.goals-progress .progress-bar {
-  text-align: center;
-} */
-
-
-/* CONTAINERS */
-/* .large-container {
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-} */

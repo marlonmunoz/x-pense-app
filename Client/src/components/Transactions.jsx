@@ -91,14 +91,12 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
     };
     
     
-    // const totalAmount = transactions.reduce((total, transaction) => total + transaction.amount, 0); // the '' will remove the 0 the shows in front of every transaction.
-
     return (
-        <div>
+        <div className="container">
             <h5>New Transactions Added </h5>
             <p style={{color: 'gray'}}> <sup>Tracking History</sup></p>
             <div className="table-responsive">
-                <table className={`table table-striped table-hover table-bordered table-responsive ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
+                <table className={`table table-striped table-hover table-bordered ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                     <thead>
                         <tr>
                             <th>Description</th>
@@ -133,21 +131,27 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                                 <input type="number" id={`amount-${index}`} name='amount' value={editTransaction.amount} onChange={handleEditChange} className="form-control" />
                                             </td>
                                             <td>
-                                                <button onClick={() => handleEditSave(index)} className="btn btn-sm btn-success ">Save</button>
-                                                <button onClick={() => setEditIndex(null)} className="btn btn-sm btn-secondary ml-2 ">Cancel</button>
+                                                <button onClick={() => handleEditSave(index)} className="btn btn-sm btn-success ml-1 ">Save</button>
+                                                <button onClick={() => setEditIndex(null)} className="btn btn-sm btn-secondary ml-1 ">Cancel</button>
                                             </td>
                                         </>
                                     ) : (
                                         <>
-                                            <td>{transaction.description || 'No Description'} </td>
-                                            <td>{transaction.category} </td>
-                                            <td>{formattedDate} </td>
-                                            <td>{formatCurrency(transaction.amount)}</td>
-                                            
-
-                                            <td>
-                                                <button onClick={() => { setEditIndex(index); setEditTransaction({ ...transaction, date: formatDateTime(transaction.date) }); }} className="btn btn-sm  btn-primary ml-2">Edit</button>
-                                                <button onClick={() => handleDelete(index)} className="btn btn-sm btn-danger ml-2">Delete</button>
+                                            <td data-label="Description">
+                                                {transaction.description || 'No Description'} 
+                                            </td>
+                                            <td data-label="Category">
+                                                {transaction.category} 
+                                            </td>
+                                            <td data-label="Date">
+                                                {formattedDate} 
+                                            </td>
+                                            <td data-label="Amount">
+                                                {formatCurrency(transaction.amount)}
+                                            </td>
+                                            <td data-label="Actions">
+                                                <button onClick={() => { setEditIndex(index); setEditTransaction({ ...transaction, date: formatDateTime(transaction.date) }); }} className="btn btn-sm  btn-primary ml-1">Edit</button>
+                                                <button onClick={() => handleDelete(index)} className="btn btn-sm btn-danger ml-1">Delete</button>
                                             </td>
                                         </>
                                     )}

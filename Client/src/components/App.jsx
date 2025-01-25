@@ -13,6 +13,17 @@ import Footer from '../components/Footer';
 import '/src/App.css'
 
 function App() {
+  // FORMATTING 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  }
+
+
   const [transactions, setTransactions] = useState([]);
   const [balance, setBalance] = useState(0);
   const [budget, setBudget] = useState(0);
@@ -31,9 +42,9 @@ function App() {
   const [editAmount, setEditAmount] = useState('');
 
   // BALANCE
-  const [cashOnHand, setCashOnHand] = useState(0);
-  const [bankAccountBalance , setBankAccountBalance] = useState(0);
-  const [savings, setSavings] = useState(0);
+  const [cashOnHand, setCashOnHand] = useState('');
+  const [bankAccountBalance , setBankAccountBalance] = useState('');
+  const [savings, setSavings] = useState('');
   const [total , setTotal] = useState(0);
 
   const totalBalance = cashOnHand + bankAccountBalance + savings;
@@ -43,9 +54,6 @@ function App() {
   const [editIndex, setEditIndex] = useState(null);
   const [editBalance, setEditBalance] = useState({cash_on_hand: 0, bank_account_balance: 0, savings:0, total: 0});
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
-  };
   
   // Goals State ======>>>>>>
   const [goalAmount, setGoalAmount] = useState(0); // This is an example amount
@@ -243,6 +251,7 @@ function App() {
                 addedInvestments={addedInvestments} 
                 goals={goals}
                 formatCurrency={formatCurrency}
+                formatDate={formatDate}
                 handleRemoveInvestment={handleRemoveInvestment}
 
                 goalsProgress={goalsProgress} setGoalsProgress={setGoalsProgress}

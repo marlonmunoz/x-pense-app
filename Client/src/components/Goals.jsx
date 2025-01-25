@@ -104,36 +104,42 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
     };
 
     return (
-        <div>
+        <div className='container'>
             <h5>Set Your Goals</h5>
             <form noValidate onSubmit={handleSubmit} className={`needs-validation ${validated ? 'was-validated' : ''}`}>
-                <div className="mt-4">
-                    <input
-                        type="text"
-                        id="newGoalName"
-                        value={newGoalName}
-                        onChange={(e) => setNewGoalName(e.target.value)}
-                        className={`form-control ${validated && !newGoalName ? 'is-invalid' : ''}`}
-                        placeholder="Goal Name"
-                        required
-                    />
-                    <div className="invalid-feedback">
-                        Please provide a goal name
+                <div className="row mt-4">
+                    <div className="col-md-6">
+                        <input
+                            type="text"
+                            id="newGoalName"
+                            value={newGoalName}
+                            onChange={(e) => setNewGoalName(e.target.value)}
+                            className={`form-control ${validated && !newGoalName ? 'is-invalid' : ''}`}
+                            placeholder="Goal Name"
+                            required
+                        />
+                        <div className="invalid-feedback">
+                            Please provide a goal name
+                        </div>
                     </div>
+                    
 
-                    <input
-                        type="number"
-                        id="newGoalAmount"
-                        value={newGoalAmount}
-                        onChange={(e) => setNewGoalAmount(e.target.value)}
-                        className={`form-control mt-2 ${validated && !newGoalAmount ? 'is-invalid' : ''}`}
-                        placeholder="Goal Amount"
-                        required
-                    />
-                    <div className="invalid-feedback">
-                        Please provide a goal amount
+                    <div className="col-md-6">
+                        <input
+                            type="number"
+                            id="newGoalAmount"
+                            value={newGoalAmount}
+                            onChange={(e) => setNewGoalAmount(e.target.value)}
+                            className={`form-control ${validated && !newGoalAmount ? 'is-invalid' : ''}`}
+                            placeholder="Goal Amount"
+                            required
+                        />
+                        <div className="invalid-feedback">
+                            Please provide a goal amount
+                        </div>
                     </div>
                 </div>
+                <br />
                 <button type="submit" className="btn btn-primary mt-3">Add Goal</button>
             </form>
             <div className="mt-4">
@@ -156,9 +162,11 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                             placeholder="Enter amount"
                         />
                         <br />
-                        <button onClick={() => handleAddAmount(goal.id)} className="btn btn-primary ">Add Amount</button>
-                        <button onClick={() => handleResetAmount(goal.id)} className="btn btn-warning ml-2">Reset Amount</button>
-                        <button onClick={() => handleDeleteGoal(goal.id)} className="btn btn-danger ml-2">Delete</button>
+                        <div className="d-flex flex-column flex-md-row justify-content-center">
+                            <button onClick={() => handleAddAmount(goal.id)} className="btn btn-primary ml-2">Add Amount</button>
+                            <button onClick={() => handleResetAmount(goal.id)} className="btn btn-warning ml-2">Reset Amount</button>
+                            <button onClick={() => handleDeleteGoal(goal.id)} className="btn btn-danger ml-2">Delete</button>
+                        </div>
                     </div>
                 ))}
             </div>
