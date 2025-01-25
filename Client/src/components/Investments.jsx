@@ -84,6 +84,11 @@ const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, a
     const handleAddClick = (index) => {
         const investment = investments[index];
         const amount = amounts[index];
+
+        if(!amount) {
+            alert('You Need To Add An Amount');
+            return;
+        }
         const totalPrice = calculatePrice(amount, investment.pricePerUnit);
         onAddInvestment({...investment, amount, totalPrice})
         navigate('/dashboard')

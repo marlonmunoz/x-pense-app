@@ -104,7 +104,7 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                     )}
                   </ul>
                 </div>
-                <br />
+              
                 <br />
                 <div className="goals-progress  rounded px-5 " style={{ maxWidth: '600px'}}>
                     <h6 >Goals Progress</h6>
