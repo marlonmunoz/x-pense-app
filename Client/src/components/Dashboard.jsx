@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts'
 
 
-function Dashboard({ transactions =[], balance = 0, goals =[], budget = 0, totalAmount, darkMode, addedInvestments,formatCurrency }) {
+function Dashboard({ transactions =[], balance = 0, goals =[], budget = 0, totalAmount, darkMode, addedInvestments,formatCurrency, handleRemoveInvestment }) {
     const navigate = useNavigate();
     
     const recentTransactions = transactions.slice(-5);
@@ -92,6 +92,7 @@ function Dashboard({ transactions =[], balance = 0, goals =[], budget = 0, total
                   addedInvestments.map((investment, index) => (
                     <li key={index} className="list-group-item">
                       {investment.name} | {investment.amount} units | ${investment.totalPrice}
+                      <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger ml-2">Remove</button>
                     </li>
                   ))
                 )}

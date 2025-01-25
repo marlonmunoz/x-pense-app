@@ -95,7 +95,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
 
     return (
         <div>
-            <h5>New Transactions Added</h5>
+            <h5>New Transactions Added </h5>
             <p style={{color: 'gray'}}> <sup>Tracking History</sup></p>
             <div className="table-responsive">
                 <table className={`table table-striped table-hover table-bordered table-responsive ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
@@ -160,6 +160,10 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                         </tr>
                     </tbody>
                 </table>
+                <div><sup>Future Impplentations</sup></div>
+                <div><sup>1. add reminders for future payments</sup></div>
+                <div><sup>2. send notifications when payment is overdue based on date of transaction</sup></div>
+                <div><sup>3. implement sort on columns</sup></div>
             </div>
         </div>
     );

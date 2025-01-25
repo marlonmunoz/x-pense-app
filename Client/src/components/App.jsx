@@ -97,6 +97,11 @@ function App() {
     return parseFloat(amount).toLocaleString();
   };
 
+  const handleRemoveInvestment = (index) => {
+    const newInvestments = addedInvestments.filter((_, i) => i !== index);
+    setAddedInvestments(newInvestments);
+  }
+
 
   return (
     <Router>
@@ -183,6 +188,7 @@ function App() {
                 addedInvestments={addedInvestments} 
                 goals={goals}
                 formatCurrency={formatCurrency}
+                handleRemoveInvestment={handleRemoveInvestment}
               />} 
             />
             <Route path='/goals' element ={
