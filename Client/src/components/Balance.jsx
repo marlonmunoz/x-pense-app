@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 
-function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setBankAccountBalance, savings, setSavings, total, setTotal, formatCurrency }) {
-  const [balanceId, setBalanceId] = useState(null)
-  const [balances, setBalances] = useState([]);
-  const [editIndex, setEditIndex] = useState(null);
-  const [editBalance, setEditBalance] = useState({cash_on_hand: 0, bank_account_balance: 0, savings:0, total: 0});
+function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setBankAccountBalance, savings, setSavings, total, setTotal, formatCurrency, balanceId, setBalanceId, balances, setBalances, editIndex, setEditIndex, editBalance, setEditBalance }) {
+  // const [balanceId, setBalanceId] = useState(null)
+  // const [balances, setBalances] = useState([]);
+  // const [editIndex, setEditIndex] = useState(null);
+  // const [editBalance, setEditBalance] = useState({cash_on_hand: 0, bank_account_balance: 0, savings:0, total: 0});
   
   useEffect(() => {
     axios.get('http://localhost:5001/balance')

@@ -1,13 +1,13 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from 'react-router-dom'
 
-function AddTransactions( {transactions, setTransactions} ) {
-    const [text, setText] = useState('');
-    const [amount , setAmount] = useState(0);
-    const [category, setCategory] = useState('');
-    const [date, setDate] = useState('');
-    const [description, setDescription] = useState('')
+function AddTransactions( {amount, setAmount, category, setCategory, date, setDate, description, setDescription } ) {
+    // const [text, setText] = useState('');
+    // const [amount , setAmount] = useState(0);
+    // const [category, setCategory] = useState('');
+    // const [date, setDate] = useState('');
+    // const [description, setDescription] = useState('')
     const navigate = useNavigate();
 
     const handleAmountChange = (e) => {

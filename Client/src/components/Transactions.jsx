@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios'
 import '/src/App.css'
 
 
-const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, setTotalAmount }) => {
+const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, setTotalAmount, editIndex, setEditIndex, editTransaction, setEditTransaction }) => {
     // const [transactions, setTransactions] = useState([]);
-    const [editIndex, setEditIndex] = useState(null);
-    const [editTransaction, setEditTransaction] = useState({ category:'', date:'', text:'', amount:'' });
+    // const [editIndex, setEditIndex] = useState(null);
+    // const [editTransaction, setEditTransaction] = useState({ category:'', date:'', text:'', amount:'' });
     // const [totalAmount, setTotalAmount] = useState(0);
     
     

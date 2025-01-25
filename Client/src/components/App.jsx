@@ -21,6 +21,15 @@ function App() {
   const [addedInvestments, setAddedInvestments] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
 
+  // BUDGET
+  const [items, setItems] = useState([]);
+  const [name, setName] = useState("");
+  const [amount, setAmount] = useState("");
+  const [newBudget, setNewBudget] = useState("")
+  const [error, setError] = useState("");
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editAmount, setEditAmount] = useState('');
+
   // BALANCE
   const [cashOnHand, setCashOnHand] = useState(0);
   const [bankAccountBalance , setBankAccountBalance] = useState(0);
@@ -28,6 +37,11 @@ function App() {
   const [total , setTotal] = useState(0);
 
   const totalBalance = cashOnHand + bankAccountBalance + savings;
+
+  const [balanceId, setBalanceId] = useState(null)
+  const [balances, setBalances] = useState([]);
+  const [editIndex, setEditIndex] = useState(null);
+  const [editBalance, setEditBalance] = useState({cash_on_hand: 0, bank_account_balance: 0, savings:0, total: 0});
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -37,12 +51,32 @@ function App() {
   const [goalAmount, setGoalAmount] = useState(0); // This is an example amount
   const [currentAmount, setCurrentAmount] = useState(0); // This is an example of current amount
   const [inputAmount, setInputAmount] = useState('');
+  
   const [newGoalName, setNewGoalName] = useState('');
   const [newGoalAmount, setNewGoalAmount] = useState('');
   const [progPercentage, setProgPercentage] = useState(0);
   const [goals, setGoals] = useState([]);
-  
+  const [goalsProgress, setGoalsProgress] = useState(goals.map(goal => ({
+          ...goal,
+          progress: (goal.saved / goal.target) * 100
+        })));
+  const [inputAmounts, setInputAmounts] = useState({});
 
+  //TRANSACTION
+  const [editTransaction, setEditTransaction] = useState({ category:'', date:'', text:'', amount:'' });
+
+  // INVESTMENTS
+  const [investments, setInvestments] = useState([]);
+  const [amounts, setAmounts] = useState([]);  
+  const [marketCaps, setMarketCaps] = useState({})
+
+  //ADD TRANSACTIONS
+  const [category, setCategory] = useState('');
+  const [date, setDate] = useState('');
+  const [description, setDescription] = useState('')
+
+
+  // LOGIN
 
   useEffect(() => {
     const total = transactions.reduce((total, transaction) => total + parseFloat(transaction.amount), 0)
@@ -151,21 +185,33 @@ function App() {
                 setTotal={setTotal}
                 formatCurrency={formatCurrency}
 
+                balanceId={balanceId} setBalanceId={setBalanceId}
+                balances={balances} setBalances={setBalances}
+                editIndex={editIndex} setEditIndex={setEditIndex}
+                editBalance={editBalance} setEditBalance={setEditBalance}
               />}
             />
             <Route path='/transactions' element ={
               <Transactions 
                 transactions={transactions} setTransactions={setTransactions} 
                 darkMode={darkMode} 
-                validated={validated} setValidated={setValidated} 
+                validated={validated} setValidated={setValidated}
+
                 totalAmount={totalAmount} setTotalAmount={setTotalAmount}
+                editIndex={editIndex} setEditIndex={setEditIndex}
+                editTransaction={editTransaction} setEditTransaction={setEditTransaction}
               />}
             />
             <Route path='/add' element ={
               <AddTransactions 
-                transactions={transactions} setTransactions={setTransactions} 
+                // transactions={transactions} setTransactions={setTransactions} 
                 darkMode={darkMode} 
                 validated={validated} setValidated={setValidated}
+
+                amount={amount} setAmount={setAmount}
+                category={category} setCategory={setCategory}
+                date={date} setDate={setDate}
+                description={description} setDescription={setDescription}
               />}
             />
             <Route path='/budget' element ={
@@ -175,6 +221,14 @@ function App() {
                 darkMode={darkMode} 
                 validated={validated} setValidated={setValidated} 
                 formatCurrency={formatCurrency}
+
+                items={items} setItems={setItems}
+                name={name} setName={setName}
+                amount={amount} setAmount={setAmount}
+                newBudget={newBudget} setNewBudget={setNewBudget}
+                error={error} setError={setError}
+                editingIndex={editingIndex} setEditingIndex={setEditingIndex}
+                editAmount={editAmount} setEditAmount={setEditAmount}
               />}
             />
             <Route path='/dashboard' element ={
@@ -189,18 +243,23 @@ function App() {
                 goals={goals}
                 formatCurrency={formatCurrency}
                 handleRemoveInvestment={handleRemoveInvestment}
+
+                goalsProgress={goalsProgress} setGoalsProgress={setGoalsProgress}
               />} 
             />
             <Route path='/goals' element ={
               <Goals 
                 goalAmount={goalAmount} setGoalAmount={setGoalAmount} 
                 currentAmount={currentAmount} setCurrentAmount={setCurrentAmount} 
-                inputAmount={inputAmount} setInputAmount={setInputAmount} 
+                // inputAmount={inputAmount} setInputAmount={setInputAmount} 
+
                 newGoalName={newGoalName} setNewGoalName={setNewGoalName}
                 newGoalAmount={newGoalAmount} setNewGoalAmount={setNewGoalAmount}
                 progPercentage={progPercentage} setProgPercentage={setProgPercentage} 
                 goals={goals} setGoals={setGoals}
                 validated={validated} setValidated={setValidated}
+                inputAmounts={inputAmounts} setInputAmounts={setInputAmounts}
+                // goalsProgress={goalsProgress} setGoalsProgress={setGoalsProgress}
               />}
             />
             <Route path='/investments' element ={
@@ -209,6 +268,10 @@ function App() {
                 darkMode={darkMode} 
                 onAddInvestment={handleAddInvestment} 
                 validated={validated} setValidated={setValidated} 
+
+                investments={investments} setInvestments={setInvestments}
+                amounts={amounts} setAmounts={setAmounts}
+                marketCaps={marketCaps} setMarketCaps={setMarketCaps}
               />}
             />
           </Route>

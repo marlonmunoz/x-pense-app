@@ -1,35 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts'
 
 
-function Dashboard({ transactions =[], balance = 0, goals =[], budget = 0, totalAmount, darkMode, addedInvestments,formatCurrency, handleRemoveInvestment }) {
+function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmount, darkMode, addedInvestments,formatCurrency, handleRemoveInvestment, goalsProgress, setGoalsProgress}) {
     const navigate = useNavigate();
     
     const recentTransactions = transactions.slice(-5);
     const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0).toFixed(2);
-    const [goalsProgress, setGoalsProgress] = useState(goals.map(goal => ({
-        ...goal,
-        progress: (goal.saved / goal.target) * 100
-      })));
+    // const [goalsProgress, setGoalsProgress] = useState(goals.map(goal => ({
+    //     ...goal,
+    //     progress: (goal.saved / goal.target) * 100
+    //   })));
     const overviewTotal = budget + parseFloat(totalInvestments) + balance - totalAmount;
     // console.log('THIS IS THE TOTAL BALANCE OVERview', overviewTotal);
 
-    const CustomTooltip = ({ active, payload}) => {
-        if (active && payload && payload.length) {
-            const { date, amount, description } = payload[0].payload;
-            return (
-                <div style={{ backgroundColor: darkMode ? '#333' : '#fff', color: darkMode ? '#fff' : '#000', padding: '10px', border: '1px solid #ccc'}} >
-                    <p>{`Date: ${date}`}</p>
-                    <p>{`Amount: ${amount}`}</p>
-                    <p>{`Description: ${description}`}</p>
-                </div>
-            );
-        }
-        return null;
-    }
 
+    // FETCHING DATA FOR OVERVIEW TABLE
     useEffect(() => {
         // Fetch goals from the backend
         axios.get('http://localhost:5001/goals')
@@ -44,6 +32,22 @@ function Dashboard({ transactions =[], balance = 0, goals =[], budget = 0, total
             console.error('Error fetching goals:', error);
           });
     }, []);
+
+    
+    const CustomTooltip = ({ active, payload}) => {
+        if (active && payload && payload.length) {
+            const { date, amount, description } = payload[0].payload;
+            return (
+                <div style={{ backgroundColor: darkMode ? '#333' : '#fff', color: darkMode ? '#fff' : '#000', padding: '10px', border: '1px solid #ccc'}} >
+                    <p>{`Date: ${date}`}</p>
+                    <p>{`Amount: ${amount}`}</p>
+                    <p>{`Description: ${description}`}</p>
+                </div>
+            );
+        }
+        return null;
+    }
+
 
     const addGoal = (newGoal) => {
       setGoalsProgress([...goalsProgress, newGoal]);
@@ -124,23 +128,23 @@ function Dashboard({ transactions =[], balance = 0, goals =[], budget = 0, total
                         <tr>
                             <th scope="row">Balance</th>
                             {/* {console.log('THIS IS THE TOTAL BALANCE', balance)}  */}
-                            <td>${formatCurrency(balance)}</td>
+                            <td>{formatCurrency(balance)}</td>
                         </tr>
                         <tr>
                             <th scope="row">Investments</th>
-                            <td>$ {formatCurrency(totalInvestments)}</td>
+                            <td>{formatCurrency(totalInvestments)}</td>
                         </tr>
                         <tr>
                             <th scope="row">Budget</th>
-                            <td>$ {formatCurrency(budget)}</td>
+                            <td>{formatCurrency(budget)}</td>
                         </tr>
                         <tr>
                             <th scope="row">X-penses</th>
-                            <td>$ {formatCurrency(totalAmount)}</td>
+                            <td>{formatCurrency(totalAmount)}</td>
                         </tr>
                         <tr>
                             <th scope="row">Overview Total</th>
-                            <td>$ {formatCurrency(overviewTotal)}</td>
+                            <td>{formatCurrency(overviewTotal)}</td>
                         </tr>
                     </tbody>
                  </table>

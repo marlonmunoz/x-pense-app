@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 
-function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCurrency }) {
-    const [items, setItems] = useState([]);
-    const [name, setName] = useState("");
-    const [amount, setAmount] = useState("");
-    const [newBudget, setNewBudget] = useState("")
-    const [error, setError] = useState("");
+function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCurrency,items, setItems, name, setName, amount, setAmount, newBudget, setNewBudget, error, setError, editingIndex, setEditingIndex, editAmount, setEditAmount }) {
+    // const [items, setItems] = useState([]);
+    // const [name, setName] = useState("");
+    // const [amount, setAmount] = useState("");
+    // const [newBudget, setNewBudget] = useState("")
+    // const [error, setError] = useState("");
 
-    const [editingIndex, setEditingIndex] = useState(null);
-    const [editAmount, setEditAmount] = useState('');
+    // const [editingIndex, setEditingIndex] = useState(null);
+    // const [editAmount, setEditAmount] = useState('');
 
     const addItem = () => {
         if (name && amount) {

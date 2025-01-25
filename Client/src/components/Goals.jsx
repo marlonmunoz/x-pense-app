@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
-const Goals = () => {
-    const [newGoalName, setNewGoalName] = useState('');
-    const [newGoalAmount, setNewGoalAmount] = useState('');
-    const [validated, setValidated] = useState(false);
-    const [goals, setGoals] = useState([]);
-    const [inputAmounts, setInputAmounts] = useState({});
+const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, goals, setGoals, inputAmounts, setInputAmounts, validated, setValidated } ) => {
+    // const [newGoalName, setNewGoalName] = useState(''); // in App
+    // const [newGoalAmount, setNewGoalAmount] = useState(''); // in App
+    // const [validated, setValidated] = useState(false);
+    // const [goals, setGoals] = useState([]); // in App
+    // const [inputAmounts, setInputAmounts] = useState({});
 
     // Retrieve goals from the backend when the component mounts
     useEffect(() => {

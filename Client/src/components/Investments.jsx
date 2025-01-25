@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { debounce } from "lodash";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom'
 // CRYPTO Symbols
-import xrpIcon from '../assets/xrp.png'
+// import xrpIcon from '../assets/xrp.png'
 import bitcoinIcon from '../assets/bitcoin.png'
 import ethereumIcon from '../assets/ethereum.png'
 import usdcIcon from '../assets/usdc.png'
 
-const Investments = ({ darkMode, onAddInvestment }) => {
+const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, amounts, setAmounts, marketCaps, setMarketCaps }) => {
     const navigate = useNavigate();
-    const [investments, setInvestments] = useState([]);
-    const [amounts, setAmounts] = useState([]);  
-    const [marketCaps, setMarketCaps] = useState({})
+    // const [investments, setInvestments] = useState([]);
+    // const [amounts, setAmounts] = useState([]);  
+    // const [marketCaps, setMarketCaps] = useState({})
     
     useEffect(() => {
         const fetchInvestments = async () => {
