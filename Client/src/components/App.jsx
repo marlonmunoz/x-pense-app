@@ -72,6 +72,8 @@ function App() {
 
   //TRANSACTION
   const [editTransaction, setEditTransaction] = useState({ category:'', date:'', text:'', amount:'' });
+  const [reminderDate, setReminderDate] = useState('');
+  const [successMessage, setSuccessMessage] = useState('')
 
   // INVESTMENTS
   const [investments, setInvestments] = useState([]);
@@ -209,6 +211,8 @@ function App() {
                 totalAmount={totalAmount} setTotalAmount={setTotalAmount}
                 editIndex={editIndex} setEditIndex={setEditIndex}
                 editTransaction={editTransaction} setEditTransaction={setEditTransaction}
+                reminderDate={reminderDate} setReminderDate={setReminderDate}
+                successMessage={successMessage} setSuccessMessage={setSuccessMessage}
               />}
             />
             <Route path='/add' element ={

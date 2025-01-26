@@ -3,12 +3,7 @@ import axios from 'axios'
 import '/src/App.css'
 
 
-const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, setTotalAmount, editIndex, setEditIndex, editTransaction, setEditTransaction, formatCurrency }) => {
-    // const [transactions, setTransactions] = useState([]);
-    // const [editIndex, setEditIndex] = useState(null);
-    // const [editTransaction, setEditTransaction] = useState({ category:'', date:'', text:'', amount:'' });
-    // const [totalAmount, setTotalAmount] = useState(0);
-    
+const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, setTotalAmount, editIndex, setEditIndex, editTransaction, setEditTransaction, formatCurrency, reminderDate, setSuccessMessage, successMessage }) => {
     
     useEffect(() => {
         axios.get('http://127.0.0.1:5001/transactions')
@@ -23,10 +18,6 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
         setTotalAmount(total);
     }, [transactions]);
     
-    // const formatAmount = (amount) => {
-    //     return parseFloat(amount).toLocaleString();
-    // };
-
     const formatAmount = (amount) => {
         const [integerPart, decimalPart] = parseFloat(amount).toFixed(2).split('.');
         return (
@@ -82,19 +73,42 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
         }
     };
     
-    const validateTransaction = (transaction) => {
-        if (!transaction.date) {
-            console.error('Transaction date is missing');
-            return false;
+    // const validateTransaction = (transaction) => {
+    //     if (!transaction.date) {
+    //         console.error('Transaction date is missing');
+    //         return false;
+    //     }
+    //     return true;
+    // };
+
+    const handleReminder = (transaction, reminderDate, amount) => {
+        const currentDate = new Date();
+        const reminderTime = new Date(reminderDate) - currentDate;
+
+        if (reminderTime > 0) {
+            setTimeout(() => {
+                alert(`Reminder: You need to make a payment of ${amount} for ${transaction.description} on ${transaction.date}`);
+            },  reminderTime);
+            setSuccessMessage(`Payment Reminder set for ${transaction.description} on ${reminderDate}`);
+        } else {
+            alert('Reminder date must in the future.')
         }
-        return true;
-    };
+    }
+
+    const handleSetReminderClick = (transaction) => {
+        const reminderDate = prompt('Enter the reminder date (YYYY-MM-DD)');
+        const amount = prompt('Enter the amount that needs to be paid:');
+        if (reminderDate && amount) {
+            handleReminder(transaction, reminderDate, amount)
+        }
+    }
     
     
     return (
         <div className="container">
             <h5>New Transactions Added </h5>
             <p style={{color: 'gray'}}> <sup>Tracking History</sup></p>
+            {successMessage && <div className='alert alert-success'>{successMessage}</div>}
             <div className="table-responsive">
                 <table className={`table table-striped table-hover table-bordered ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                     <thead>
@@ -152,6 +166,8 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                             <td data-label="Actions">
                                                 <button onClick={() => { setEditIndex(index); setEditTransaction({ ...transaction, date: formatDateTime(transaction.date) }); }} className="btn btn-sm  btn-primary ml-1">Edit</button>
                                                 <button onClick={() => handleDelete(index)} className="btn btn-sm btn-danger ml-1">Delete</button>
+                                                <button onClick={() => handleSetReminderClick(transaction, reminderDate)} className='btn btn-sm btn-info ml-1'>Set Reminder</button>
+                                                
                                             </td>
                                         </>
                                     )}

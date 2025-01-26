@@ -4,9 +4,9 @@ import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+# from flask_migrate import Migrate
 from sqlalchemy.orm import Session
-from models import db, Goal, Transaction, Balance, Investment
+from models import db, Goal, Transaction, Balance
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 import requests
@@ -20,7 +20,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///xpense.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') 
 db.init_app(app)
-migrate = Migrate(app, db)
+# migrate = Migrate(app, db)
 
 with app.app_context():
     db.create_all()
@@ -259,42 +259,7 @@ def delete_goal(goal_id):
     return '', 204
 
 
-# INVESTMENTS ============>>>>>>>
-@app.route('/investments', methods=['GET'])
-def get_investments():
-    investments = Investment.query.all()
-    return jsonify([investment.to_dict() for investment in  investments])
 
-@app.route('/investments', methods=['POST'])
-def add_investment():
-    data = request.get_json()
-    new_investment = Investment(
-        name=data['name'],
-        amount=data['amount'],
-        price=data['price']
-    )
-    db.session.add(new_investment)
-    db.session.commit()
-    return jsonify(new_investment.to_dict()), 201
-    
-@app.route('/investments/<int:id>', methods=['PUT'])
-def update_investment(id):
-    investment = Investment.query.get_or_404(id)
-    data = request.get_json()
-    investment.name=data['name']
-    investment.amount=data['amount']
-    investment.price=data['price']
-    db.session.commit()
-    return jsonify(investment.to_dict())
-    
-@app.route('/investment/<int:id>', methods=['DELETE'])
-def delete_investment(id):
-    investment = Investment.query.get_or_404(id)
-    db.session.delete(investment)
-    db.session.commit()
-    return '', 204
-    
-    pass
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
     
