@@ -59,9 +59,9 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
     };
 
     return (
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-12">
+        <div className="container-fluid" >
+          <div className="row"  >
+            <div className="col-16" >
                 <div className="summary">
                     <h5>Recent Transactions</h5>
                     <br />
@@ -71,16 +71,18 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                 <div className="charts">
                     <h6>Spending Over Time</h6>
                     <p style={{color: 'gray'}}><sup>Tracking All X-PENSE Transactions</sup></p>
-                    <ResponsiveContainer width="100%" height={350}>
+                    <ResponsiveContainer width={390} height={350}>
                       <LineChart data={formattedTransactions}>
                         <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#444' : '#ccc'} />
-                        <XAxis dataKey="date" stroke={darkMode ? '#fff' : '#000'} label={{ value: 'Date', position: 'insideBottomRight', offset: -10 }}/>
-                        <YAxis dataKey="amount" vstroke={darkMode ? '#fff' : '#000'} label={{ value: 'Amount', angle: -90, position: 'insideLeft', offset: 10 }}  />
+                        <XAxis dataKey="date" stroke={darkMode ? '#fff' : '#000'} label={{ value: 'Date', angle: -0, position: 'insideBottomCEnter', offset: 0 }}/>
+                        <YAxis dataKey="amount" vstroke={darkMode ? '#fff' : '#000'} label={{ value: 'Amount', angle: -90, position: 'insideLeft', offset: 0 }}  />
                         <Tooltip content={<CustomTooltip />}/>
                         <Legend wrapperStyle={{ color: darkMode ? '#fff' : '#000' }} />
                         <Line 
                           type="monotone"     
-                          dataKey="amount"    
+                          dataKey="amount"   
+                          // name="legend" 
+                          label={{ position: 'top', fill: darkMode ? '#fff' : '#000' }}
                           stroke={darkMode ? '#08fa00' : '#8884d8'} 
                           activeDot={{ r: 8 }}
                         />

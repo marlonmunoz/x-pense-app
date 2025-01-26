@@ -181,7 +181,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                     </tbody>
                 </table>
                 <div><sup>Future Impplentations</sup></div>
-                <div><sup>1. add reminders for future payments</sup></div>
+                {/* <div><sup>1. add reminders for future payments</sup></div> */}
                 <div><sup>2. send notifications when payment is overdue based on date of transaction</sup></div>
                 <div><sup>3. implement sort on columns</sup></div>
             </div>
