@@ -1,21 +1,20 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 
-function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setBankAccountBalance, savings, setSavings, total, setTotal, formatCurrency, balanceId, setBalanceId, balances, setBalances, editIndex, setEditIndex, editBalance, setEditBalance }) {
-  // const [balanceId, setBalanceId] = useState(null)
-  // const [balances, setBalances] = useState([]);
-  // const [editIndex, setEditIndex] = useState(null);
-  // const [editBalance, setEditBalance] = useState({cash_on_hand: 0, bank_account_balance: 0, savings:0, total: 0});
-  
+function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setBankAccountBalance, savings, setSavings, setTotal, formatCurrency, balanceId, setBalanceId, balances, setBalances, editIndex, setEditIndex, editBalance, setEditBalance }) {
   useEffect(() => {
+    console.log('BALANCE COMPONENT');
+    console.log('Fetching balances...');
     axios.get('http://localhost:5001/balance')
       .then(response => {
+        console.log('Response received:', response.data);
         if (Array.isArray(response.data)) {
           const fetchedBalances = response.data.map(balance => ({
             ...balance,
             total: balance.cash_on_hand + balance.bank_account_balance + balance.savings, // Calculate total
             id: balance.id // Ensure each balance has an id
           }));
+          console.log('Fetched balances:', fetchedBalances);
           setBalances(fetchedBalances);
           if (fetchedBalances.length > 0) {
             const firstBalance = fetchedBalances[0];
@@ -28,6 +27,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
             ...response.data,
             total: response.data.cash_on_hand + response.data.bank_account_balance + response.data.savings // Calculate total
           };
+          console.log('Fetched single balance:', balance);
           setBalances([balance]); // Wrap the single object in an array
           setCashOnHand(balance.cash_on_hand);
           setBankAccountBalance(balance.bank_account_balance);
@@ -102,22 +102,6 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
     setSavings('');
     setTotal('');
 }
-  
-  // const resetFields = () => {
-  //   const updatedValues = {
-  //     cash_on_hand: 0,
-  //     bank_account_balance: 0,
-  //     savings: 0,
-  //     total: 0
-  //   }
-    
-  //   setCashOnHand('');
-  //   setBankAccountBalance('');
-  //   setSavings('');
-  //   setTotal('');
-    
-  //   updateBalance(balanceId, updatedValues)
-  // }
 
   const totalBalance = () => {
     const newTotal = cashOnHand + bankAccountBalance + savings;
@@ -142,10 +126,6 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
         console.error('There was an error saving your balance!', error);
       });
   }
-  
-  // const formatAmount = (amount) => {
-  //   return parseFloat(amount).toLocaleString();
-  // };
 
   return (
     <div>

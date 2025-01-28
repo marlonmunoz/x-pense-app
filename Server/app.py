@@ -27,7 +27,7 @@ with app.app_context():
 
 
 users = {
-    "mago": "1234"
+    "mago": "1234***"
 }
 
 # LOGIN ============>>>>>>>

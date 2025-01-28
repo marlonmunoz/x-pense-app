@@ -10,9 +10,7 @@ import usdcIcon from '../assets/usdc.png'
 
 const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, amounts, setAmounts, marketCaps, setMarketCaps, formatCurrency }) => {
     const navigate = useNavigate();
-    // const [investments, setInvestments] = useState([]);
-    // const [amounts, setAmounts] = useState([]);  
-    // const [marketCaps, setMarketCaps] = useState({})
+
     
     useEffect(() => {
         const fetchInvestments = async () => {
@@ -45,6 +43,7 @@ const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, a
                 const response = await axios.get(`http://localhost:5001/api/coins/markets`, {
                     params: { ids }
                 });
+                console.log('INVESTMENTS COMPONENTS');
                 console.log('Market cap response:', response.data); // Log the response data
     
                 if (Array.isArray(response.data)) {
@@ -86,7 +85,7 @@ const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, a
         const amount = amounts[index];
 
         if(!amount) {
-            alert('You Need To Add An Amount');
+            alert('AMOUNTS NOT DETECTED!');
             return;
         }
         const totalPrice = calculatePrice(amount, investment.pricePerUnit);

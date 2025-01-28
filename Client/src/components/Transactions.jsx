@@ -6,8 +6,12 @@ import '/src/App.css'
 const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, setTotalAmount, editIndex, setEditIndex, editTransaction, setEditTransaction, formatCurrency, reminderDate, setSuccessMessage, successMessage }) => {
     
     useEffect(() => {
+        console.log('TRANSACTIONS COMPONENT');
+        
+        console.log('Fetching transactions...'); // logs 01
         axios.get('http://127.0.0.1:5001/transactions')
         .then(response => {
+            console.log('Fetched transactions:', response.data); // log 02
             setTransactions(response.data)
         })
         .catch(error => console.log('Error fetching transactions', error));
@@ -18,15 +22,15 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
         setTotalAmount(total);
     }, [transactions]);
     
-    const formatAmount = (amount) => {
-        const [integerPart, decimalPart] = parseFloat(amount).toFixed(2).split('.');
-        return (
-            <>
-                {integerPart}
-                <sup>.{decimalPart}</sup>
-            </>
-        );
-    };
+    // const formatAmount = (amount) => {
+    //     const [integerPart, decimalPart] = parseFloat(amount).toFixed(2).split('.');
+    //     return (
+    //         <>
+    //             {integerPart}
+    //             <sup>.{decimalPart}</sup>
+    //         </>
+    //     );
+    // };
     const formatDateTime = (dataString) => {
         const date = new Date(dataString);
         const formattedDate = date.toISOString().split('T')[0];
@@ -72,14 +76,6 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
             console.error('Error updating transaction:', error);
         }
     };
-    
-    // const validateTransaction = (transaction) => {
-    //     if (!transaction.date) {
-    //         console.error('Transaction date is missing');
-    //         return false;
-    //     }
-    //     return true;
-    // };
 
     const handleReminder = (transaction, reminderDate, amount) => {
         const currentDate = new Date();
@@ -180,10 +176,6 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                         </tr>
                     </tbody>
                 </table>
-                <div><sup>Future Impplentations</sup></div>
-                {/* <div><sup>1. add reminders for future payments</sup></div> */}
-                <div><sup>2. send notifications when payment is overdue based on date of transaction</sup></div>
-                <div><sup>3. implement sort on columns</sup></div>
             </div>
         </div>
     );

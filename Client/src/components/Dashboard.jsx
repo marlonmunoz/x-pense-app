@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 
 
 function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmount, darkMode, addedInvestments,formatCurrency, formatDate, handleRemoveInvestment, goalsProgress, setGoalsProgress}) {
     const navigate = useNavigate();
     
-    const recentTransactions = transactions.slice(-5);
+    // const recentTransactions = transactions.slice(-5);
     const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0).toFixed(2);
     const overviewTotal = budget + parseFloat(totalInvestments) + balance - totalAmount;
     const sortedTransactions = transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -50,18 +50,18 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
     }
 
 
-    const addGoal = (newGoal) => {
-      setGoalsProgress([...goalsProgress, newGoal]);
-    };
+    // const addGoal = (newGoal) => {
+    //   setGoalsProgress([...goalsProgress, newGoal]);
+    // };
 
-    const deleteGoal = (goalId) => {
-      setGoalsProgress(goalsProgress.filter(goal => goal.id !== goalId));
-    };
+    // const deleteGoal = (goalId) => {
+    //   setGoalsProgress(goalsProgress.filter(goal => goal.id !== goalId));
+    // };
 
     return (
         <div className="container-fluid" >
           <div className="row"  >
-            <div className="col-16" >
+            <div className="col-12" >
                 <div className="summary">
                     <h5>Recent Transactions</h5>
                     <br />
@@ -71,8 +71,8 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                 <div className="charts">
                     <h6>Spending Over Time</h6>
                     <p style={{color: 'gray'}}><sup>Tracking All X-PENSE Transactions</sup></p>
-                    <ResponsiveContainer width={390} height={350}>
-                      <LineChart data={formattedTransactions}>
+                    {/* <ResponsiveContainer width="100%" height="100%"> */}
+                      <LineChart width={390} height={350} data={formattedTransactions}>
                         <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#444' : '#ccc'} />
                         <XAxis dataKey="date" stroke={darkMode ? '#fff' : '#000'} label={{ value: 'Date', angle: -0, position: 'insideBottomCEnter', offset: 0 }}/>
                         <YAxis dataKey="amount" vstroke={darkMode ? '#fff' : '#000'} label={{ value: 'Amount', angle: -90, position: 'insideLeft', offset: 0 }}  />
@@ -81,13 +81,12 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                         <Line 
                           type="monotone"     
                           dataKey="amount"   
-                          // name="legend" 
                           label={{ position: 'top', fill: darkMode ? '#fff' : '#000' }}
                           stroke={darkMode ? '#08fa00' : '#8884d8'} 
                           activeDot={{ r: 8 }}
                         />
                       </LineChart>
-                    </ResponsiveContainer>
+                    {/* </ResponsiveContainer> */}
                 </div>
                 <br />
                 <div>

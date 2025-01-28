@@ -9,6 +9,8 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
 
     // Retrieve goals from the backend when the component mounts
     useEffect(() => {
+        console.log('GOALS COMPONENT');
+        
         console.log('Fetching goals from backend'); // Debug log
         fetch('http://localhost:5001/goals')
             .then(response => response.json())

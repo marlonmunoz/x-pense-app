@@ -155,17 +155,17 @@ function App() {
         <h1>X-PENSE</h1>
         <h6><span className='badge badge-info'>A Budget Tracker At Your Fingertips</span></h6>
 
-
         <button 
           onClick={toggleDarkMode} 
           className={`btn mb-3 ${darkMode ? 'btn-light' : 'btn-dark'}`}
         >
           {darkMode ? 'Light' : 'Dark'} Mode
         </button>
+       
 
         <nav className={`navbar navbar-expand-lg ${darkMode ? 'navbar-dark-mode' : 'navbar-light-mode'}`}>
           <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toogle navigation'>
-            <span className={`navbar-toggler-icon ${darkMode ? 'dark-mode-icon' : 'light-mode-icon'}`}></span>
+              <span className={`navbar-toggler-icon ${darkMode ? 'dark-mode-icon' : 'light-mode-icon'} align-left`}></span>
           </button>
           <div className='collapse navbar-collapse justify-content-center' id='navbarNav'>
             <ul className='nav nav-tabs nav-tabs-bg'>
@@ -174,14 +174,11 @@ function App() {
               <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/'>Balance</NavLink></li>
 
               <li className='nav-item'>
-                <NavLink 
-                  // className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} 
-                  className={`nav-link ${darkMode ? 'highlight-black' : 'highlight-white'} border`} 
-                  to='/add'
-                >
+                <NavLink className={`nav-link ${darkMode ? 'highlight-black' : 'highlight-white'} border`} to='/add'>
                   <strong>X-PENSE</strong>
                 </NavLink>
               </li>
+                  {/* className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `}  */}
 
               <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/transactions'>Transaction</NavLink></li>
               <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/goals'>Goals</NavLink></li>
