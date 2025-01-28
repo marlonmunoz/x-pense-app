@@ -237,6 +237,7 @@ def update_goal(goal_id):
     goal = Goal.query.get(goal_id)
     if goal is None:
         return jsonify({'error': 'Goal not found'}), 404
+    goal.name = data.get('name', goal.name)
     goal.saved = data.get('saved', goal.saved)
     db.session.commit()
     return jsonify(

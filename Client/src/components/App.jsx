@@ -70,6 +70,10 @@ function App() {
         })));
   const [inputAmounts, setInputAmounts] = useState({});
 
+        // Edit Existing Goal Name
+  const [editingGoalId, setEditingGoalId] = useState(null);
+  const [editedGoalName, setEditedGoalName] = useState('');
+
   //TRANSACTION
   const [editTransaction, setEditTransaction] = useState({ category:'', date:'', text:'', amount:'' });
   const [reminderDate, setReminderDate] = useState('');
@@ -281,6 +285,8 @@ function App() {
                 validated={validated} setValidated={setValidated}
                 inputAmounts={inputAmounts} setInputAmounts={setInputAmounts}
                 // goalsProgress={goalsProgress} setGoalsProgress={setGoalsProgress}
+                editingGoalId={editingGoalId} setEditingGoalId={setEditingGoalId}
+                editedGoalName={editedGoalName} setEditedGoalName={setEditedGoalName}
               />}
             />
             <Route path='/investments' element ={
