@@ -286,7 +286,7 @@ body.dark-mode {
 
 /* goal border */
 .goal-container {
-  border: 1px solid rgb(142, 22, 22);
+  border: 1px solid rgb(163, 161, 161);
   padding: 18px;
   border-radius: 5px;
 }
