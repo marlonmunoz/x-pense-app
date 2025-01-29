@@ -287,6 +287,8 @@ function App() {
                 // goalsProgress={goalsProgress} setGoalsProgress={setGoalsProgress}
                 editingGoalId={editingGoalId} setEditingGoalId={setEditingGoalId}
                 editedGoalName={editedGoalName} setEditedGoalName={setEditedGoalName}
+                formatCurrency={formatCurrency}
+                darkMode={darkMode}
               />}
             />
             <Route path='/investments' element ={

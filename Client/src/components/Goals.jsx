@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, goals, setGoals, inputAmounts, setInputAmounts, validated, setValidate, editingGoalId, setEditingGoalId, editedGoalName, setEditedGoalName } ) => {
+const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, goals, setGoals, inputAmounts, setInputAmounts, validated, setValidate, editingGoalId, setEditingGoalId, editedGoalName, setEditedGoalName, formatCurrency, darkMode } ) => {
 
     // Retrieve goals from the backend when the component mounts
     useEffect(() => {
@@ -179,7 +179,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                 <button type="submit" className="btn btn-primary mt-3">Add Goal</button>
             </form>
             <div className="mt-4">
-            <p style={{color: 'gray'}}><sup>Add All Your Goals Here</sup></p>
+            <p style={{color: 'gray'}}><sup>YOUR ADDED GOALS</sup></p>
             {goals.map(goal => (
                 <div key={goal.id} className="mb-3">
                     {editingGoalId === goal.id ? (
@@ -196,27 +196,31 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                         </>
                     ) : (
                         <>
-                            <h6>{goal.name}: $ {goal.target.toLocaleString()}</h6>
-                            <div className="progress">
-                                <div className="progress-bar bg-success" role="progressbar" style={{width: `${(goal.saved / goal.target) * 100}%`}} aria-valuemin="0" aria-valuemax="100">
-                                    {(goal.saved / goal.target * 100).toFixed(2)}%
+                            <div className='goal-container'>
+                                <h6>{goal.name}: $ {goal.target.toLocaleString()}</h6>
+                                <div className={`progress ${darkMode ? 'progress-dark' : 'progress-light'}`}>
+                                    <div className={`progress-bar ${darkMode ? 'bg-dark' : 'bg-success'}`} role="progressbar" style={{width: `${(goal.saved / goal.target) * 100}%`}} aria-valuemin="0" aria-valuemax="100">
+                                        {(goal.saved / goal.target * 100).toFixed(2)}%
+                                    </div>
                                 </div>
-                            </div>
-                            <input 
-                                type="number" 
-                                id={`inputAmount-${goal.id}`}
-                                name="inputAmount"
-                                value={inputAmounts[goal.id] || ''}
-                                onChange={(e) => setInputAmounts({ ...inputAmounts, [goal.id]: e.target.value })}
-                                className="form-control mt-3"
-                                placeholder="Enter amount"
-                            />
-                            <br />
-                            <div className="d-flex flex-column flex-md-row justify-content-center">
-                                <button onClick={() => handleAddAmount(goal.id)} className="btn btn-primary ml-2">Add Amount</button>
-                                <button onClick={() => handleResetAmount(goal.id)} className="btn btn-warning ml-2">Reset Amount</button>
-                                <button onClick={() => handleDeleteGoal(goal.id)} className="btn btn-danger ml-2">Delete</button>
-                                <button onClick={() => handleEdit(goal.id, goal.name)} className="btn btn-secondary ml-2">Edit</button>
+                                <span className='saved-amount'> <sup>You Have {formatCurrency(goal.saved)} Saved </sup></span>
+                                <input 
+                                    type="number" 
+                                    id={`inputAmount-${goal.id}`}
+                                    name={`inputAmount-${goal.id}`}
+                                    // name="inputAmount"
+                                    value={inputAmounts[goal.id] || ''}
+                                    onChange={(e) => setInputAmounts({ ...inputAmounts, [goal.id]: e.target.value })}
+                                    className="form-control mt-3"
+                                    placeholder="Enter amount"
+                                />
+                                <br />
+                                <div className="d-flex flex-column flex-md-row justify-content-center">
+                                    <button onClick={() => handleAddAmount(goal.id)} className="btn btn-primary ml-2">Add Amount</button>
+                                    <button onClick={() => handleResetAmount(goal.id)} className="btn btn-warning ml-2">Reset Amount</button>
+                                    <button onClick={() => handleDeleteGoal(goal.id)} className="btn btn-danger ml-2">Delete</button>
+                                    <button onClick={() => handleEdit(goal.id, goal.name)} className="btn btn-secondary ml-2">Edit</button>
+                                </div>
                             </div>
                         </>
                     )}

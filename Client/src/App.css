@@ -267,6 +267,31 @@ body.dark-mode {
   }
 }
 
+/* GOAL progress bar */
+.progress-dark {
+  background-color: #eceaea; /* Dark background color */
+}
+
+.progress-light {
+  background-color: #cbcaca; /* Light background color */
+}
+
+.bg-dark {
+  background-color: #6d46c1 !important; /* Dark progress bar color */
+}
+
+.bg-success {
+  background-color: #28a745; /* Light progress bar color */
+}
+
+/* goal border */
+.goal-container {
+  border: 1px solid rgb(142, 22, 22);
+  padding: 18px;
+  border-radius: 5px;
+}
+
+
 /* INVESTMENTS */
 /* Investments.jsx */
 
@@ -330,4 +355,11 @@ body.dark-mode {
   .d-flex {
     align-items: center !important;
   }
+}
+
+.saved-amount {
+  font-weight: bold;
+  color: rgb(20, 137, 183);
+  margin-top: 5px;
+  display: block;
 }
