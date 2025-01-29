@@ -203,7 +203,12 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                                         {(goal.saved / goal.target * 100).toFixed(2)}%
                                     </div>
                                 </div>
-                                <span className='saved-amount'> <sup>You Have {formatCurrency(goal.saved)} Saved </sup></span>
+                                <div >
+                                    <br />
+                                    <span>
+                                        <sup>Saved: <span className='amounts'> {formatCurrency(goal.saved)}</span>  Remaining: <span className='amounts'>{formatCurrency(goal.target - goal.saved)}</span></sup>
+                                    </span>
+                                </div>
                                 <input 
                                     type="number" 
                                     id={`inputAmount-${goal.id}`}

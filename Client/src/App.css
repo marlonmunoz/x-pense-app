@@ -357,9 +357,10 @@ body.dark-mode {
   }
 }
 
-.saved-amount {
+.amounts {
   font-weight: bold;
   color: rgb(20, 137, 183);
-  margin-top: 5px;
-  display: block;
+  padding: 3px;
+  display: inline;
 }
+
