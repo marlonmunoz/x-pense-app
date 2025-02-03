@@ -1,2 +1,3 @@
 # Ignore .env file
 .env
+generate_s_k.py
