@@ -221,10 +221,10 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                                 />
                                 <br />
                                 <div className="d-flex flex-column flex-md-row justify-content-center">
-                                    <button onClick={() => handleAddAmount(goal.id)} className="btn btn-primary ml-2">Add Amount</button>
+                                    <button onClick={() => handleAddAmount(goal.id)} className="btn btn-success ml-2">Add Amount</button>
                                     <button onClick={() => handleResetAmount(goal.id)} className="btn btn-warning ml-2">Reset Amount</button>
                                     <button onClick={() => handleDeleteGoal(goal.id)} className="btn btn-danger ml-2">Delete</button>
-                                    <button onClick={() => handleEdit(goal.id, goal.name)} className="btn btn-secondary ml-2">Edit</button>
+                                    <button onClick={() => handleEdit(goal.id, goal.name)} className="btn btn-primary ml-2">Edit</button>
                                 </div>
                             </div>
                         </>

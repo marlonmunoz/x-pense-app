@@ -5,6 +5,8 @@
   text-align: center;
 }
 
+
+
 /* .logo {
   height: 6em;
   padding: 1.5em;
@@ -41,7 +43,7 @@
   color: #888;
 } */
 
-
+/* 
 body.light-mode {
   background-color: white;
   color: black;
@@ -50,7 +52,7 @@ body.light-mode {
 body.dark-mode {
   background-color: black;
   color: white;
-}
+} */
 
 
 .navbar {

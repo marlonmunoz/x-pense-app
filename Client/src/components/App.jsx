@@ -23,7 +23,6 @@ function App() {
     return date.toLocaleDateString();
   }
 
-
   const [transactions, setTransactions] = useState([]);
   const [balance, setBalance] = useState(0);
   const [budget, setBudget] = useState(0);
@@ -46,20 +45,16 @@ function App() {
   const [bankAccountBalance , setBankAccountBalance] = useState('');
   const [savings, setSavings] = useState('');
   const [total , setTotal] = useState(0);
-
   const totalBalance = cashOnHand + bankAccountBalance + savings;
-
   const [balanceId, setBalanceId] = useState(null)
   const [balances, setBalances] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [editBalance, setEditBalance] = useState({cash_on_hand: 0, bank_account_balance: 0, savings:0, total: 0});
-
   
   // Goals State ======>>>>>>
   const [goalAmount, setGoalAmount] = useState(0); // This is an example amount
   const [currentAmount, setCurrentAmount] = useState(0); // This is an example of current amount
   const [inputAmount, setInputAmount] = useState('');
-  
   const [newGoalName, setNewGoalName] = useState('');
   const [newGoalAmount, setNewGoalAmount] = useState('');
   const [progPercentage, setProgPercentage] = useState(0);
@@ -153,7 +148,7 @@ function App() {
 
   return (
     <Router>
-      <div className={`container d-flex flex-column align-items-center ${darkMode ? 'dark-mode' : 'light-mode'}`}>
+      <div id="root" className={`container d-flex flex-column align-items-center ${darkMode ? 'dark-mode' : 'light-mode'}`}>
         {/* LOGOUT */}
         <button onClick={handleLogout}className='btn btn-secondary mb-3 ml-auto' >Logout</button>
         <h1>X-PENSE</h1>
