@@ -366,3 +366,38 @@ body.dark-mode {
   display: inline;
 }
 
+
+/* BUDGET */
+@media (max-width: 768px) {
+  .responsive-table {
+      width: 100%;
+      border-collapse: collapse;
+  }
+
+  .responsive-table thead {
+      display: none;
+  }
+
+  .responsive-table tr {
+      display: block;
+      margin-bottom: 10px;
+  }
+
+  .responsive-table td {
+      display: block;
+      text-align: right;
+      position: relative;
+      padding-left: 50%;
+      border: 1px solid #ddd;
+  }
+
+  .responsive-table td::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 10px;
+      width: calc(50% - 20px);
+      white-space: nowrap;
+      text-align: left;
+      font-weight: bold;
+  }
+}

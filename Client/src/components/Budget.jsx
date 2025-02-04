@@ -10,6 +10,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
         return `${year}-${month}-${day}`;
     };
     const [editDate, setEditDate] = useState(formatDate(new Date()));
+    const [budgetDate, setBudgetDate] = useState('');
 
     const addItem = () => {
         if (name && amount) {
@@ -25,12 +26,13 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
     const editBudget = (index) => {
         setEditingIndex(index);
         setEditAmount(index === 'set' ? budget : items[index].amount);
-        setEditDate(index === 'set' ? formatDate(new Date()) : items[index].date);
+        setEditDate(index === 'set' ? budgetDate : items[index].date);
     };
 
     const saveBudget = (index) => {
         if (index === 'set') {
             setBudget(parseFloat(editAmount));
+            setBudgetDate(editDate);
         } else {
             const updatedItems = [...items];
             updatedItems[index].amount = parseFloat(editAmount);
@@ -48,23 +50,35 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
         setEditDate(formatDate(new Date()));
     }
 
+    // const handleSetBudget = () => {
+    //     if (newBudget === '' || isNaN(newBudget)) {
+    //         setError('Please enter a valid budget');
+    //         setValidated(false);
+    //     } else {
+    //         setBudget(parseFloat(newBudget));
+    //         setError('');
+    //         setValidated(true);
+    //     }
+    // };
     const handleSetBudget = () => {
-        if (newBudget === '' || isNaN(newBudget)) {
-            setError('Please enter a valid budget');
-            setValidated(false);
-        } else {
-            setBudget(parseFloat(newBudget));
-            setError('');
+        if (newBudget && budgetDate) {
+            setBudget(newBudget);
+            setBudgetDate(budgetDate);
             setValidated(true);
+            setError('');
+        } else {
+            setValidated(false);
+            setError('Please enter both budget amount and date');
         }
     };
 
     const resetBudget = () => {
         setNewBudget('');
-        setBudget(0);
-        setError('');
-        setValidated(false);
-        setEditDate(formatDate(new Date()));
+        setBudgetDate('');
+        setBudget('');
+        // setError('');
+        // setValidated(false);
+        // setEditDate(formatDate(new Date()));
     };
 
     const deleteItem = (index) => {
@@ -72,10 +86,12 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
         setItems(updatedItems);
     };
 
+    const totalAmount = items.reduce((total, item) => total + item.amount, 0) + (isNaN(budget) ? 0 : budget);
+
     return (
         <div>
             <h5>Set Budget</h5>
-            <div>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <input 
                     type="number"
                     id="Set budget"
@@ -85,15 +101,25 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                         setNewBudget(value === '' ? '' : parseFloat(value));
                     }}
                     className={`form-control ${validated ? 'is-valid' : 'is-invalid'}`}
+                    placeholder="Set Amount"
                 />
                 <br />
-                <button className="btn btn-primary" onClick={handleSetBudget} >Set Budget</button>
-                {/* <button className="btn btn-danger ml-2" onClick={resetBudget}>Reset</button> */}
+                <input 
+                    type="date" 
+                    value={budgetDate}
+                    onChange={(e) => setBudgetDate(e.target.value)}
+                    className="form-control"
+                    id="budget-date"
+                    name="budget-date"
+                />
+                <br />
+                <button className="btn btn-primary" onClick={handleSetBudget} >Set</button>
             </div>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <br />
+            <br />
             <h5>Add New Budget</h5>
-            <div>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <input
                     type="text"
                     placeholder="Item Name"
@@ -117,13 +143,14 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                     name="item-amount"
                 />
                 <br />
-                <button className="btn btn-primary" onClick={addItem}>Add Item</button>
+                <button className="btn btn-primary" onClick={addItem}>Add</button>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
             <br />
+            <br />
             <h5>Budget Types</h5>
             <div className="table-responsive">
-            <table className={`table table-striped table-hover table-bordered  ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
+            <table className={`table table-striped table-hover table-bordered responsive-table  ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                     <thead>
                         <tr>
                             <th>Item Name</th>
@@ -133,97 +160,101 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                         </tr>
                     </thead>
                     <tbody>
-                <tr>
-                    <td data-label="Item Name">Set Budget</td>
-                    <td data-label="Amount">
-                        {editingIndex === 'set' ? (
-                            <>
-                                <input
-                                    type="number"
-                                    value={editAmount}
-                                    onChange={(e) => setEditAmount(e.target.value)}
-                                />
-                                {/* <input
-                                    type="date"
-                                    value={editDate}
-                                    onChange={(e) => setEditDate(e.target.value)}
-                                /> */}
-                            </>
-                        ) : (
-                            `$ ${budget.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                        )}
-                    </td>
-                    <td data-label="Date">
-                        {editingIndex === 'set' ? (
-                            <input
-                                type="date"
-                                value={editDate}
-                                onChange={(e) => setEditDate(e.target.value)}
-                            />
-                        ) : (
-                            formatDate(new Date())
-                        )}
-                    </td>
-                    <td data-label="Actions">
-                        {editingIndex === 'set' ? (
-                            <>
-                                <button className="btn btn-sm btn-success ml-2" onClick={() => saveBudget('set')}>Save</button>
-                                <button className="btn btn-sm btn-secondary ml-2" onClick={cancelEdit}>Cancel</button>
-                            </>
-                        ) : (
-                            <>
-                                <button className="btn btn-sm btn-primary ml-2" onClick={() => editBudget('set')}>Edit</button>
-                                <button className="btn btn-sm btn-warning ml-2" onClick={resetBudget}>Reset</button>
-                            </>
-                        )}
-                    </td>
-                </tr>
-                {items.length > 0 ? (
-                    items.map((item, index) => (
-                        <tr key={index}>
-                            <td>{item.name}</td>
-                            <td>
-                                {editingIndex === index ? (
+                        <tr>
+                            <td data-label="Item Name">Set Budget</td>
+                            <td data-label="Amount">
+                                {editingIndex === 'set' ? (
                                     <>
                                         <input
                                             type="number"
                                             value={editAmount}
                                             onChange={(e) => setEditAmount(e.target.value)}
                                         />
-                                        {/* <button className="btn btn-sm btn-success ml-2" onClick={() => saveBudget(index)}>Save</button>
+                                    </>
+                                ) : (
+                                    `$ ${budget.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                                )}
+                            </td>
+                            <td data-label="Date">
+                                {editingIndex === 'set' ? (
+                                    <>
+
                                         <input
                                             type="date"
                                             value={editDate}
                                             onChange={(e) => setEditDate(e.target.value)}
                                         />
-                                        <button className="btn btn-sm btn-secondary ml-2" onClick={cancelEdit}>Cancel</button> */}
                                     </>
                                 ) : (
-                                    formatCurrency(item.amount)
+                                    budgetDate
                                 )}
                             </td>
-                            <td>{item.date}</td>
-                            <td>
-                                {editingIndex === index ? (
+                            <td data-label="Actions">
+                                {editingIndex === 'set' ? (
                                     <>
-                                        <button className="btn btn-sm btn-success ml-2" onClick={() => saveBudget(index)}>Save</button>
+                                        <button className="btn btn-sm btn-success ml-2" onClick={() => saveBudget('set')}>Save</button>
                                         <button className="btn btn-sm btn-secondary ml-2" onClick={cancelEdit}>Cancel</button>
                                     </>
                                 ) : (
                                     <>
-                                        <button className="btn btn-sm btn-primary ml-2" onClick={() => editBudget(index)}>Edit</button>
-                                        <button className="btn btn-sm btn-danger ml-2" onClick={() => deleteItem(index)}>Delete</button>
+                                        <button className="btn btn-sm btn-primary ml-2" onClick={() => editBudget('set')}>Edit</button>
+                                        <button className="btn btn-sm btn-warning ml-2" onClick={resetBudget}>Reset</button>
                                     </>
                                 )}
                             </td>
                         </tr>
-                    ))
-                ) : (
-                    <tr>
-                        <td colSpan="4">No items added yet</td>
-                    </tr>
-                )}
-            </tbody>
+                        {items.length > 0 ? (
+                            items.map((item, index) => (
+                                <tr key={index}>
+                                    <td data-label="Item Name">{item.name}</td>
+                                    <td data-label="Amount">
+                                        {editingIndex === index ? (
+                                            <input
+                                                type="number"
+                                                value={editAmount}
+                                                onChange={(e) => setEditAmount(e.target.value)}
+                                            />
+                                        ) : (
+                                            formatCurrency(item.amount)
+                                        )}
+                                    </td>
+                                    <td data-label="Date">
+                                        {editingIndex === index ? (
+                                            <input
+                                                type="date"
+                                                value={editDate}
+                                                onChange={(e) => setEditDate(e.target.value)}
+                                            />
+                                        ) : (
+                                            item.date
+                                        )}
+                                    </td>
+                                    <td data-label="Actions">
+                                        {editingIndex === index ? (
+                                            <>
+                                                <button className="btn btn-sm btn-success ml-2" onClick={() => saveBudget(index)}>Save</button>
+                                                <button className="btn btn-sm btn-secondary ml-2" onClick={cancelEdit}>Cancel</button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <button className="btn btn-sm btn-primary ml-2" onClick={() => editBudget(index)}>Edit</button>
+                                                <button className="btn btn-sm btn-danger ml-2" onClick={() => deleteItem(index)}>Delete</button>
+                                            </>
+                                        )}
+                                    </td>
+                                  
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="4">No items added yet</td>
+                            </tr>
+                        )}
+                        <tr>
+                            <td colSpan="1"><strong>Total</strong></td>
+                            <td colSpan="3">{formatCurrency(totalAmount)}</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
