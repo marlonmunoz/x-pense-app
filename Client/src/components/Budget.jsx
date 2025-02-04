@@ -172,7 +172,8 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                         />
                                     </>
                                 ) : (
-                                    `$ ${budget.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                                    formatCurrency(budget)
+                                    // `$ ${budget.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
                                 )}
                             </td>
                             <td data-label="Date">
