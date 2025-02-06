@@ -1,47 +1,102 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 
-function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCurrency,items, setItems, name, setName, amount, setAmount, newBudget, setNewBudget, error, setError, editingIndex, setEditingIndex, editAmount, setEditAmount }) {
+function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCurrency,items, setItems, name, setName, amount, setAmount, newBudget, setNewBudget, error, setError, editingIndex, setEditingIndex, editAmount, setEditAmount, date, setDate, totalBudgetAmount }) {
 
     const formatDate = (date) => {
+        if (!date) return '';
         const d = new Date(date);
-        const month = `0${d.getMonth() + 1}`.slice(-2);
-        const day = `0${d.getDate()}`.slice(-2);
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
         const year = d.getFullYear();
         return `${year}-${month}-${day}`;
     };
+  
+
+    const parseDate = (dateString) => {
+        const date = new Date(dateString);
+        date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+        return formatDate(date);
+    };
+
     const [editDate, setEditDate] = useState(formatDate(new Date()));
     const [budgetDate, setBudgetDate] = useState('');
 
-    const addItem = () => {
-        if (name && amount) {
-            const date = formatDate(new Date()); // Add this line
-            setItems([...items, { name, amount: parseFloat(amount), date }]); // Update this line
+    useEffect(() => {
+        fetchBudgets();
+    }, []);
+
+
+    const fetchBudgets = async () => {
+        try {
+            console.log('BUDGET COMPONENT');
+            console.log('Fetching budgets...');
+            const response = await axios.get('http://localhost:5001/budgets');
+            const adjustedBudgets = response.data.map(budget => ({
+                ...budget,
+                date: parseDate(budget.date)
+            }));
+            console.log('Adjusted budgets:', adjustedBudgets);
+            setItems(adjustedBudgets);
+        } catch (error) {
+            console.error('Error fetching budgets:', error);
+        }
+    };
+
+    const addItem = async () => {
+        if (!name || !amount) {
+            setError('Please enter both name and amount');
+            return;
+        }
+
+        const newBudget = {
+            item_name: name,
+            amount: parseFloat(amount),
+            date: date
+        };
+
+        try {
+            const response = await axios.post('http://localhost:5001/budgets', newBudget);
+            setItems([...items, response.data]);
             setName('');
             setAmount('');
-        } else {
-            setError('Please enter both name and amount');
+            setDate('');
+            setError('');
+        } catch (error) {
+            console.error('Error adding budget:', error);
+            setError('Failed to add budget');
         }
     };
 
     const editBudget = (index) => {
         setEditingIndex(index);
-        setEditAmount(index === 'set' ? budget : items[index].amount);
-        setEditDate(index === 'set' ? budgetDate : items[index].date);
+        setEditAmount(index === 0 ? budget : items[index].amount);
+        setEditDate(index === 0 ? budgetDate : formatDate(items[index].date));
     };
 
-    const saveBudget = (index) => {
-        if (index === 'set') {
+    const saveBudget = async (index) => {
+        const updatedBudget = {
+            item_name: index === 0 ? 'Set Budget' : items[index].item_name,
+            amount: parseFloat(editAmount),
+            date: new Date(editDate).toISOString().split('T')[0]
+        };
+
+        if (index === 0) {
             setBudget(parseFloat(editAmount));
             setBudgetDate(editDate);
-        } else {
-            const updatedItems = [...items];
-            updatedItems[index].amount = parseFloat(editAmount);
-            updatedItems[index].date = editDate;
-            setItems(updatedItems);
         }
+
+        try {
+            await axios.put(`http://localhost:5001/budgets/${items[index].id}`, updatedBudget);
+            const updatedItems = items.map((item, i) => i === index ? updatedBudget : item);
+            setItems(updatedItems);
+            setError('');
+        } catch (error) {
+            console.error('Error saving budget:', error);
+            setError('Failed to save budget');
+        }
+
         setEditingIndex(null);
-        setEditAmount('');
-        setEditDate(formatDate(new Date()));
     };
 
     const cancelEdit = () => {
@@ -50,47 +105,64 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
         setEditDate(formatDate(new Date()));
     }
 
-    // const handleSetBudget = () => {
-    //     if (newBudget === '' || isNaN(newBudget)) {
-    //         setError('Please enter a valid budget');
-    //         setValidated(false);
-    //     } else {
-    //         setBudget(parseFloat(newBudget));
-    //         setError('');
-    //         setValidated(true);
-    //     }
-    // };
-    const handleSetBudget = () => {
+    const handleSetBudget = async () => {
         if (newBudget && budgetDate) {
-            setBudget(newBudget);
-            setBudgetDate(budgetDate);
-            setValidated(true);
-            setError('');
+            const newBudgetData = {
+                item_name: 'Set Budget',
+                amount: parseFloat(newBudget),
+                date: budgetDate
+            };
+    
+            try {
+                const response = await axios.post('http://localhost:5001/budgets', newBudgetData);
+                console.log('Response data:', response.data); // Log the response data
+                setItems([...items, response.data]);
+                setBudget(newBudget);
+                setBudgetDate(budgetDate);
+                setValidated(true);
+                setError('');
+            } catch (error) {
+                console.error('Error adding budget:', error);
+                setError('Failed to add budget');
+            }
         } else {
             setValidated(false);
             setError('Please enter both budget amount and date');
         }
     };
 
-    const resetBudget = () => {
-        setNewBudget('');
-        setBudgetDate('');
-        setBudget('');
-        // setError('');
-        // setValidated(false);
-        // setEditDate(formatDate(new Date()));
+    const resetBudget = async () => {
+        const setBudgetItem = items.find(item => item.item_name === 'Set Budget');
+        if (setBudgetItem) {
+            const updatedItem = { ...setBudgetItem, amount: '', date: '' };
+            try {
+                await axios.put(`http://localhost:5001/budgets/${setBudgetItem.id}`, updatedItem);
+                setItems(items.map(item => 
+                    item.item_name === 'Set Budget' ? updatedItem : item
+                ));
+            } catch (error) {
+                console.log('Error resetting budget:', error);
+            }
+        } else {
+            console.log('Set Budget item not found');
+        }
     };
 
-    const deleteItem = (index) => {
-        const updatedItems = items.filter((_, i) => i !== index);
-        setItems(updatedItems);
+    const deleteItem = async (index) => {
+        try {
+            await axios.delete(`http://localhost:5001/budgets/${items[index].id}`);
+            const updatedItems = items.filter((_, i) => i !== index);
+            setItems(updatedItems);
+        } catch(error) {
+            console.log('Error deleting budget:', error);
+        }
     };
 
-    const totalAmount = items.reduce((total, item) => total + item.amount, 0) + (isNaN(budget) ? 0 : budget);
+    // const totalBudgetAmount = items.reduce((total, item) => total + item.amount, 0) + (isNaN(budget) ? 0 : budget);
 
     return (
         <div>
-            <h5>Set Budget</h5>
+            <h5>Set Main Budget</h5>
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <input 
                     type="number"
@@ -106,7 +178,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                 <br />
                 <input 
                     type="date" 
-                    value={budgetDate}
+                    value={formatDate(budgetDate)}
                     onChange={(e) => setBudgetDate(e.target.value)}
                     className="form-control"
                     id="budget-date"
@@ -114,6 +186,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                 />
                 <br />
                 <button className="btn btn-primary" onClick={handleSetBudget} >Set</button>
+                <button className="btn btn btn-warning" onClick={resetBudget}>Reset</button>
             </div>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <br />
@@ -143,6 +216,15 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                     name="item-amount"
                 />
                 <br />
+                <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="form-control"
+                    id="item-date"
+                    name="item-date"
+                />
+                <br />
                 <button className="btn btn-primary" onClick={addItem}>Add</button>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
@@ -160,54 +242,10 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td data-label="Item Name">Set Budget</td>
-                            <td data-label="Amount">
-                                {editingIndex === 'set' ? (
-                                    <>
-                                        <input
-                                            type="number"
-                                            value={editAmount}
-                                            onChange={(e) => setEditAmount(e.target.value)}
-                                        />
-                                    </>
-                                ) : (
-                                    formatCurrency(budget)
-                                    // `$ ${budget.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                                )}
-                            </td>
-                            <td data-label="Date">
-                                {editingIndex === 'set' ? (
-                                    <>
-
-                                        <input
-                                            type="date"
-                                            value={editDate}
-                                            onChange={(e) => setEditDate(e.target.value)}
-                                        />
-                                    </>
-                                ) : (
-                                    budgetDate
-                                )}
-                            </td>
-                            <td data-label="Actions">
-                                {editingIndex === 'set' ? (
-                                    <>
-                                        <button className="btn btn-sm btn-success ml-2" onClick={() => saveBudget('set')}>Save</button>
-                                        <button className="btn btn-sm btn-secondary ml-2" onClick={cancelEdit}>Cancel</button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <button className="btn btn-sm btn-primary ml-2" onClick={() => editBudget('set')}>Edit</button>
-                                        <button className="btn btn-sm btn-warning ml-2" onClick={resetBudget}>Reset</button>
-                                    </>
-                                )}
-                            </td>
-                        </tr>
                         {items.length > 0 ? (
                             items.map((item, index) => (
                                 <tr key={index}>
-                                    <td data-label="Item Name">{item.name}</td>
+                                    <td data-label="Item Name">{item.item_name}</td>
                                     <td data-label="Amount">
                                         {editingIndex === index ? (
                                             <input
@@ -253,7 +291,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                         )}
                         <tr>
                             <td colSpan="1"><strong>Total</strong></td>
-                            <td colSpan="3">{formatCurrency(totalAmount)}</td>
+                            <td colSpan="3">{formatCurrency(totalBudgetAmount)}</td>
                         </tr>
                     </tbody>
                 </table>

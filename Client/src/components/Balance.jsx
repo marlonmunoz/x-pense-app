@@ -42,7 +42,6 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
   }, []);
 
   useEffect(() => {
-   
     setTotal(cashOnHand + bankAccountBalance + savings);
   }, [cashOnHand, bankAccountBalance, savings, setTotal]);
 
@@ -97,10 +96,10 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
   };
 
   const resetFields = () => {
-    setCashOnHand('');
-    setBankAccountBalance('');
-    setSavings('');
-    setTotal('');
+    setCashOnHand(0);
+    setBankAccountBalance(0);
+    setSavings(0);
+    setTotal(0);
 }
 
   const totalBalance = () => {
@@ -133,7 +132,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-12 col-sm-10 col-md-8 col-lg-6">
-            <label htmlFor="cashOnHand" className="form-label">Cash on Hand</label>
+            <label htmlFor="cashOnHand" className="form-label">Cash On Hand</label>
             <input 
               type="number" 
               id="cashOnHand"

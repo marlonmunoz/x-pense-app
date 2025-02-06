@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 
 
-function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmount, darkMode, addedInvestments,formatCurrency, formatDate, handleRemoveInvestment, goalsProgress, setGoalsProgress}) {
+function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmount, darkMode, addedInvestments,formatCurrency, formatDate, handleRemoveInvestment, goalsProgress, setGoalsProgress, totalBudgetAmount}) {
     const navigate = useNavigate();
     
     // const recentTransactions = transactions.slice(-5);
@@ -138,7 +138,7 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                             </tr>
                             <tr>
                                 <th scope="row">Budget</th>
-                                <td className="text-left" >{formatCurrency(budget)}</td>
+                                <td className="text-left" >{formatCurrency(totalBudgetAmount)}</td>
                             </tr>
                             <tr>
                                 <th scope="row">X-penses</th>

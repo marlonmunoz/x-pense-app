@@ -6,9 +6,10 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.orm import Session
-from models import db, Goal, Transaction, Balance
+from models import db, Goal, Transaction, Balance, Budget
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
+from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 
 load_dotenv()  
@@ -16,7 +17,6 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///xpense.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') 
@@ -32,7 +32,7 @@ users = {
 }
 
 # LOGIN ============>>>>>>>
-
+# POST
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json 
@@ -74,6 +74,10 @@ def verify_token():
 def logout():
     return jsonify({"message": "Logout Successful"}), 200
 
+
+
+# INVESTMENTS =======>>>>>
+# GET
 # Add the proxy route for CoinGecko API
 @app.route('/api/coins/markets', methods=['GET'])
 def get_market_caps():
@@ -86,7 +90,53 @@ def get_market_caps():
     except requests.exceptions.RequestException as e:
         return jsonify({'error': 'Error fetching market cap data'}), 500
 
-# BALANCE
+
+
+# BUDGET ============>>>>>>>
+# GET
+@app.route('/budgets', methods=['GET'])
+def get_budgets():
+    budgets = Budget.query.all()
+    return jsonify([budget.to_dict() for budget in budgets])
+
+# POST
+@app.route('/budgets', methods=['POST'])
+def add_budget():
+    data = request.get_json()
+    new_budget = Budget(
+        item_name=data['item_name'],
+        amount=data['amount'],
+        date=datetime.strptime(data['date'], '%Y-%m-%d').date()
+    )
+    db.session.add(new_budget)
+    db.session.commit()
+    return jsonify(new_budget.to_dict()), 201
+
+# PUT
+@app.route('/budgets/<int:id>', methods=['PUT'])
+def update_budget(id):
+    data = request.get_json()
+    if 'item_name' not in data or 'amount' not in data or 'date' not in data:
+        return jsonify({'error': 'Missing required fields'}), 400
+    
+    budget = Budget.query.get_or_404(id)
+    budget.item_name = data['item_name']
+    budget.amount = data['amount']
+    budget.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
+    db.session.commit()
+    return jsonify(budget.to_dict())
+
+# DELETE
+@app.route('/budgets/<int:id>', methods=['DELETE'])
+def delete_budget(id):
+    budget = Budget.query.get_or_404(id)
+    db.session.delete(budget)
+    db.session.commit()
+    return '', 204
+
+
+
+# BALANCE ============>>>>>>>
 # GET
 @app.route('/balance', methods=['GET'])
 def get_balance():
@@ -96,7 +146,7 @@ def get_balance():
     else:
         return jsonify({'message': 'No balance found'}), 404
     
-#POST
+# POST
 @app.route('/balance', methods=['POST'])
 def add_balance():
     data = request.json
@@ -137,6 +187,7 @@ def delete_balance(id):
 def get_balances():
     balances = Balance.query.all()
     return jsonify([balances.to_dict() for balance in balances])
+    
     
     
 # TRANSACTIONS ============>>>>>>>
@@ -267,3 +318,6 @@ if __name__ == '__main__':
     
     
 # pip install Flask Flask-SQLAlchemy Flask-Cors
+
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///xpense.db'

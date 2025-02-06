@@ -10,6 +10,25 @@ convention = {
 
 db = SQLAlchemy()
 
+class Budget(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    item_name = db.Column(db.String(80), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'item_name': self.item_name,
+            'amount': self.amount,
+            'date': self.date        
+        }
+# Run This Commands to create the new table =====>>>>
+# flask db init
+# flask db migrate -m "Create Budget table"
+# flask db upgrade 
+    
+
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     category = db.Column(db.String(80), nullable=False)

@@ -39,6 +39,7 @@ function App() {
   const [error, setError] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
   const [editAmount, setEditAmount] = useState('');
+  const totalBudgetAmount = items.reduce((total, item) => total + item.amount, 0) + (isNaN(budget) ? 0 : budget);
 
   // BALANCE
   const [cashOnHand, setCashOnHand] = useState('');
@@ -248,6 +249,8 @@ function App() {
                 error={error} setError={setError}
                 editingIndex={editingIndex} setEditingIndex={setEditingIndex}
                 editAmount={editAmount} setEditAmount={setEditAmount}
+                date={date} setDate={setDate}
+                totalBudgetAmount={totalBudgetAmount}
               />}
             />
             <Route path='/dashboard' element ={
@@ -265,6 +268,7 @@ function App() {
                 handleRemoveInvestment={handleRemoveInvestment}
 
                 goalsProgress={goalsProgress} setGoalsProgress={setGoalsProgress}
+                totalBudgetAmount={totalBudgetAmount}
               />} 
             />
             <Route path='/goals' element ={
