@@ -10,6 +10,14 @@ convention = {
 
 db = SQLAlchemy()
 
+# class Investment(db.Model):
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     name = db.Column(db.String(80), nullable=False)
+#     amount = db.Column(db.Float, nullable=False)
+#     total_price = db.Column(db.Float, nullable=False)
+    
+#     pass
+
 class Budget(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     item_name = db.Column(db.String(80), nullable=False)

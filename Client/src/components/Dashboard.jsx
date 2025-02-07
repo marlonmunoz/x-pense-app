@@ -144,13 +144,13 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                     {/* </ResponsiveContainer> */}
                 </div>
                 <br />
-                <div>
+                <div className="table-responsive">
                   <h6>Added Investments</h6>
                   <p style={{ color: 'gray' }}><sup>Tracking All CRYPTO Transactions</sup></p>
                   {addedInvestments.length === 0 ? (
                     <p>No Investments Have Been Added</p>
                   ) : (
-                    <table className={`table ${darkMode ? 'table-dark' : ''} table-rounded`}>
+                    <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                       <thead>
                         <tr>
                           <th>Name</th>

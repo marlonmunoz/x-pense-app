@@ -91,6 +91,9 @@ function App() {
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('')
 
+  // DASHBOARD
+  
+
 
   // LOGIN
 
@@ -116,6 +119,8 @@ function App() {
 //         .then(data => setGoals(data))
 //         .catch(error => console.error('Error fetching goals:', error));
 // }, []);
+
+
 
   // Dark-Light MODE ======>>>>>>
   const toggleDarkMode = () => {
