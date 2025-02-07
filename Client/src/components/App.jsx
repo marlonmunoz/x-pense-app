@@ -23,13 +23,19 @@ function App() {
     return date.toLocaleDateString();
   }
 
+  const parseDate = (dateString) => {
+    const date = new Date(dateString);
+    date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+    return formatDate(date);
+  };
+
   const [transactions, setTransactions] = useState([]);
   const [balance, setBalance] = useState(0);
   const [budget, setBudget] = useState(0);
   const [darkMode, setDarkMode] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [addedInvestments, setAddedInvestments] = useState([]);
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0); 
 
   // BUDGET
   const [items, setItems] = useState([]);
@@ -93,13 +99,23 @@ function App() {
     setTotalAmount(total);
   }, [transactions])
 
-  // Fetch goals from the backend
-  useEffect(() => {
-    fetch('http://localhost:5001/goals')
-        .then(response => response.json())
-        .then(data => setGoals(data))
-        .catch(error => console.error('Error fetching goals:', error));
-}, []);
+// <<<<<<<<<<<<<<<<<<<<<<><<<<===============================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> //
+// <<<<<<<<<============== FETCHINGs FOR DASHBOARD RENDERING ====================>>>>>>>>>>>>> //
+// <<<<<<<<<<<<<<<<<<<<<<><<<<===============================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> //
+
+  // BUDGET FETCHED FOR DASHBOARD
+  // BALANCES FETCHED FOR DASHBOARD
+  // TRANSACTIONS FETCHED FOR DASHBOARD
+  // CRYPTO FETCHED FOR DASHBOARD
+
+  // GOALS FETCHED FOR DASHBOARD
+//   useEffect(() => {
+//     console.log('GOALS'); // logs
+//     fetch('http://localhost:5001/goals')
+//         .then(response => response.json())
+//         .then(data => setGoals(data))
+//         .catch(error => console.error('Error fetching goals:', error));
+// }, []);
 
   // Dark-Light MODE ======>>>>>>
   const toggleDarkMode = () => {
@@ -178,8 +194,6 @@ function App() {
                   <strong>X-PENSE</strong>
                 </NavLink>
               </li>
-                  {/* className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `}  */}
-
               <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/transactions'>Transaction</NavLink></li>
               <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/goals'>Goals</NavLink></li>
               <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/investments'>Investments</NavLink></li>
@@ -201,7 +215,6 @@ function App() {
                 total={total} 
                 setTotal={setTotal}
                 formatCurrency={formatCurrency}
-
                 balanceId={balanceId} setBalanceId={setBalanceId}
                 balances={balances} setBalances={setBalances}
                 editIndex={editIndex} setEditIndex={setEditIndex}
@@ -214,7 +227,6 @@ function App() {
                 darkMode={darkMode} 
                 validated={validated} setValidated={setValidated}
                 formatCurrency={formatCurrency}
-
                 totalAmount={totalAmount} setTotalAmount={setTotalAmount}
                 editIndex={editIndex} setEditIndex={setEditIndex}
                 editTransaction={editTransaction} setEditTransaction={setEditTransaction}
@@ -224,10 +236,8 @@ function App() {
             />
             <Route path='/add' element ={
               <AddTransactions 
-                // transactions={transactions} setTransactions={setTransactions} 
                 darkMode={darkMode} 
                 validated={validated} setValidated={setValidated}
-
                 amount={amount} setAmount={setAmount}
                 category={category} setCategory={setCategory}
                 date={date} setDate={setDate}
@@ -241,7 +251,6 @@ function App() {
                 darkMode={darkMode} 
                 validated={validated} setValidated={setValidated} 
                 formatCurrency={formatCurrency}
-
                 items={items} setItems={setItems}
                 name={name} setName={setName}
                 amount={amount} setAmount={setAmount}
@@ -251,6 +260,7 @@ function App() {
                 editAmount={editAmount} setEditAmount={setEditAmount}
                 date={date} setDate={setDate}
                 totalBudgetAmount={totalBudgetAmount}
+                parseDate={parseDate}
               />}
             />
             <Route path='/dashboard' element ={
@@ -266,24 +276,27 @@ function App() {
                 formatCurrency={formatCurrency}
                 formatDate={formatDate}
                 handleRemoveInvestment={handleRemoveInvestment}
-
                 goalsProgress={goalsProgress} setGoalsProgress={setGoalsProgress}
                 totalBudgetAmount={totalBudgetAmount}
+                parseDate={parseDate}
+                setItems={setItems}
+                setBalances={setBalances}
+                setCashOnHand={setCashOnHand}
+                setBankAccountBalance={setBankAccountBalance}
+                setSavings={setSavings}
+                setTransactions={setTransactions}
               />} 
             />
             <Route path='/goals' element ={
               <Goals 
                 goalAmount={goalAmount} setGoalAmount={setGoalAmount} 
                 currentAmount={currentAmount} setCurrentAmount={setCurrentAmount} 
-                // inputAmount={inputAmount} setInputAmount={setInputAmount} 
-
                 newGoalName={newGoalName} setNewGoalName={setNewGoalName}
                 newGoalAmount={newGoalAmount} setNewGoalAmount={setNewGoalAmount}
                 progPercentage={progPercentage} setProgPercentage={setProgPercentage} 
                 goals={goals} setGoals={setGoals}
                 validated={validated} setValidated={setValidated}
                 inputAmounts={inputAmounts} setInputAmounts={setInputAmounts}
-                // goalsProgress={goalsProgress} setGoalsProgress={setGoalsProgress}
                 editingGoalId={editingGoalId} setEditingGoalId={setEditingGoalId}
                 editedGoalName={editedGoalName} setEditedGoalName={setEditedGoalName}
                 formatCurrency={formatCurrency}
@@ -297,7 +310,6 @@ function App() {
                 darkMode={darkMode} 
                 onAddInvestment={handleAddInvestment} 
                 validated={validated} setValidated={setValidated} 
-
                 investments={investments} setInvestments={setInvestments}
                 amounts={amounts} setAmounts={setAmounts}
                 marketCaps={marketCaps} setMarketCaps={setMarketCaps}

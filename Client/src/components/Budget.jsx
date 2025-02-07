@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
-function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCurrency,items, setItems, name, setName, amount, setAmount, newBudget, setNewBudget, error, setError, editingIndex, setEditingIndex, editAmount, setEditAmount, date, setDate, totalBudgetAmount }) {
+function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCurrency,items, setItems, name, setName, amount, setAmount, newBudget, setNewBudget, error, setError, editingIndex, setEditingIndex, editAmount, setEditAmount, date, setDate, totalBudgetAmount, parseDate }) {
 
     const formatDate = (date) => {
         if (!date) return '';
@@ -13,11 +13,11 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
     };
   
 
-    const parseDate = (dateString) => {
-        const date = new Date(dateString);
-        date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-        return formatDate(date);
-    };
+    // const parseDate = (dateString) => {
+    //     const date = new Date(dateString);
+    //     date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+    //     return formatDate(date);
+    // };
 
     const [editDate, setEditDate] = useState(formatDate(new Date()));
     const [budgetDate, setBudgetDate] = useState('');

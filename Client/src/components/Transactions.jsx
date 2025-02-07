@@ -22,15 +22,6 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
         setTotalAmount(total);
     }, [transactions]);
     
-    // const formatAmount = (amount) => {
-    //     const [integerPart, decimalPart] = parseFloat(amount).toFixed(2).split('.');
-    //     return (
-    //         <>
-    //             {integerPart}
-    //             <sup>.{decimalPart}</sup>
-    //         </>
-    //     );
-    // };
     const formatDateTime = (dataString) => {
         const date = new Date(dataString);
         const formattedDate = date.toISOString().split('T')[0];

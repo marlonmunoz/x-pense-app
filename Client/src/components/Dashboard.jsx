@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 
 
-function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmount, darkMode, addedInvestments,formatCurrency, formatDate, handleRemoveInvestment, goalsProgress, setGoalsProgress, totalBudgetAmount}) {
+function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmount, darkMode, addedInvestments,formatCurrency, formatDate, handleRemoveInvestment, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions}) {
     const navigate = useNavigate();
     
     // const recentTransactions = transactions.slice(-5);
     const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0).toFixed(2);
-    const overviewTotal = budget + parseFloat(totalInvestments) + balance - totalAmount;
+    const overviewTotal = totalBudgetAmount + parseFloat(totalInvestments) + balance - totalAmount;
     const sortedTransactions = transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     const formattedTransactions = sortedTransactions.map(transaction => ({
@@ -19,8 +19,10 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
 
 
     // FETCHING DATA FOR OVERVIEW TABLE
+    // GOAL.jsx ==============================================>>>>
     useEffect(() => {
         // Fetch goals from the backend
+        console.log('Loaded from Goal.jsx component');
         axios.get('http://localhost:5001/goals')
           .then(response => {
             const goals = response.data.map(goal => ({
@@ -34,6 +36,69 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
           });
     }, []);
 
+    // BUDGET.jsx =============================================>>>>
+    useEffect (() => {
+      console.log('Loaded from Budget.jsx component');
+      axios.get('http://localhost:5001/budgets')
+        .then(response => {
+          const adjustedBudgets = response.data.map(budget => ({
+            ...budget,
+            date: parseDate(budget.date)
+          }));
+          setItems(adjustedBudgets);
+        })
+        .catch(error => {
+          console.error('Error fetching budgets:', error)
+        })
+    },[])
+
+    // BALANCE.jsx =============================================>>>>
+    useEffect(() => {
+      // Fetch balances from the backend
+      console.log('Loaded from Balance.jsx component');
+      axios.get('http://localhost:5001/balance')
+        .then(response => {
+          if (Array.isArray(response.data)) {
+            const fetchedBalances = response.data.map(balance => ({
+              ...balance,
+              total: balance.cash_on_hand + balance.bank_account_balance + balance.savings, // Calculate total
+              id: balance.id // Ensure each balance has an id
+            }));
+            setBalances(fetchedBalances);
+            if (fetchedBalances.length > 0) {
+              const firstBalance = fetchedBalances[0];
+              setCashOnHand(firstBalance.cash_on_hand);
+              setBankAccountBalance(firstBalance.bank_account_balance);
+              setSavings(firstBalance.savings);
+            }
+          } else if (response.data && typeof response.data === 'object') {
+            const balance = {
+              ...response.data,
+              total: response.data.cash_on_hand + response.data.bank_account_balance + response.data.savings // Calculate total
+            };
+            setBalances([balance]); // Wrap the single object in an array
+            setCashOnHand(balance.cash_on_hand);
+            setBankAccountBalance(balance.bank_account_balance);
+            setSavings(balance.savings);
+          } else {
+            console.error('Fetched data is not an array or object:', response.data);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching balances:', error);
+        });
+    }, []);
+
+    // TRANSACTIONS.jsx ====>>>>
+    useEffect(() => {
+      console.log('Loaded from Transactions.jsx component');
+      axios.get('http://127.0.0.1:5001/transactions')
+      .then(response => {
+          setTransactions(response.data)
+      })
+      .catch(error => console.log('Error fetching transactions', error));
+    }, []);
+  
     
     const CustomTooltip = ({ active, payload}) => {
         if (active && payload && payload.length) {
@@ -48,15 +113,6 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
         }
         return null;
     }
-
-
-    // const addGoal = (newGoal) => {
-    //   setGoalsProgress([...goalsProgress, newGoal]);
-    // };
-
-    // const deleteGoal = (goalId) => {
-    //   setGoalsProgress(goalsProgress.filter(goal => goal.id !== goalId));
-    // };
 
     return (
         <div className="container-fluid" >
@@ -107,21 +163,21 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                 </div>
               
                 <br />
-                <div className="goals-progress  rounded px-5 " style={{ maxWidth: '600px'}}>
-                    <h6 >Goals Progress</h6>
-                    <p style={{color: 'gray'}}><sup>Tracking </sup></p>
-                    <ul className="d-flex flex-column align-items-center">
+                <div className="goals-progress rounded px-5" style={{ maxWidth: '600px' }}>
+                    <h6>Goals Progress</h6>
+                    <p style={{ color: 'gray' }}><sup>Tracking</sup></p>
+                    <div className="d-flex flex-column align-items-center">
                         {goalsProgress.map((goal, index) => (
-                            <li key={index} className="d-flex align-items-center mb-2  rounded " style={{ width: '150%'}}>
+                            <div key={index} className="d-flex align-items-center mb-2 rounded" style={{ width: '150%' }}>
                                 <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
-                                <div className="progress flex-grow-1 custom-progress-height border" style={{color: 'black'}}>
-                                    <div className="progress-bar bg-success custom-progress-height" role="progressbar" style={{ width: `${goal.progress}%`}} aria-valuemin="0" aria-valuemax="100">
+                                <div className="progress flex-grow-1 custom-progress-height border" style={{ color: 'black' }}>
+                                    <div className="progress-bar bg-success custom-progress-height" role="progressbar" style={{ width: `${goal.progress}%` }} aria-valuemin="0" aria-valuemax="100">
                                         {goal.progress.toFixed(2)}%
                                     </div>
                                 </div>
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
                 <br />
                 <div className="table-responsive ">
