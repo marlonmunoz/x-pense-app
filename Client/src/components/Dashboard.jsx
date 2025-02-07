@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 
 
-function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmount, darkMode, addedInvestments,formatCurrency, formatDate, handleRemoveInvestment, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions}) {
+function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmount, darkMode, addedInvestments, setAddedInvestments,formatCurrency, formatDate, handleRemoveInvestment, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setInvestments, setAmounts }) {
     const navigate = useNavigate();
     
     const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0).toFixed(2);
@@ -97,6 +97,30 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
       })
       .catch(error => console.log('Error fetching transactions', error));
     }, []);
+
+    // INVESTMENTS.jsx ====>>>>
+    useEffect(() => {
+      axios.get('https://api.coindesk.com/v1/bpi/currentprice.json')
+          .then(responseBitcoin => {
+              return axios.get('https://api.coinbase.com/v2/prices/ETH-USD/spot')
+                  .then(responseEthereum => {
+                      return axios.get('https://api.coinbase.com/v2/prices/USDC-USD/spot')
+                          .then(responseUSDC => {
+                              const data = [
+                                  { id: 'bitcoin', name: 'Bitcoin', type: 'Cryptocurrency', pricePerUnit: responseBitcoin.data.bpi.USD.rate_float || 0 },
+                                  { id: 'ethereum', name: 'Ethereum', type: 'Cryptocurrency', pricePerUnit: parseFloat(responseEthereum.data.data.amount) || 0 },
+                                  { id: 'usd-coin', name: 'USDC', type: 'Stablecoin', pricePerUnit: parseFloat(responseUSDC.data.data.amount) || 1.00 },
+                              ];
+                              setInvestments(data);
+                              setAmounts(data.map(() => 0));
+                          });
+                  });
+          })
+          .catch(error => console.error("Error fetching investments", error));
+    }, []);
+
+
+    
   
     
     const CustomTooltip = ({ active, payload}) => {
@@ -112,6 +136,13 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
         }
         return null;
     }
+    
+    const handleAmountChange = (index, value) => {
+      const updatedInvestments = [...addedInvestments];
+      updatedInvestments[index].amount = value;
+      updatedInvestments[index].totalPrice = value * updatedInvestments[index].pricePerUnit;
+      setAddedInvestments(updatedInvestments);
+    };
 
     return (
         <div className="container-fluid" >
@@ -163,7 +194,18 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                         {addedInvestments.map((investment, index) => (
                           <tr key={index}>
                             <td>{investment.name}</td>
-                            <td>{investment.amount} units</td>
+                            {/* <td>{investment.amount} units</td> */}
+                            <td>
+                              <input 
+                                type="number" 
+                                className="form-control"
+                                value={investment.amount}
+                                placeholder="enter amount"
+                                name={`investment-amount-${index}`}
+                                onChange={(e) => handleAmountChange(index, e.target.value)}
+                                style={{width: '60px'}} // Set your width here
+                              />
+                            </td>
                             <td>{formatCurrency(investment.totalPrice)}</td>
                             <td>
                               <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger">Remove</button>

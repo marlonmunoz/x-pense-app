@@ -290,6 +290,9 @@ function App() {
                 setBankAccountBalance={setBankAccountBalance}
                 setSavings={setSavings}
                 setTransactions={setTransactions}
+                setAddedInvestments={setAddedInvestments} 
+                setInvestments={setInvestments}
+                setAmounts={setAmounts}
               />} 
             />
             <Route path='/goals' element ={
