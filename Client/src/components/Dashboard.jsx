@@ -88,7 +88,7 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
         });
     }, []);
 
-    // TRANSACTIONS.jsx ====>>>>
+    // TRANSACTIONS.jsx =============================================>>>>
     useEffect(() => {
       console.log('Loaded from Transactions.jsx component');
       axios.get('http://127.0.0.1:5001/transactions')
@@ -98,7 +98,7 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
       .catch(error => console.log('Error fetching transactions', error));
     }, []);
 
-    // INVESTMENTS.jsx ====>>>>
+    // INVESTMENTS.jsx =============================================>>>>
     useEffect(() => {
       axios.get('https://api.coindesk.com/v1/bpi/currentprice.json')
           .then(responseBitcoin => {
@@ -136,7 +136,7 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
         }
         return null;
     }
-    
+
     const handleAmountChange = (index, value) => {
       const updatedInvestments = [...addedInvestments];
       updatedInvestments[index].amount = value;
@@ -193,9 +193,8 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                       <tbody>
                         {addedInvestments.map((investment, index) => (
                           <tr key={index}>
-                            <td>{investment.name}</td>
-                            {/* <td>{investment.amount} units</td> */}
-                            <td>
+                            <td data-label="Name">{investment.name}</td>
+                            <td data-label="Amount">
                               <input 
                                 type="number" 
                                 className="form-control"
@@ -206,8 +205,8 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                                 style={{width: '60px'}} // Set your width here
                               />
                             </td>
-                            <td>{formatCurrency(investment.totalPrice)}</td>
-                            <td>
+                            <td data-label="Total Price">{formatCurrency(investment.totalPrice)}</td>
+                            <td data-label="Actions">
                               <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger">Remove</button>
                             </td>
                           </tr>
