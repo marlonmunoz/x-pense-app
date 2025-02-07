@@ -7,7 +7,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'r
 function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmount, darkMode, addedInvestments,formatCurrency, formatDate, handleRemoveInvestment, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions}) {
     const navigate = useNavigate();
     
-    // const recentTransactions = transactions.slice(-5);
     const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0).toFixed(2);
     const overviewTotal = totalBudgetAmount + parseFloat(totalInvestments) + balance - totalAmount;
     const sortedTransactions = transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -148,18 +147,32 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                 <div>
                   <h6>Added Investments</h6>
                   <p style={{ color: 'gray' }}><sup>Tracking All CRYPTO Transactions</sup></p>
-                  <ul className={`list-group ${darkMode ? 'list-group-dark' : ''} table-rounded`}>
-                    {addedInvestments.length === 0 ? (
-                      <li className="list-group-item">No Investments Have Been Added</li>
-                    ) : (
-                      addedInvestments.map((investment, index) => (
-                        <li key={index} className="list-group-item">
-                          {investment.name} | {investment.amount} units | ${investment.totalPrice}
-                          <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger ml-2">Remove</button>
-                        </li>
-                      ))
-                    )}
-                  </ul>
+                  {addedInvestments.length === 0 ? (
+                    <p>No Investments Have Been Added</p>
+                  ) : (
+                    <table className={`table ${darkMode ? 'table-dark' : ''} table-rounded`}>
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Amount</th>
+                          <th>Total Price</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {addedInvestments.map((investment, index) => (
+                          <tr key={index}>
+                            <td>{investment.name}</td>
+                            <td>{investment.amount} units</td>
+                            <td>{formatCurrency(investment.totalPrice)}</td>
+                            <td>
+                              <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger">Remove</button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
                 </div>
               
                 <br />
