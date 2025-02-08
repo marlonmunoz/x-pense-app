@@ -63,7 +63,7 @@ npm run dev
     <img src="./Client/src/tech_pngs/JS_logo.png" alt="Alt text" width="70"     height="70">
     <img src="./Client/src/tech_pngs/python_logo.png" alt="Alt text" width="70"     height="70">
     <img src="./Client/src/tech_pngs/React.webp" alt="Alt text" width="70"  height="70">
-    <img src="./Client/src/tech_pngs/flask_logo.png" alt="Alt text" width="50"  height="70">
+    <img src="./Client/src/tech_pngs/flask_logo01.png" alt="Alt text" width="80"  height="70">
     <img src="./Client/src/tech_pngs/psql_logo.webp" alt="Alt text" width="70"  height="70">
     <img src="./Client/src/tech_pngs/Bootstrap_logo.png" alt="Alt text" width="70"  height="70">
     <img src="./Client/src/tech_pngs/html_css_logo.png" alt="Alt text" width="80"   height="70">
