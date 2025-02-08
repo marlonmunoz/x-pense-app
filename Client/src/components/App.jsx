@@ -273,6 +273,7 @@ function App() {
                 transactions={transactions} 
                 balance={totalBalance} 
                 budget={budget} 
+                investments={investments}
                 totalAmount={totalAmount} 
                 darkMode={darkMode} 
                 formatAmount={formatAmount} 

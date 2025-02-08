@@ -10,13 +10,24 @@ convention = {
 
 db = SQLAlchemy()
 
-# class Investment(db.Model):
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-#     name = db.Column(db.String(80), nullable=False)
-#     amount = db.Column(db.Float, nullable=False)
-#     total_price = db.Column(db.Float, nullable=False)
+class Investment(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(80), nullable=False)
+    pricePerUnit = db.Column(db.Float, nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    total_price = db.Column(db.Float, nullable=False)
     
-#     pass
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'pricePerUnit': self.pricePerUnit,
+            'amount': self.amount,
+            'total_price': self.total_price
+        }
+
+    
+    pass
 
 class Budget(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

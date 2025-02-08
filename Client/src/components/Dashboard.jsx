@@ -1,11 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 
 
-function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmount, darkMode, addedInvestments, setAddedInvestments,formatCurrency, formatDate, handleRemoveInvestment, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setInvestments, setAmounts }) {
+function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmount, darkMode, addedInvestments, setAddedInvestments,formatCurrency, formatDate, handleRemoveInvestment, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setAmounts }) {
     const navigate = useNavigate();
+    const [investments, setInvestments] = useState([]);
+
     
     const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0).toFixed(2);
     const overviewTotal = totalBudgetAmount + parseFloat(totalInvestments) + balance - totalAmount;
@@ -100,25 +102,13 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
 
     // INVESTMENTS.jsx =============================================>>>>
     useEffect(() => {
-      axios.get('https://api.coindesk.com/v1/bpi/currentprice.json')
-          .then(responseBitcoin => {
-              return axios.get('https://api.coinbase.com/v2/prices/ETH-USD/spot')
-                  .then(responseEthereum => {
-                      return axios.get('https://api.coinbase.com/v2/prices/USDC-USD/spot')
-                          .then(responseUSDC => {
-                              const data = [
-                                  { id: 'bitcoin', name: 'Bitcoin', type: 'Cryptocurrency', pricePerUnit: responseBitcoin.data.bpi.USD.rate_float || 0 },
-                                  { id: 'ethereum', name: 'Ethereum', type: 'Cryptocurrency', pricePerUnit: parseFloat(responseEthereum.data.data.amount) || 0 },
-                                  { id: 'usd-coin', name: 'USDC', type: 'Stablecoin', pricePerUnit: parseFloat(responseUSDC.data.data.amount) || 1.00 },
-                              ];
-                              setInvestments(data);
-                              setAmounts(data.map(() => 0));
-                          });
-                  });
+      axios.get('http://localhost:5001/investments')
+          .then(response => {
+            console.log('Fetched from Investments:', response.data);
+              setInvestments(response.data);
           })
-          .catch(error => console.error("Error fetching investments", error));
+          .catch(error => console.log('Error fetching investments', error));
     }, []);
-
 
     
   
@@ -178,36 +168,28 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                 <div className="table-responsive">
                   <h6>Added Investments</h6>
                   <p style={{ color: 'gray' }}><sup>Tracking All CRYPTO Transactions</sup></p>
-                  {addedInvestments.length === 0 ? (
+                  {investments.length === 0 ? (
                     <p>No Investments Have Been Added</p>
                   ) : (
                     <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                       <thead>
                         <tr>
+                          <th>ID</th>
                           <th>Name</th>
                           <th>Amount</th>
-                          <th>Total Price</th>
+                          <th>Price</th>
                           <th>Actions</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {addedInvestments.map((investment, index) => (
-                          <tr key={index}>
-                            <td data-label="Name">{investment.name}</td>
-                            <td data-label="Amount">
-                              <input 
-                                type="number" 
-                                className="form-control"
-                                value={investment.amount}
-                                placeholder="enter amount"
-                                name={`investment-amount-${index}`}
-                                onChange={(e) => handleAmountChange(index, e.target.value)}
-                                style={{width: '60px'}} // Set your width here
-                              />
-                            </td>
-                            <td data-label="Total Price">{formatCurrency(investment.totalPrice)}</td>
-                            <td data-label="Actions">
-                              <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger">Remove</button>
+                        {investments.map(investment => (
+                          <tr key={investment.id}>
+                            <td>{investment.id}</td>
+                            <td>{investment.name}</td>
+                            <td>{investment.amount}</td>
+                            <td>{formatCurrency(investment.total_price)}</td>
+                            <td>
+                            <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger">Remove</button>
                             </td>
                           </tr>
                         ))}

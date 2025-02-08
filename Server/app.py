@@ -6,7 +6,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.orm import Session
-from models import db, Goal, Transaction, Balance, Budget
+from models import db, Goal, Transaction, Balance, Budget, Investment
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -311,10 +311,41 @@ def delete_goal(goal_id):
     db.session.commit()
     return '', 204
 
+# INVESTEMENT ===================>>>>>>>>>>>>>>>>>>
+# POST
+@app.route('/investments', methods=['POST'])
+def add_investment():
+    data = request.json
+    new_investment = Investment(
+        name=data['name'],
+        pricePerUnit=data['pricePerUnit'],
+        amount=data['amount'],
+        total_price=data['totalPrice']
+    )
+    db.session.add(new_investment)
+    db.session.commit()
+    return jsonify(new_investment.to_dict()), 201
 
+# GET
+@app.route('/investments', methods=['GET'])
+def get_investments():
+    investments = Investment.query.all()
+    return jsonify([investment.to_dict() for investment in investments]), 200
+
+# DELETE
+@app.route('/investments/<int:investments_id>', methods=['DELETE'])
+def delete_investment(investment_id):
+    investment = Investment.query.get(investment_id)
+    if investment is None:
+        return jsonify({'error': 'Investment not found'}), 404
+    db.session.delete(investment)
+    db.session.commit()
+    return '', 204
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
+    
+
     
     
 # pip install Flask Flask-SQLAlchemy Flask-Cors

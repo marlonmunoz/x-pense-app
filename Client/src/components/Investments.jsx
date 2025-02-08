@@ -80,17 +80,43 @@ const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, a
         return price.toFixed(2);
     };
 
-    const handleAddClick = (index) => {
+    // const handleAddClick = (index) => {
+    //     const investment = investments[index];
+    //     const amount = amounts[index];
+
+    //     if(!amount) {
+    //         alert('AMOUNTS NOT DETECTED!');
+    //         return;
+    //     }
+    //     const totalPrice = calculatePrice(amount, investment.pricePerUnit);
+    //     onAddInvestment({...investment, amount, totalPrice})
+    //     navigate('/dashboard')
+    // };
+
+    const handleAddClick = async (index) => {
         const investment = investments[index];
         const amount = amounts[index];
-
-        if(!amount) {
+    
+        if (!amount) {
             alert('AMOUNTS NOT DETECTED!');
             return;
         }
+    
         const totalPrice = calculatePrice(amount, investment.pricePerUnit);
-        onAddInvestment({...investment, amount, totalPrice})
-        navigate('/dashboard')
+        const newInvestment = { ...investment, amount, totalPrice };
+    
+        try {
+            const response = await axios.post('http://localhost:5001/investments', newInvestment, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            onAddInvestment(response.data);
+            navigate('/dashboard');
+        } catch (error) {
+            console.error('There was a problem with the axios operation:', error);
+        }
     };
 
     const handleResetClick = (index) => {
