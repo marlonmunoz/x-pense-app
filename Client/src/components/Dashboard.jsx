@@ -210,7 +210,7 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                         {investments.map((investment, index) => (
                           <tr key={index}>
                             <td data-label="ID" className="hidden">{index + 1}</td>
-                            <td data-label="Name">{investment.name}</td>
+                            <td data-label="Name"><strong>{investment.name}</strong></td>
                             <td data-label="Amount">{investment.amount}</td>
                             <td data-label="Price">{formatCurrency(investment.total_price)}</td>
                             <td data-label="Actions">
