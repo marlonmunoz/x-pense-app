@@ -14,8 +14,8 @@ X-PENSE App is a personal finance management application that allows users to tr
 - User authentication
 - Live Crypto Update APIs
 - Responsive Graphs and Progress Bars
-- Log In - Log Out 
-- Add, Delete, Edit, Save and Reset Buttons 
+- Log In/Out Feature 
+- CRUD ops 
 - Input validation checks
 
 ### SERVER - Backend Activation
@@ -47,7 +47,7 @@ npm run dev
 
 - Use the frontend interface to input your cash on hand, bank account balance, savings, expenses, goals and investements.
 - The application will calculate and display the total balance.
-- You can also manage your financial goals and track transactions through the backend API.
+- Set future goals with responsive progress bars that allows you to keep track until goal is met
 
 
 ## restfulAPIs
@@ -57,10 +57,10 @@ npm run dev
 - `DELETE`
 
 ## Technologies Used
-- Javascript
-- Python
-- React
-- Flask
-- Bootstrap
-- CSS
-- HTML
+<img src="./Client/src/tech_pngs/JS_logo.png" alt="Alt text" width="70" height="70">
+<img src="./Client/src/tech_pngs/python_logo.png" alt="Alt text" width="70" height="70">
+<img src="./Client/src/tech_pngs/React.webp" alt="Alt text" width="70" height="70">
+<img src="./Client/src/tech_pngs/flask_logo.png" alt="Alt text" width="50" height="70">
+<img src="./Client/src/tech_pngs/psql_logo.webp" alt="Alt text" width="70" height="70">
+<img src="./Client/src/tech_pngs/Bootstrap_logo.png" alt="Alt text" width="70" height="70">
+<img src="./Client/src/tech_pngs/html_css_logo.png" alt="Alt text" width="80" height="70">
