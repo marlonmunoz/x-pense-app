@@ -143,11 +143,6 @@ function App() {
     return parseFloat(amount).toLocaleString();
   };
 
-  // const handleRemoveInvestment = (index) => {
-  //   const newInvestments = addedInvestments.filter((_, i) => i !== index);
-  //   setAddedInvestments(newInvestments);
-  // }
-
   const handleRemoveInvestment = (index) => {
     if (!addedInvestments || !addedInvestments[index]) {
         console.error('Investment not found');

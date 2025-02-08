@@ -11,13 +11,6 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
         const year = d.getFullYear();
         return `${year}-${month}-${day}`;
     };
-  
-
-    // const parseDate = (dateString) => {
-    //     const date = new Date(dateString);
-    //     date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-    //     return formatDate(date);
-    // };
 
     const [editDate, setEditDate] = useState(formatDate(new Date()));
     const [budgetDate, setBudgetDate] = useState('');

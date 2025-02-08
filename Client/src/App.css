@@ -344,7 +344,7 @@ body.dark-mode {
 }
 /* PROGRESS BARS */
 .custom-progress-height {
-  height: 20px; /* Ensure the progress bar fills the height of the progress container */
+  height: 30px; /* Ensure the progress bar fills the height of the progress container */
 }
 .custom-progress-height .progress-bar {
   height: 100%; /* Adjust the height as needed */
@@ -400,4 +400,9 @@ body.dark-mode {
       text-align: left;
       font-weight: bold;
   }
+}
+
+/* THINGS TO HIDE */
+.hidden {
+  display: none;
 }

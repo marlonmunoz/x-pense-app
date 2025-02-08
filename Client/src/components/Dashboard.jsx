@@ -199,7 +199,7 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                     <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                       <thead>
                         <tr>
-                          <th>ID</th>
+                          <th className="hidden"> ID</th>
                           <th>Name</th>
                           <th>Amount</th>
                           <th>Price</th>
@@ -209,7 +209,7 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                       <tbody>
                         {investments.map((investment, index) => (
                           <tr key={index}>
-                            <td data-label="ID">{index + 1}</td>
+                            <td data-label="ID" className="hidden">{index + 1}</td>
                             <td data-label="Name">{investment.name}</td>
                             <td data-label="Amount">{investment.amount}</td>
                             <td data-label="Price">{formatCurrency(investment.total_price)}</td>
