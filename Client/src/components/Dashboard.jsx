@@ -4,13 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 
 
-function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmount, darkMode, addedInvestments, setAddedInvestments,formatCurrency, formatDate, handleRemoveInvestment, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setAmounts }) {
+function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmount, darkMode,formatCurrency, formatDate, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setAmounts }) {
     const navigate = useNavigate();
     const [investments, setInvestments] = useState([]);
+    const [addedInvestments, setAddedInvestments] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
+
 
     
     const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0).toFixed(2);
-    const overviewTotal = totalBudgetAmount + parseFloat(totalInvestments) + balance - totalAmount;
+    const overviewTotal = totalBudgetAmount + parseFloat(totalPrice) + balance - totalAmount;
     const sortedTransactions = transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     const formattedTransactions = sortedTransactions.map(transaction => ({
@@ -106,9 +109,15 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
           .then(response => {
             console.log('Fetched from Investments:', response.data);
               setInvestments(response.data);
+              calculateTotalPrice(response.data);
           })
           .catch(error => console.log('Error fetching investments', error));
     }, []);
+
+    const calculateTotalPrice = (investments) => {
+      const total = investments.reduce((sum, investment) => sum + investment.total_price, 0);
+      setTotalPrice(total);
+  };
 
     
   
@@ -127,12 +136,28 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
         return null;
     }
 
-    const handleAmountChange = (index, value) => {
-      const updatedInvestments = [...addedInvestments];
-      updatedInvestments[index].amount = value;
-      updatedInvestments[index].totalPrice = value * updatedInvestments[index].pricePerUnit;
-      setAddedInvestments(updatedInvestments);
-    };
+    const handleRemoveInvestment = (index) => {
+      if (!investments || !investments[index]) {
+          console.error('Investment not found');
+          return;
+      }
+
+      const investmentId = investments[index].id; // Get the actual investment ID
+
+      axios.delete(`http://localhost:5001/investments/${investmentId}`)
+          .then(response => {
+              if (response.status === 204) {
+                  const newInvestments = investments.filter((_, i) => i !== index);
+                  setInvestments(newInvestments);
+                  calculateTotalPrice(newInvestments) ///////
+              } else {
+                  console.error('Failed to delete the investment');
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+          });
+  }
 
     return (
         <div className="container-fluid" >
@@ -182,9 +207,9 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                         </tr>
                       </thead>
                       <tbody>
-                        {investments.map(investment => (
-                          <tr key={investment.id}>
-                            <td>{investment.id}</td>
+                        {investments.map((investment, index) => (
+                          <tr key={index}>
+                            <td>{index + 1}</td>
                             <td>{investment.name}</td>
                             <td>{investment.amount}</td>
                             <td>{formatCurrency(investment.total_price)}</td>
@@ -226,7 +251,7 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                             </tr>
                             <tr>
                                 <th scope="row">Investments</th>
-                                <td className="text-left" >{formatCurrency(totalInvestments)}</td>
+                                <td className="text-left" >{formatCurrency(totalPrice)}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Budget</th>

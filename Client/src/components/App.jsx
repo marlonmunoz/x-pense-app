@@ -102,25 +102,6 @@ function App() {
     setTotalAmount(total);
   }, [transactions])
 
-// <<<<<<<<<<<<<<<<<<<<<<><<<<===============================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> //
-// <<<<<<<<<============== FETCHINGs FOR DASHBOARD RENDERING ====================>>>>>>>>>>>>> //
-// <<<<<<<<<<<<<<<<<<<<<<><<<<===============================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> //
-
-  // BUDGET FETCHED FOR DASHBOARD
-  // BALANCES FETCHED FOR DASHBOARD
-  // TRANSACTIONS FETCHED FOR DASHBOARD
-  // CRYPTO FETCHED FOR DASHBOARD
-
-  // GOALS FETCHED FOR DASHBOARD
-//   useEffect(() => {
-//     console.log('GOALS'); // logs
-//     fetch('http://localhost:5001/goals')
-//         .then(response => response.json())
-//         .then(data => setGoals(data))
-//         .catch(error => console.error('Error fetching goals:', error));
-// }, []);
-
-
 
   // Dark-Light MODE ======>>>>>>
   const toggleDarkMode = () => {
@@ -162,9 +143,31 @@ function App() {
     return parseFloat(amount).toLocaleString();
   };
 
+  // const handleRemoveInvestment = (index) => {
+  //   const newInvestments = addedInvestments.filter((_, i) => i !== index);
+  //   setAddedInvestments(newInvestments);
+  // }
+
   const handleRemoveInvestment = (index) => {
-    const newInvestments = addedInvestments.filter((_, i) => i !== index);
-    setAddedInvestments(newInvestments);
+    if (!addedInvestments || !addedInvestments[index]) {
+        console.error('Investment not found');
+        return;
+    }
+
+    const investmentId = addedInvestments[index].id; // Assuming each investment has an 'id' property
+
+    axios.delete(`http://localhost:5001/investments/${investmentId}`)
+        .then(response => {
+            if (response.status === 204) {
+                const newInvestments = addedInvestments.filter((_, i) => i !== index);
+                setAddedInvestments(newInvestments);
+            } else {
+                console.error('Failed to delete the investment');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
   }
 
 

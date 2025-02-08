@@ -80,19 +80,6 @@ const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, a
         return price.toFixed(2);
     };
 
-    // const handleAddClick = (index) => {
-    //     const investment = investments[index];
-    //     const amount = amounts[index];
-
-    //     if(!amount) {
-    //         alert('AMOUNTS NOT DETECTED!');
-    //         return;
-    //     }
-    //     const totalPrice = calculatePrice(amount, investment.pricePerUnit);
-    //     onAddInvestment({...investment, amount, totalPrice})
-    //     navigate('/dashboard')
-    // };
-
     const handleAddClick = async (index) => {
         const investment = investments[index];
         const amount = amounts[index];

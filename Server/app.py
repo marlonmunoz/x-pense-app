@@ -333,7 +333,7 @@ def get_investments():
     return jsonify([investment.to_dict() for investment in investments]), 200
 
 # DELETE
-@app.route('/investments/<int:investments_id>', methods=['DELETE'])
+@app.route('/investments/<int:investment_id>', methods=['DELETE'])
 def delete_investment(investment_id):
     investment = Investment.query.get(investment_id)
     if investment is None:
