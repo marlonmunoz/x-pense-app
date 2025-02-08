@@ -1,5 +1,6 @@
-# X-PENSE
-env shelll
+<div style="text-align: center;">
+    <h1>X-PENSE</h1>
+</div>
 
 X-PENSE App is a personal finance management application that allows users to track their cash on hand, bank account balances, savings, expenses and set financial goals. The application is built using Flask for the backend and React for the frontend. In addition, under Investments tab, the user can check a live crypto price update that can be added to the dashboard to calculate over all budget.
 ![Alt text](./Client/public/x-pense.png)
@@ -45,12 +46,13 @@ npm run dev
 ```
 ## Usage
 
+- Dashboard consolidates all transactions performed across all components
 - Use the frontend interface to input your cash on hand, bank account balance, savings, expenses, goals and investements.
-- The application will calculate and display the total balance.
-- Set future goals with responsive progress bars that allows you to keep track until goal is met
+- Set future goals with responsive progress bars that allows you to keep track until goal is met by displaying `saved` and `target` features.
+- Live Crypto Update prices that you can add it up to the Dashbaord and make future investments. 
 
 
-## restfulAPIs
+## RESTful API CRUD operations:
 - `GET`
 - `POST`
 - `PUT`
