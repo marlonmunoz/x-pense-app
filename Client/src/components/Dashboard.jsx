@@ -209,11 +209,11 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                       <tbody>
                         {investments.map((investment, index) => (
                           <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{investment.name}</td>
-                            <td>{investment.amount}</td>
-                            <td>{formatCurrency(investment.total_price)}</td>
-                            <td>
+                            <td data-label="ID">{index + 1}</td>
+                            <td data-label="Name">{investment.name}</td>
+                            <td data-label="Amount">{investment.amount}</td>
+                            <td data-label="Price">{formatCurrency(investment.total_price)}</td>
+                            <td data-label="Actions">
                             <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger">Remove</button>
                             </td>
                           </tr>
