@@ -151,8 +151,6 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
         }
     };
 
-    // const totalBudgetAmount = items.reduce((total, item) => total + item.amount, 0) + (isNaN(budget) ? 0 : budget);
-
     return (
         <div>
             <h5>Set Main Budget</h5>

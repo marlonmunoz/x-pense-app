@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 
 
-function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmount, darkMode,formatCurrency, formatDate, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setAmounts }) {
+function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,formatCurrency, formatDate, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setAmounts }) {
     const navigate = useNavigate();
     const [investments, setInvestments] = useState([]);
     const [addedInvestments, setAddedInvestments] = useState([]);
