@@ -344,12 +344,20 @@ body.dark-mode {
 }
 /* PROGRESS BARS */
 .custom-progress-height {
-  height: 30px; /* Ensure the progress bar fills the height of the progress container */
+  height: 25px; /* Ensure the progress bar fills the height of the progress container */
 }
 .custom-progress-height .progress-bar {
   height: 100%; /* Adjust the height as needed */
 }
 
+
+.progress {
+  height: 30px; /* Adjust the height as needed */
+}
+
+.progress-bar {
+  height: 100%; /* Ensure the progress bar fills the height of the progress container */
+}
 /* GOALS */
 /* Goals.jsx */
 

@@ -172,7 +172,6 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                 <div className="charts">
                     <h6>Spending Over Time</h6>
                     <p style={{color: 'gray'}}><sup>Tracking All X-PENSE Transactions</sup></p>
-                    {/* <ResponsiveContainer width="100%" height="100%"> */}
                       <LineChart width={390} height={350} data={formattedTransactions}>
                         <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#444' : '#ccc'} />
                         <XAxis dataKey="date" stroke={darkMode ? '#fff' : '#000'} label={{ value: 'Date', angle: -0, position: 'insideBottomCEnter', offset: 0 }}/>
@@ -187,7 +186,6 @@ function Dashboard({ transactions =[], balance = 0, goals, budget = 0, totalAmou
                           activeDot={{ r: 8 }}
                         />
                       </LineChart>
-                    {/* </ResponsiveContainer> */}
                 </div>
                 <br />
                 <div className="table-responsive">
