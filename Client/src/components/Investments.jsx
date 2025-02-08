@@ -177,18 +177,8 @@ const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, a
                                     />
                                 </td>
                                 <td data-label="Actions">
-                                    <button
-                                        className="btn btn-sm btn-success ml-1 "
-                                        onClick={() => handleAddClick(index)}
-                                    >
-                                        Add
-                                    </button>
-                                    <button
-                                        className="btn btn-sm btn-danger ml-1"
-                                        onClick={() => handleResetClick(index)}
-                                    >
-                                        Reset
-                                    </button>
+                                    <button className="btn btn-sm btn-success ml-1 " onClick={() => handleAddClick(index)}> Add </button>
+                                    <button className="btn btn-sm btn-danger ml-1" onClick={() => handleResetClick(index)}> Reset </button>
                                 </td>
                             </tr>
                         ))}
