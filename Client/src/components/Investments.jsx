@@ -15,26 +15,30 @@ const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, a
     useEffect(() => {
         const fetchInvestments = async () => {
             try {
-                const responseBitcoin = await axios.get('https://api.coindesk.com/v1/bpi/currentprice.json');
+                const responseBitcoin = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
                 const responseEthereum = await axios.get('https://api.coinbase.com/v2/prices/ETH-USD/spot');
                 const responseUSDC = await axios.get('https://api.coinbase.com/v2/prices/USDC-USD/spot');
                 // const responseXRP = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ripple&vs_currencies=usd');
 
+                const bitcoinPrice = responseBitcoin.data?.bitcoin?.usd || 0;
+                const ethereumPrice = parseFloat(responseEthereum.data?.data?.amount) || 0;
+                const usdcPrice = parseFloat(responseUSDC.data?.data?.amount) || 1.00;
+
                 const data = [
-                    { id: 'bitcoin', name: 'Bitcoin', type: 'Cryptocurrency', pricePerUnit: responseBitcoin.data.bpi.USD.rate_float || 0},
-                    { id: 'ethereum', name: 'Ethereum', type: 'Cryptocurrency', pricePerUnit: parseFloat(responseEthereum.data.data.amount) },
-                    { id: 'usd-coin', name: 'USDC', type: 'Stablecoin', pricePerUnit: parseFloat(responseUSDC.data.data.amount) || 1.00},
+                    { id: 'bitcoin', name: 'Bitcoin', type: 'Cryptocurrency', pricePerUnit: bitcoinPrice },
+                    { id: 'ethereum', name: 'Ethereum', type: 'Cryptocurrency', pricePerUnit: ethereumPrice },
+                    { id: 'usd-coin', name: 'USDC', type: 'Stablecoin', pricePerUnit: usdcPrice },
                     // { id: 'ripple', name: 'Ripple', type: 'Cryptocurrency', pricePerUnit: responseXRP.data.ripple.usd || 0 }, // Added XRP
                 ];
                 setInvestments(data);
-                setAmounts(data.map(() => 0))
+                setAmounts(data.map(() => 0));
             } catch (error) {
                 console.error("Error fetching investments", error);
             }
         };
-        
+
         fetchInvestments();
-    }, []);
+    }, [setInvestments, setAmounts]);
 
     useEffect(() => {
         const fetchMarketCaps = async () => {
