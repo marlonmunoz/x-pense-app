@@ -7,12 +7,11 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'r
 function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,formatCurrency, formatDate, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setAmounts, addedInvestments, setAddedInvestments }) {
     const navigate = useNavigate();
     const [investments, setInvestments] = useState([]);
-    // const [addedInvestments, setAddedInvestments] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
 
 
     
-    const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0).toFixed(2);
+    const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.total_price), 0).toFixed(2);
     const overviewTotal = totalBudgetAmount + parseFloat(totalPrice) + balance - totalAmount;
     const sortedTransactions = transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
 
@@ -108,7 +107,8 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
       axios.get('http://localhost:5001/investments')
           .then(response => {
             console.log('Fetched from Investments:', response.data);
-              setInvestments(response.data);
+              // setInvestments(response.data);
+              setAddedInvestments(response.data);
               calculateTotalPrice(response.data);
           })
           .catch(error => console.log('Error fetching investments', error));
@@ -121,10 +121,10 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
     };
 
     useEffect(() => {
-      const calculateTotalPrice = (investments) => {
-          const total = investments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0);
-          setTotalPrice(total);
-      };
+      // const calculateTotalPrice = (investments) => {
+      //     const total = investments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0);
+      //     setTotalPrice(total);
+      // };
   
       calculateTotalPrice(addedInvestments);
     }, [addedInvestments]);
@@ -143,26 +143,6 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
       return null;
   }
 
-  // const handleRemoveInvestment = (index) => {
-  //   if (!investments || !investments[index]) {
-  //       console.error('Investment not found');
-  //       return;
-  //   }
-  //   const investmentId = investments[index].id; // Get the actual investment ID
-  //   axios.delete(`http://localhost:5001/investments/${investmentId}`)
-  //       .then(response => {
-  //           if (response.status === 204) {
-  //               const newInvestments = investments.filter((_, i) => i !== index);
-  //               setInvestments(newInvestments);
-  //               calculateTotalPrice(newInvestments) ///////
-  //           } else {
-  //               console.error('Failed to delete the investment');
-  //           }
-  //       })
-  //       .catch(error => {
-  //           console.error('Error:', error);
-  //       });
-  // }
   const handleRemoveInvestment = (index) => {
     if (!addedInvestments || !addedInvestments[index]) {
         console.error('Investment not found');
@@ -236,7 +216,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                             <td data-label="ID" className="hidden">{index + 1}</td>
                             <td data-label="Name"><strong>{investment.name}</strong></td>
                             <td data-label="Amount">{investment.amount}</td>
-                            <td data-label="Price">{formatCurrency(investment.totalPrice)}</td>
+                            <td data-label="Price">{formatCurrency(investment.total_price)}</td>
                             <td data-label="Actions">
                             <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger">Remove</button>
                             </td>
