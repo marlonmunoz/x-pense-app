@@ -119,7 +119,9 @@ def update_budget(id):
     if 'item_name' not in data or 'amount' not in data or 'date' not in data:
         return jsonify({'error': 'Missing required fields'}), 400
     
-    budget = Budget.query.get_or_404(id)
+    budget = db.session.get(Budget, id)
+    if budget is None:
+        return jsonify({'error': 'Budget not found'}), 404
     budget.item_name = data['item_name']
     budget.amount = data['amount']
     budget.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
@@ -286,7 +288,7 @@ def add_goal():
 @app.route('/goals/<int:goal_id>', methods=['PUT'])
 def update_goal(goal_id):
     data = request.get_json()
-    goal = Goal.query.get(goal_id)
+    goal = db.session.get(Goal, goal_id)
     if goal is None:
         return jsonify({'error': 'Goal not found'}), 404
     goal.name = data.get('name', goal.name)
