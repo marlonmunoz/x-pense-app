@@ -224,7 +224,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                     <p style={{color: 'gray'}}><sup>Tracking All X-PENSE Transactions</sup></p>
                       <LineChart width={390} height={350} data={formattedTransactions}>
                         <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#444' : '#ccc'} />
-                        <XAxis dataKey="date" stroke={darkMode ? '#fff' : '#000'} label={{ value: 'Date', angle: -0, position: 'insideBottomLeft', offset: -16 }}/>
+                        <XAxis dataKey="date" stroke={darkMode ? '#fff' : '#000'} label={{ value: 'Date', angle: -0, position: 'insideBottomLeft', offset: -10 }}/>
                         <YAxis dataKey="amount" vstroke={darkMode ? '#fff' : '#000'} label={{ value: 'Amount', angle: -90, position: 'insideLeft', offset: 0 }}  />
                         <Tooltip content={<CustomTooltip />}/>
                         <Legend wrapperStyle={{ color: darkMode ? '#fff' : '#000' }} />
