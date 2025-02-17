@@ -335,12 +335,27 @@ def get_investments():
 # DELETE
 @app.route('/investments/<int:investment_id>', methods=['DELETE'])
 def delete_investment(investment_id):
-    investment = Investment.query.get(investment_id)
+    investment = db.session.get(Investment, investment_id)
     if investment is None:
         return jsonify({'error': 'Investment not found'}), 404
     db.session.delete(investment)
     db.session.commit()
     return '', 204
+
+# PUT
+@app.route('/investments/<int:investment_id>', methods=['PUT'])
+def update_investment(investment_id):
+    data = request.json
+    investment = db.session.get(Investment, investment_id)
+    if investment is None:
+        return jsonify({'error': 'Investment not found'}), 404
+    
+    investment.amount += float(data['amount'])
+    investment.total_price += float(data['totalPrice'])
+    db.session.commit()
+    return jsonify(investment.to_dict()), 200
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

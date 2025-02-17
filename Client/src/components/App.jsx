@@ -315,11 +315,26 @@ function App() {
                 formatAmount={formatAmount} 
                 formatCurrency={formatCurrency}
                 darkMode={darkMode} 
-                onAddInvestment={handleAddInvestment} 
+                // onAddInvestment={handleAddInvestment} 
+                onAddInvestment={(newInvestment) => {
+                  const existingInvestmentIndex = addedInvestments.findIndex(inv => inv.id === newInvestment.id);
+                  if (existingInvestmentIndex !== -1) {
+                      const updatedInvestments = [...addedInvestments];
+                      updatedInvestments[existingInvestmentIndex] = {
+                          ...updatedInvestments[existingInvestmentIndex],
+                          amount: updatedInvestments[existingInvestmentIndex].amount + newInvestment.amount,
+                          totalPrice: updatedInvestments[existingInvestmentIndex].totalPrice + newInvestment.totalPrice,
+                      };
+                      setAddedInvestments(updatedInvestments);
+                  } else {
+                      setAddedInvestments([...addedInvestments, newInvestment]);
+                  }
+                }}
                 validated={validated} setValidated={setValidated} 
                 investments={investments} setInvestments={setInvestments}
                 amounts={amounts} setAmounts={setAmounts}
                 marketCaps={marketCaps} setMarketCaps={setMarketCaps}
+                addedInvestments={addedInvestments} setAddedInvestments={setAddedInvestments}
               />}
             />
           </Route>

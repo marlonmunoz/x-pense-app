@@ -8,7 +8,7 @@ import bitcoinIcon from '../assets/bitcoin.png'
 import ethereumIcon from '../assets/ethereum.png'
 import usdcIcon from '../assets/usdc.png'
 
-const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, amounts, setAmounts, marketCaps, setMarketCaps, formatCurrency }) => {
+const Investments = ({ darkMode, investments, setInvestments, amounts, setAmounts, marketCaps, setMarketCaps, formatCurrency, addedInvestments, setAddedInvestments }) => {
     const navigate = useNavigate();
 
     
@@ -97,13 +97,39 @@ const Investments = ({ darkMode, onAddInvestment, investments, setInvestments, a
         const newInvestment = { ...investment, amount, totalPrice };
     
         try {
-            const response = await axios.post('http://localhost:5001/investments', newInvestment, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+            // Check if the investment already exists in the addedInvestments array
+            const existingInvestmentIndex = addedInvestments.findIndex(inv => inv.name === newInvestment.name);
     
-            onAddInvestment(response.data);
+            if (existingInvestmentIndex !== -1) {
+                // Update the existing investment using PUT
+                const existingInvestment = addedInvestments[existingInvestmentIndex];
+                const response = await axios.put(`http://localhost:5001/investments/${existingInvestment.id}`, {
+                    amount,
+                    totalPrice
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+    
+                const updatedInvestments = [...addedInvestments];
+                updatedInvestments[existingInvestmentIndex] = {
+                    ...existingInvestment,
+                    amount: existingInvestment.amount + amount,
+                    totalPrice: existingInvestment.totalPrice + totalPrice
+                };
+                setAddedInvestments(updatedInvestments);
+            } else {
+                // Add the new investment using POST
+                const response = await axios.post('http://localhost:5001/investments', newInvestment, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+    
+                setAddedInvestments([...addedInvestments, { ...newInvestment, id: response.data.id }]);
+            }
+    
             navigate('/dashboard');
         } catch (error) {
             console.error('There was a problem with the axios operation:', error);

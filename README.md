@@ -52,11 +52,48 @@ npm run dev
 - Live Crypto Update prices that you can add it up to the Dashbaord and make future investments. 
 
 
-## RESTful API CRUD operations:
-- `GET`
-- `POST`
-- `PUT`
-- `DELETE`
+## RESTful APIs:
+`GET` | `PUT` | `POST` | `DELETE`
+
+## Route Testing With POSTMAN
+`GET` Route
+```
+http://localhost:5001/investments
+```
+
+`POST` Route
+```
+http://localhost:5001/investments
+```
+```
+Example:
+
+{
+    "name": "Bitcoin",
+    "pricePerUnit": 96063.00,
+    "amount": 1,
+    "totalPrice": 96063.00
+}
+```
+
+`PUT` Route
+```
+Example:
+
+{   
+    "amount": 1,
+    "totalPrice": 96063.99
+}
+```
+
+
+
+`DELETE` Route <sup>Replace the id# with your id</sup>
+```
+http://localhost:5001/investments/97
+```
+
+
 
 ## Technologies Used
 <div style="text-align: center;">
