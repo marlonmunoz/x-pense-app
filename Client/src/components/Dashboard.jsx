@@ -9,6 +9,9 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
     const [investments, setInvestments] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
 
+    const [editIndex, setEditIndex] = useState(null);
+    const [editAmount, setEditAmount] = useState("");
+
 
     
     const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.total_price), 0).toFixed(2);
@@ -165,6 +168,47 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
         });
   };
 
+  // EDIT AMOUNT 
+  const handleEditInvestment = (index) => {
+    setEditIndex(index);
+    setEditAmount(addedInvestments[index].amount);
+  };
+
+  const handleSaveInvestment = (index) => {
+    const updatedInvestments = [ ...addedInvestments];
+    const investment = updatedInvestments[index];
+    const amount = parseFloat(editAmount);
+    if (!isNaN(amount)) {
+        investment.amount = amount;
+        if (investment.pricePerUnit) {
+            investment.total_price = amount * investment.pricePerUnit;
+        } else {
+            console.error('pricePerUnit is not defined for investment:', investment);
+        }
+
+        // Make PUT request to update investment in the backend
+        axios.put(`http://localhost:5001/investments/${investment.id}`, {
+            amount: investment.amount,
+            totalPrice: investment.total_price
+        })
+        .then(response => {
+            setAddedInvestments(updatedInvestments);
+            setEditIndex(null);
+            setEditAmount("");
+        })
+        .catch(error => {
+            console.error('Error updating investment:', error);
+        });
+    } else {
+        console.error('Invalid amount:', editAmount);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditIndex(null);
+    setEditAmount("");
+  }
+
     return (
         <div className="container-fluid" >
           <div className="row"  >
@@ -215,11 +259,32 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                           <tr key={index}>
                             <td data-label="ID" className="hidden">{index + 1}</td>
                             <td data-label="Name"><strong>{investment.name}</strong></td>
-                            <td data-label="Amount">{investment.amount}</td>
+                            {/* <td data-label="Amount">{investment.amount}</td> */}
+                            <td data-label="Amount">
+                              {editIndex === index ? (
+                                <input
+                                  type="number"
+                                  value={editAmount}
+                                  onChange={(e) => setEditAmount(e.target.value)}
+                                />
+                              ) : (
+                                investment.amount
+                              )}
+                            </td>
+
                             <td data-label="Price">{formatCurrency(investment.total_price)}</td>
                             <td data-label="Actions">
-                            <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger">Remove</button>
-                            <button className="btn btn-sm btn-primary ml-1">Edit</button>
+                              {editIndex === index ? (
+                                <>
+                                  <button onClick={() => handleSaveInvestment(index)} className="btn btn-sm btn-success">Save</button>
+                                  <button onClick={handleCancelEdit} className="btn btn-sm btn-secondary ml-1">Cancel</button>
+                                </>
+                              ) : (
+                                <>
+                                  <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger">Remove</button>
+                                  <button onClick={() => handleEditInvestment(index)} className="btn btn-sm btn-primary ml-1">Edit</button>
+                                </>
+                              )}
                             </td>
                           </tr>
                         ))}

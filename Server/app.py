@@ -350,8 +350,8 @@ def update_investment(investment_id):
     if investment is None:
         return jsonify({'error': 'Investment not found'}), 404
     
-    investment.amount += float(data['amount'])
-    investment.total_price += float(data['totalPrice'])
+    investment.amount = float(data['amount'])
+    investment.total_price = float(data['totalPrice'])
     db.session.commit()
     return jsonify(investment.to_dict()), 200
 
