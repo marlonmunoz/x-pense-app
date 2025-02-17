@@ -235,6 +235,7 @@ function App() {
                 editTransaction={editTransaction} setEditTransaction={setEditTransaction}
                 reminderDate={reminderDate} setReminderDate={setReminderDate}
                 successMessage={successMessage} setSuccessMessage={setSuccessMessage}
+                parseDate={parseDate}
               />}
             />
             <Route path='/add' element ={

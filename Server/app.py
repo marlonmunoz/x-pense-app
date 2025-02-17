@@ -31,7 +31,7 @@ users = {
     "mago": "1234***"
 }
 
-# LOGIN ============>>>>>>>
+# LOGIN ============================================================================>>>>>>>
 # POST
 @app.route('/login', methods=['POST'])
 def login():
@@ -76,7 +76,7 @@ def logout():
 
 
 
-# INVESTMENTS =======>>>>>
+# INVESTMENTS ==========================================================================>>>>>
 # GET
 # Add the proxy route for CoinGecko API
 @app.route('/api/coins/markets', methods=['GET'])
@@ -92,7 +92,7 @@ def get_market_caps():
 
 
 
-# BUDGET ============>>>>>>>
+# BUDGET ==========================================================================>>>>>>>
 # GET
 @app.route('/budgets', methods=['GET'])
 def get_budgets():
@@ -138,7 +138,7 @@ def delete_budget(id):
 
 
 
-# BALANCE ============>>>>>>>
+# BALANCE =====================================================================>>>>>>>
 # GET
 @app.route('/balance', methods=['GET'])
 def get_balance():
@@ -192,7 +192,7 @@ def get_balances():
     
     
     
-# TRANSACTIONS ============>>>>>>>
+# TRANSACTIONS ================================================================>>>>>>>
 # GET
 @app.route('/transactions', methods=['GET'])
 def get_transaction():
@@ -257,7 +257,7 @@ def delete_transaction(id):
 
 
 
-# GOALS ============>>>>>>>
+# GOALS ======================================================================>>>>>>>
 # GET
 @app.route('/goals', methods=['GET'])
 def get_goals():
@@ -313,7 +313,7 @@ def delete_goal(goal_id):
     db.session.commit()
     return '', 204
 
-# INVESTEMENT ===================>>>>>>>>>>>>>>>>>>
+# INVESTEMENT =====================================================>>>>>>>>>>>>>>>>>>
 # POST
 @app.route('/investments', methods=['POST'])
 def add_investment():

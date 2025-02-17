@@ -9,10 +9,11 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const day = String(d.getDate()).padStart(2, '0');
         const year = d.getFullYear();
-        return `${year}-${month}-${day}`;
+        // return `${year}-${month}-${day}`;
+        return `${month}-${day}-${year}`;
     };
 
-    const [editDate, setEditDate] = useState(formatDate(new Date()));
+    const [editDate, setEditDate] = useState((new Date()));
     const [budgetDate, setBudgetDate] = useState('');
 
     useEffect(() => {
@@ -27,7 +28,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
             const response = await axios.get('http://localhost:5001/budgets');
             const adjustedBudgets = response.data.map(budget => ({
                 ...budget,
-                date: parseDate(budget.date)
+                date: formatDate(parseDate(budget.date))
             }));
             console.log('Adjusted budgets:', adjustedBudgets);
             setItems(adjustedBudgets);
@@ -169,7 +170,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                 <br />
                 <input 
                     type="date" 
-                    value={formatDate(budgetDate)}
+                    value={(budgetDate)}
                     onChange={(e) => setBudgetDate(e.target.value)}
                     className="form-control"
                     id="budget-date"
@@ -182,6 +183,10 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <br />
             <br />
+
+
+
+
             <h5>Add New Budget</h5>
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <input

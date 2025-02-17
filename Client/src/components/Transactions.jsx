@@ -3,7 +3,7 @@ import axios from 'axios'
 import '/src/App.css'
 
 
-const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, setTotalAmount, editIndex, setEditIndex, editTransaction, setEditTransaction, formatCurrency, reminderDate, setSuccessMessage, successMessage }) => {
+const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, setTotalAmount, editIndex, setEditIndex, editTransaction, setEditTransaction, formatCurrency, reminderDate, setSuccessMessage, successMessage, parseDate }) => {
     
     useEffect(() => {
         console.log('TRANSACTIONS COMPONENT');
@@ -27,6 +27,16 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
         const formattedDate = date.toISOString().split('T')[0];
         return formattedDate
     }
+
+    const formatDate = (date) => {
+        if (!date) return '';
+        const d = new Date(date);
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const year = d.getFullYear();
+        // return `${year}-${month}-${day}`;
+        return `${month}-${day}-${year}`;
+    };
 
     // DELETE 
     const handleDelete = (index) => {
@@ -145,7 +155,8 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                                 {transaction.category} 
                                             </td>
                                             <td data-label="Date">
-                                                {formattedDate} 
+                                                {/* {formattedDate}  */}
+                                                {formatDate(parseDate(transaction.date))}
                                             </td>
                                             <td data-label="Amount">
                                                 {formatCurrency(transaction.amount)}
