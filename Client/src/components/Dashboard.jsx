@@ -219,6 +219,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                             <td data-label="Price">{formatCurrency(investment.total_price)}</td>
                             <td data-label="Actions">
                             <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger">Remove</button>
+                            <button className="btn btn-sm btn-primary ml-1">Edit</button>
                             </td>
                           </tr>
                         ))}
