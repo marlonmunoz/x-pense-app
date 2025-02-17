@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
+import { parseISO, format } from 'date-fns';
+
 
 
 function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,formatCurrency, formatDate, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setAmounts, addedInvestments, setAddedInvestments }) {
@@ -20,7 +22,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
 
     const formattedTransactions = sortedTransactions.map(transaction => ({
       ...transaction,
-      date: formatDate(transaction.date)
+      date: formatDate(parseDate(transaction.date))
     }))
 
 
@@ -96,10 +98,21 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
     }, []);
 
     // TRANSACTIONS.jsx =============================================>>>>
+    // useEffect(() => {
+    //   console.log('Loaded from Transactions.jsx component');
+    //   axios.get('http://127.0.0.1:5001/transactions')
+    //   .then(response => {
+    //       setTransactions(response.data)
+    //   })
+    //   .catch(error => console.log('Error fetching transactions', error));
+    // }, []);
     useEffect(() => {
-      console.log('Loaded from Transactions.jsx component');
+      console.log('TRANSACTIONS COMPONENT');
+      
+      console.log('Fetching transactions...'); // logs 01
       axios.get('http://127.0.0.1:5001/transactions')
       .then(response => {
+          console.log('Fetched transactions:', response.data); // log 02
           setTransactions(response.data)
       })
       .catch(error => console.log('Error fetching transactions', error));
@@ -222,20 +235,20 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                 <div className="charts">
                     <h6>Spending Over Time</h6>
                     <p style={{color: 'gray'}}><sup>Tracking All X-PENSE Transactions</sup></p>
-                      <LineChart width={390} height={350} data={formattedTransactions}>
-                        <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#444' : '#ccc'} />
-                        <XAxis dataKey="date" stroke={darkMode ? '#fff' : '#000'} label={{ value: 'Date', angle: -0, position: 'insideBottomLeft', offset: -10 }}/>
-                        <YAxis dataKey="amount" vstroke={darkMode ? '#fff' : '#000'} label={{ value: 'Amount', angle: -90, position: 'insideLeft', offset: 0 }}  />
-                        <Tooltip content={<CustomTooltip />}/>
-                        <Legend wrapperStyle={{ color: darkMode ? '#fff' : '#000' }} />
-                        <Line 
-                          type="monotone"     
-                          dataKey="amount"   
-                          label={{ position: 'top', fill: darkMode ? '#fff' : '#000' }}
-                          stroke={darkMode ? '#08fa00' : '#8884d8'} 
-                          activeDot={{ r: 8 }}
-                        />
-                      </LineChart>
+                    <LineChart width={390} height={350} data={formattedTransactions}>
+                      <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#444' : '#ccc'} />
+                      <XAxis dataKey="date" stroke={darkMode ? '#fff' : '#000'} label={{ value: 'Date', angle: -0, position: 'insideBottomLeft', offset: -10 }}/>
+                      <YAxis dataKey="amount" stroke={darkMode ? '#fff' : '#000'} label={{ value: 'Amount', angle: -90, position: 'insideLeft', offset: 0 }}  />
+                      <Tooltip content={<CustomTooltip />}/>
+                      <Legend wrapperStyle={{ color: darkMode ? '#fff' : '#000' }} />
+                      <Line 
+                        type="monotone"     
+                        dataKey="amount"   
+                        label={{ position: 'top', fill: darkMode ? '#fff' : '#000' }}
+                        stroke={darkMode ? '#08fa00' : '#8884d8'} 
+                        activeDot={{ r: 8 }}
+                      />
+                    </LineChart>
                 </div>
                 <br />
                 <div className="table-responsive">
