@@ -255,7 +255,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                   <h6>Added Investments</h6>
                   <p style={{ color: 'gray' }}><sup>Tracking All CRYPTO Transactions</sup></p>
                   {addedInvestments.length === 0 ? (
-                    <p>No Investments Have Been Added</p>
+                    <p className="border border-danger rounded p-2 ml-5 text-danger">No Investments Have Been Added !</p>
                   ) : (
                     <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                       <thead>
