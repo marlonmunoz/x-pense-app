@@ -295,7 +295,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                               ) : (
                                 <>
                                   <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger">Remove</button>
-                                  <button onClick={() => handleEditInvestment(index)} className="btn btn-sm btn-primary ml-1">Edit</button>
+                                  <button onClick={() => handleEditInvestment(index)} className="btn btn-sm btn-primary ml-1">Edit Amount</button>
                                 </>
                               )}
                             </td>
