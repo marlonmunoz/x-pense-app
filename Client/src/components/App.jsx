@@ -170,7 +170,7 @@ function App() {
     <Router>
       <div id="root" className={`container d-flex flex-column align-items-center ${darkMode ? 'dark-mode' : 'light-mode'}`}>
         {/* LOGOUT */}
-        <button onClick={handleLogout}className='btn btn-secondary mb-3 ml-auto' >Logout</button>
+        <button onClick={handleLogout}className={`btn btn-secondary mb-3 ml-auto border ${darkMode ? 'btn-light' : 'btn-dark'}`} >Logout</button>
         <h1>X-PENSE</h1>
         <h6><span className='badge badge-info border border'>A Budget Tracker At Your Fingertips</span></h6>
 
