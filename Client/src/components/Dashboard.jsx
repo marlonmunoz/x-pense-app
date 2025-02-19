@@ -229,7 +229,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                 <div className="summary">
                     <h5>Recent Transactions</h5>
                     <br />
-                    <button onClick={() => navigate('/transactions')} className="btn btn-info "> View All Transactions</button>
+                    <button onClick={() => navigate('/transactions')} className={`btn ${darkMode ? 'btn-light' : 'btn-dark'}`}> View All Transactions</button>
                 </div>
                 <br />
                 <div className={`charts border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
