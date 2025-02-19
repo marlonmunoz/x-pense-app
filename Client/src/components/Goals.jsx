@@ -199,7 +199,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                             <div className='goal-container'>
                                 <h6>{goal.name}: $ {goal.target.toLocaleString()}</h6>
                                 <div className={`progress ${darkMode ? 'progress-dark' : 'progress-light'}`}>
-                                    <div className={`progress-bar ${darkMode ? 'bg-dark' : 'bg-success'} progress-bar-thick `} role="progressbar" style={{width: `${(goal.saved / goal.target) * 100}%`}} aria-valuemin="0" aria-valuemax="100">
+                                    <div className={`progress-bar border border-success ${darkMode ? 'bg-info' : 'bg-success'} progress-bar-thick `} role="progressbar" style={{width: `${(goal.saved / goal.target) * 100}%`}} aria-valuemin="0" aria-valuemax="100">
                                         {(goal.saved / goal.target * 100).toFixed(2)}%
                                     </div>
                                 </div>

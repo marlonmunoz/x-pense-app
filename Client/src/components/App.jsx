@@ -172,7 +172,7 @@ function App() {
         {/* LOGOUT */}
         <button onClick={handleLogout}className='btn btn-secondary mb-3 ml-auto' >Logout</button>
         <h1>X-PENSE</h1>
-        <h6><span className='badge badge-info'>A Budget Tracker At Your Fingertips</span></h6>
+        <h6><span className='badge badge-info border border'>A Budget Tracker At Your Fingertips</span></h6>
 
         <button 
           onClick={toggleDarkMode} 
@@ -187,7 +187,7 @@ function App() {
               <span className={`navbar-toggler-icon ${darkMode ? 'dark-mode-icon' : 'light-mode-icon'} align-left`}></span>
           </button>
           <div className='collapse navbar-collapse justify-content-center' id='navbarNav'>
-            <ul className='nav nav-tabs nav-tabs-bg'>
+            <ul className={`nav nav-tabs ${darkMode ? 'nav-tabs-bg-dark-mode' : 'nav-tabs-bg-light-mode'} rounded`}>
               <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/dashboard'>Dashboard</NavLink></li>
               <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='budget'>Budget</NavLink></li>
               <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/'>Balance</NavLink></li>

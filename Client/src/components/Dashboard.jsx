@@ -223,16 +223,16 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
   }
 
     return (
-        <div className="container-fluid" >
+        <div className={`container-fluid ${darkMode ? 'dark-mode' : 'light-mode'}`} >
           <div className="row"  >
             <div className="col-12" >
-                <div className="summary border border-info rounded p-3 ml-7">
+                <div className="summary">
                     <h5>Recent Transactions</h5>
                     <br />
-                    <button onClick={() => navigate('/transactions')} className="btn btn-info"> View All Transactions</button>
+                    <button onClick={() => navigate('/transactions')} className="btn btn-info "> View All Transactions</button>
                 </div>
                 <br />
-                <div className="charts border border-info rounded p-3 ml-7">
+                <div className={`charts border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                     <h6>Spending Over Time</h6>
                     <p style={{color: 'gray'}}><sup>Tracking All X-PENSE Transactions</sup></p>
                     <LineChart width={390} height={350} data={formattedTransactions}>
@@ -252,7 +252,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                 </div>
                 <br />
 
-                <div className="table-responsive border border-info rounded p-3 ml-7">
+                <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                   <h6>Added Investments</h6>
                   <p style={{ color: 'gray' }}><sup>Tracking All CRYPTO Transactions</sup></p>
                   {addedInvestments.length === 0 ? (
@@ -308,19 +308,20 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                 </div>
               
                 <br />
-                <div className="table-responsive border border-info rounded p-3 ml-7">
+                <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                   <h6>Goals Progress</h6>
                   <p style={{ color: 'gray' }}><sup>Tracking</sup></p>
                   {goalsProgress.length === 0 ? (
                     <p className="border border-danger rounded p-2 ml-7 text-danger">No Goals Have Been Added !</p>
                   ) : (
-                    <div className="goals-progress rounded px-5 border border-info rounded p-2 ml-7" style={{ maxWidth: '600px', borderWidth: '2px' }} >
+                    <div className="goals-progress rounded px-5 border border-info rounded p-2 ml-6" style={{ maxWidth: '600px', borderWidth: '2px' }} >
                       <div className="d-flex flex-column align-items-center">
                         {goalsProgress.map((goal, index) => (
                           <div key={index} className="d-flex align-items-center mb-2 rounded" style={{ width: '120%' }}>
                             <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
-                            <div className="progress flex-grow-1 custom-progress-height border" style={{ color: 'black' }}>
-                              <div className="progress-bar bg-success custom-progress-height" role="progressbar" style={{ width: `${goal.progress}%` }} aria-valuemin="0" aria-valuemax="100">
+                            <div className="progress flex-grow-1 custom-progress-height border border-info " style={{ color: 'black' }}>
+                              {/* <div className="progress-bar bg-success custom-progress-height" role="progressbar" style={{ width: `${goal.progress}%` }} aria-valuemin="0" aria-valuemax="100"> */}
+                              <div className={`progress-bar ${darkMode ? 'bg-info' : 'bg-success'} custom-progress-height`} role="progressbar" style={{ width: `${goal.progress}%` }} aria-valuemin="0" aria-valuemax="100">  
                                 {goal.progress.toFixed(2)}%
                               </div>
                             </div>
@@ -331,8 +332,9 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                   )}
                 </div>
                 <br />
-                <div className="table-responsive ">
+                <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                     <h6>Overview</h6>
+                    <p style={{ color: 'gray' }}><sup>Total Summary</sup></p>
                     <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                         <tbody>
                             <tr>

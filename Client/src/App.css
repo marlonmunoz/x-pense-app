@@ -29,13 +29,6 @@
   background-color: transparent; /* Make the navbar background transparent */
 }
 
-.nav-link-light-mode {
-  color: black;
-}
-
-.nav-link-dark-mode {
-  color: rgb(48, 132, 127);
-}
 
 .navbar-toggler-icon.light-mode-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 0, 0, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
@@ -45,12 +38,28 @@
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
-.nav-tabs-bg {
-  background-color: lightgray; /* Set the background color for the tabs */
-  border-radius: 5px; /* Optional: Add some border radius for better appearance */
-  padding: 1px; /* Optional: Add some padding */
+/* TABS BG darkMode-lightMode */
+.nav-tabs-bg-light-mode {
+  background-color: #17a2b8; 
+  border-radius: 6px; 
+  padding: 1px; 
 }
 
+.nav-tabs-bg-dark-mode {
+  background-color: #000000; /* Light mode background color */
+  border-radius: 6px; 
+  padding: 1px; 
+}
+
+.nav-link-light-mode {
+  color: rgb(255, 255, 255);
+}
+
+.nav-link-dark-mode {
+  color: rgb(255, 255, 255);
+}
+
+/*  */
 .nav-link.highlight-white:hover {
   background: rgb(0, 0, 0) !important;
   color: rgb(255, 255, 255) !important;
@@ -215,6 +224,16 @@
   }
 }
 
+.dark-mode .overview-table th {
+  background-color: #343a40;
+  color: #fff;
+}
+
+
+
+
+
+
 /* GOAL progress bar */
 .progress-dark {
   background-color: #eceaea; /* Dark background color */
@@ -225,7 +244,10 @@
 }
 
 .bg-dark {
-  background-color: #6d46c1 !important; /* Dark progress bar color */
+  background-color: #232c36 !important; /* Dark progress bar color */
+}
+.bg-light {
+  background-color: #e0e2e6 !important; /* Dark progress bar color */
 }
 
 .bg-success {
@@ -315,7 +337,7 @@
 
 .amounts {
   font-weight: bold;
-  color: rgb(20, 137, 183);
+  color: #17a2b8;
   padding: 3px;
   display: inline;
 }
