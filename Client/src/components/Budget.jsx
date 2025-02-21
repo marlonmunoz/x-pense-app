@@ -155,79 +155,78 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
     return (
         <div>
             <h5>Set Main Budget</h5>
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                <input 
-                    type="number"
-                    id="Set budget"
-                    value={isNaN(newBudget) ? '' : newBudget} 
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        setNewBudget(value === '' ? '' : parseFloat(value));
-                    }}
-                    className={`form-control ${validated ? 'is-valid' : 'is-invalid'}`}
-                    placeholder="Set Amount"
-                />
-                <br />
-                <input 
-                    type="date" 
-                    value={(budgetDate)}
-                    onChange={(e) => setBudgetDate(e.target.value)}
-                    className="form-control"
-                    id="budget-date"
-                    name="budget-date"
-                />
-                <br />
-                <button className="btn btn-primary" onClick={handleSetBudget} >Set</button>
-                <button className="btn btn btn-warning" onClick={resetBudget}>Reset</button>
+            <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <input 
+                        type="number"
+                        id="Set budget"
+                        value={isNaN(newBudget) ? '' : newBudget} 
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setNewBudget(value === '' ? '' : parseFloat(value));
+                        }}
+                        className={`form-control ${validated ? 'is-valid' : 'is-invalid'}`}
+                        placeholder="Set Amount"
+                    />
+                    <br />
+                    <input 
+                        type="date" 
+                        value={(budgetDate)}
+                        onChange={(e) => setBudgetDate(e.target.value)}
+                        className="form-control"
+                        id="budget-date"
+                        name="budget-date"
+                    />
+                    <br />
+                    <button className="btn btn-primary" onClick={handleSetBudget} >Set</button>
+                    <button className="btn btn btn-warning" onClick={resetBudget}>Reset</button>
+                </div>
             </div>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <br />
-            <br />
-
-
-
 
             <h5>Add New Budget</h5>
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                <input
-                    type="text"
-                    placeholder="Item Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="form-control"
-                    id="item-name"
-                    name="item-name"
-                />
-                <br />
-                <input
-                    type="number"
-                    placeholder="Amount"
-                    value={isNaN(amount) ? '' : amount}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        setAmount(value === '' ? '' : parseFloat(value));
-                    }}
-                    className="form-control"
-                    id="item-amount"
-                    name="item-amount"
-                />
-                <br />
-                <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="form-control"
-                    id="item-date"
-                    name="item-date"
-                />
-                <br />
-                <button className="btn btn-primary" onClick={addItem}>Add</button>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+            <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <input
+                        type="text"
+                        placeholder="Item Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="form-control"
+                        id="item-name"
+                        name="item-name"
+                    />
+                    <br />
+                    <input
+                        type="number"
+                        placeholder="Amount"
+                        value={isNaN(amount) ? '' : amount}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setAmount(value === '' ? '' : parseFloat(value));
+                        }}
+                        className="form-control"
+                        id="item-amount"
+                        name="item-amount"
+                    />
+                    <br />
+                    <input
+                        type="date"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        className="form-control"
+                        id="item-date"
+                        name="item-date"
+                    />
+                    <br />
+                    <button className="btn btn-primary" onClick={addItem}>Add</button>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                </div>
             </div>
             <br />
-            <br />
             <h5>Budget Types</h5>
-            <div className="table-responsive">
+            <div className={`table-responsive border border-info rounded p-2 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
             <table className={`table table-striped table-hover table-bordered responsive-table  ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                     <thead>
                         <tr>
