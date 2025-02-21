@@ -130,71 +130,68 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
     <div>
       <h5>Set Balance</h5>
       <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-12 col-sm-10 col-md-8 col-lg-6">
-            <label htmlFor="cashOnHand" className="form-label">Cash On Hand</label>
-            <input 
-              type="number" 
-              id="cashOnHand"
-              name="cashOnHand"
-              value={cashOnHand}
-              onChange={(e) => setCashOnHand(Number(e.target.value))}
-              placeholder="Enter cash on hand"
-              className="form-control"
-              style={{ width: '100%' }}
-            />
+        <div className={`border border-info rounded center ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+          <div className="row justify-content-center">
+            <div className="col-12 col-sm-10 col-md-8 col-lg-6">
+              <label htmlFor="cashOnHand" className="form-label">Cash On Hand</label>
+              <input 
+                type="number" 
+                id="cashOnHand"
+                name="cashOnHand"
+                value={cashOnHand}
+                onChange={(e) => setCashOnHand(Number(e.target.value))}
+                placeholder="Enter cash on hand"
+                className="form-control"
+                style={{ width: '100%' }}
+              />
+            </div>
           </div>
-        </div>
-      <br />
-
-
-        <div className="row justify-content-center">
-          <div className="col-12 col-sm-10 col-md-8 col-lg-6">
-            <label htmlFor="bankAccountBalance" className="form-label">Bank Account Balance</label>
-            <input 
-              type="number" 
-              id="bankAccountBalance"
-              name="bankAccountBalance"
-              value={bankAccountBalance}
-              onChange={(e) => setBankAccountBalance(Number(e.target.value))}
-              placeholder="Enter bank account balance"
-              className="form-control"
-              style={{ width: '100%' }}
-            />
+          <br />
+          <div className="row justify-content-center">
+            <div className="col-12 col-sm-10 col-md-8 col-lg-6">
+              <label htmlFor="bankAccountBalance" className="form-label">Bank Account Balance</label>
+              <input 
+                type="number" 
+                id="bankAccountBalance"
+                name="bankAccountBalance"
+                value={bankAccountBalance}
+                onChange={(e) => setBankAccountBalance(Number(e.target.value))}
+                placeholder="Enter bank account balance"
+                className="form-control"
+                style={{ width: '100%' }}
+              />
+            </div>
           </div>
-        </div>
-        <br />
-
-
-        <div className="row justify-content-center">
-          <div className="col-12 col-sm-10 col-md-8 col-lg-6">
-            <label htmlFor="savings" className="form-label">Savings</label>
-            <input 
-              type="number" 
-              id="savings"
-              name="savings"
-              value={savings}
-              onChange={(e) => setSavings(Number(e.target.value))}
-              placeholder="Enter savings"
-              className="form-control"
-              style={{ width: '100%' }}
-            />
+          <br />
+          <div className="row justify-content-center">
+            <div className="col-12 col-sm-10 col-md-8 col-lg-6">
+              <label htmlFor="savings" className="form-label">Savings</label>
+              <input 
+                type="number" 
+                id="savings"
+                name="savings"
+                value={savings}
+                onChange={(e) => setSavings(Number(e.target.value))}
+                placeholder="Enter savings"
+                className="form-control"
+                style={{ width: '100%' }}
+              />
+            </div>
           </div>
-        </div>
-        <br />
-        <div className="row justify-content-center">
-          <div className="col-12 col-sm-10 col-md-8 col-lg-6 ">
-            <button className="btn btn-primary ml-2" onClick={totalBalance} >Set Balance</button>
-            <button className="btn btn-warning ml-2 " onClick={resetFields} >Reset</button>
+          <br />
+          <div className="row justify-content-center">
+            <div className="col-12 col-sm-10 col-md-8 col-lg-6 ">
+              <button className="btn btn-primary ml-2" onClick={totalBalance} >Set Balance</button>
+              <button className="btn btn-warning ml-2 " onClick={resetFields} >Reset</button>
+            </div>
           </div>
+          <br />
+          <br />
         </div>
-        <br />
-        <br />
-
         <h5>Account Overview</h5>
 
-        <div className="table-responsive">
-        <table className={`table table-striped table-hover table-bordered ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
+        <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+          <table className={`table table-striped table-hover table-bordered ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
             <thead>
               <tr>
                 <th>ACC#</th>
