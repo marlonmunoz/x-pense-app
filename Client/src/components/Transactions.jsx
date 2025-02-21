@@ -107,78 +107,80 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
             <h5>New Transactions Added </h5>
             <p style={{color: 'gray'}}> <sup>Tracking History</sup></p>
             {successMessage && <div className='alert alert-success'>{successMessage}</div>}
-            <div className="table-responsive">
-                <table className={`table table-striped table-hover table-bordered ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>Category</th>
-                            <th>Date</th>
-                            <th>Amount</th>
-                            <th>Actions</th>
+            <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                <div className="table-responsive">
+                    <table className={`table table-striped table-hover table-bordered ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {transactions.map((transaction, index) => {
-                             const  formattedDate  = formatDateTime(transaction.date)
-                             return (
-                                <tr key={index}>
-                                    {editIndex === index ? (
-                                        <>
-                                            <td>
-                                                <label htmlFor={`category-${index}`}>Category</label>
-                                                <input type="text" id={`category-${index}`} name='category' value={editTransaction.category} onChange={handleEditChange} className="form-control" />
-                                            </td>
-                                            <td>
-                                                <label htmlFor={`date-${index}`}>Date</label>
-                                                <input type="date" id={`date-${index}`} name='date' value={editTransaction.date} onChange={handleEditChange} className="form-control"/>
-                                            </td>
-                                            <td>
-                                                <label htmlFor={`description-${index}`}>Description</label>
-                                                <input type="text" id={`description-${index}`} name='description' value={editTransaction.description} onChange={handleEditChange} className="form-control" />
-                                            </td>
-                                            <td>
-                                                <label htmlFor={`amount-${index}`}>Amount</label>
-                                                <input type="number" id={`amount-${index}`} name='amount' value={editTransaction.amount} onChange={handleEditChange} className="form-control" />
-                                            </td>
-                                            <td>
-                                                <button onClick={() => handleEditSave(index)} className="btn btn-sm btn-success ml-1 ">Save</button>
-                                                <button onClick={() => setEditIndex(null)} className="btn btn-sm btn-secondary ml-1 ">Cancel</button>
-                                            </td>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <td data-label="Description">
-                                                {transaction.description || 'No Description'} 
-                                            </td>
-                                            <td data-label="Category">
-                                                {transaction.category} 
-                                            </td>
-                                            <td data-label="Date">
-                                                {/* {formattedDate}  */}
-                                                {formatDate(parseDate(transaction.date))}
-                                            </td>
-                                            <td data-label="Amount">
-                                                {formatCurrency(transaction.amount)}
-                                            </td>
-                                            <td data-label="Actions">
-                                                <button onClick={() => { setEditIndex(index); setEditTransaction({ ...transaction, date: formatDateTime(transaction.date) }); }} className="btn btn-sm  btn-primary ml-1">Edit</button>
-                                                <button onClick={() => handleDelete(index)} className="btn btn-sm btn-danger ml-1">Delete</button>
-                                                <button onClick={() => handleSetReminderClick(transaction, reminderDate)} className='btn btn-sm btn-info ml-1'>Set Reminder</button>
-                                                
-                                            </td>
-                                        </>
-                                    )}
-                                </tr>  
-                            )
-                        })}
-                        <tr>
-                            <td colSpan="4"><strong>Total :</strong></td>
-                            <td>{formatCurrency(totalAmount)}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {transactions.map((transaction, index) => {
+                                 const  formattedDate  = formatDateTime(transaction.date)
+                                 return (
+                                    <tr key={index}>
+                                        {editIndex === index ? (
+                                            <>
+                                                <td>
+                                                    <label htmlFor={`category-${index}`}>Category</label>
+                                                    <input type="text" id={`category-${index}`} name='category' value={editTransaction.category} onChange={handleEditChange} className="form-control" />
+                                                </td>
+                                                <td>
+                                                    <label htmlFor={`date-${index}`}>Date</label>
+                                                    <input type="date" id={`date-${index}`} name='date' value={editTransaction.date} onChange={handleEditChange} className="form-control"/>
+                                                </td>
+                                                <td>
+                                                    <label htmlFor={`description-${index}`}>Description</label>
+                                                    <input type="text" id={`description-${index}`} name='description' value={editTransaction.description} onChange={handleEditChange} className="form-control" />
+                                                </td>
+                                                <td>
+                                                    <label htmlFor={`amount-${index}`}>Amount</label>
+                                                    <input type="number" id={`amount-${index}`} name='amount' value={editTransaction.amount} onChange={handleEditChange} className="form-control" />
+                                                </td>
+                                                <td>
+                                                    <button onClick={() => handleEditSave(index)} className="btn btn-sm btn-success ml-1 ">Save</button>
+                                                    <button onClick={() => setEditIndex(null)} className="btn btn-sm btn-secondary ml-1 ">Cancel</button>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td data-label="Description">
+                                                    {transaction.description || 'No Description'} 
+                                                </td>
+                                                <td data-label="Category">
+                                                    {transaction.category} 
+                                                </td>
+                                                <td data-label="Date">
+                                                    {/* {formattedDate}  */}
+                                                    {formatDate(parseDate(transaction.date))}
+                                                </td>
+                                                <td data-label="Amount">
+                                                    {formatCurrency(transaction.amount)}
+                                                </td>
+                                                <td data-label="Actions">
+                                                    <button onClick={() => { setEditIndex(index); setEditTransaction({ ...transaction, date: formatDateTime(transaction.date) }); }} className="btn btn-sm  btn-primary ml-1">Edit</button>
+                                                    <button onClick={() => handleDelete(index)} className="btn btn-sm btn-danger ml-1">Delete</button>
+                                                    <button onClick={() => handleSetReminderClick(transaction, reminderDate)} className='btn btn-sm btn-info ml-1'>Set Reminder</button>
+
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>  
+                                )
+                            })}
+                            <tr>
+                                <td colSpan="4"><strong>Total :</strong></td>
+                                <td>{formatCurrency(totalAmount)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );
