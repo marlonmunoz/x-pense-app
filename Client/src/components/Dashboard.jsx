@@ -233,7 +233,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                 </div>
                 <br />
                 <div className={`charts border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
-                    <h6>Spending Over Time</h6>
+                    <h6>Spending Over Time Graph</h6>
                     <p style={{color: 'gray'}}><sup>Tracking All X-PENSE Transactions</sup></p>
                     <LineChart width={390} height={350} data={formattedTransactions}>
                       <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#444' : '#ccc'} />

@@ -203,7 +203,14 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
               </tr>
             </thead>
             <tbody>
-              {balances.map((balance, index) => (
+            {balances.length === 0 ? (
+              <tr>
+                <td colSpan="6">
+                  <p className="border border-danger rounded p-2 ml-7 text-danger">No Budgets Have Been Added Yet !</p>
+                </td>
+              </tr>
+            ) : (
+              balances.map((balance, index) => (
                 <tr key={index}>
                   {editIndex === index ? (
                     <>
@@ -237,7 +244,8 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                     </>
                   )}
                 </tr>
-              ))}
+              ))
+              )}
             </tbody>
           </table>
         </div>

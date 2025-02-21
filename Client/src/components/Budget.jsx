@@ -132,7 +132,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
             try {
                 await axios.put(`http://localhost:5001/budgets/${setBudgetItem.id}`, updatedItem);
                 setItems(items.map(item => 
-                    item.item_name === 'Set Budget' ? updatedItem : item
+                    item.item_name === 'Set Budget' ? updatedItem : item  // Change to `Main Budget` or leave it as Set Budget
                 ));
             } catch (error) {
                 console.log('Error resetting budget:', error);
@@ -281,7 +281,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="4">No items added yet</td>
+                                <td colSpan="4"> <span className="border border-danger rounded p-2 ml-7 text-danger">No items added yet !</span></td>
                             </tr>
                         )}
                         <tr>

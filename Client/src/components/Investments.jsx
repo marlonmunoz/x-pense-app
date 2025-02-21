@@ -84,58 +84,6 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
         return price.toFixed(2);
     };
 
-    // const handleAddClick = async (index) => {
-        // const investment = investments[index];
-        // const amount = amounts[index];
-    
-        // if (!amount) {
-        //     alert('AMOUNTS NOT DETECTED!');
-        //     return;
-        // }
-    
-        // const totalPrice = calculatePrice(amount, investment.pricePerUnit);
-        // const newInvestment = { ...investment, amount, totalPrice };
-    
-        // try {
-        //     // Check if the investment already exists in the addedInvestments array
-        //     const existingInvestmentIndex = addedInvestments.findIndex(inv => inv.name === newInvestment.name);
-    
-        //     if (existingInvestmentIndex !== -1) {
-        //         // Update the existing investment using PUT
-        //         const existingInvestment = addedInvestments[existingInvestmentIndex];
-        //         const response = await axios.put(`http://localhost:5001/investments/${existingInvestment.id}`, {
-        //             amount,
-        //             totalPrice
-        //         }, {
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //             },
-        //         });
-    
-        //         const updatedInvestments = [...addedInvestments];
-        //         updatedInvestments[existingInvestmentIndex] = {
-        //             ...existingInvestment,
-        //             amount: existingInvestment.amount + amount,
-        //             totalPrice: existingInvestment.totalPrice + totalPrice
-        //         };
-        //         setAddedInvestments(updatedInvestments);
-        //     } else {
-        //         // Add the new investment using POST
-        //         const response = await axios.post('http://localhost:5001/investments', newInvestment, {
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //             },
-        //         });
-    
-        //         setAddedInvestments([...addedInvestments, { ...newInvestment, id: response.data.id }]);
-        //     }
-    
-        //     navigate('/dashboard');
-        // } catch (error) {
-        //     console.error('There was a problem with the axios operation:', error);
-        // }
-    // };
-
     const handleAddClick = async (index) => {
         const investment = investments[index];
         const amount = amounts[index];
