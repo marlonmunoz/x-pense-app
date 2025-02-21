@@ -225,10 +225,10 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
      return (
         <div>
             <h5>Set Your Investments</h5>
-            <p style={{color: 'gray'}}> <sup>Make Informed Decisions With Live Crypto Updates</sup></p>
-            <h6><span className="badge bg-danger" style={{ color: 'white' }} >Live</span> Updates</h6>
-           
             <div className={`border border-info rounded-lg p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                <p style={{color: 'gray'}}> <sup>Make Informed Decisions With Live Crypto Updates</sup></p>
+                <h6><span className="badge bg-danger" style={{ color: 'white' }} >Live</span> Updates</h6>
+           
                 <table className={`table table-striped table-hover table-bordered ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                     <thead>
                         <tr>
