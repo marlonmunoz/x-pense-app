@@ -41,7 +41,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
             })
             .catch(error => console.error('Error adding goal:', error));
         } else {
-            console.log('Goal name or amount is missing'); // Debug log
+            alert('Goal name or amount is missing'); // Debug log
         }
     };
 
@@ -142,42 +142,45 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
     return (
         <div className='container'>
             <h5>Set Your Goals</h5>
-            <form noValidate onSubmit={handleSubmit} className={`needs-validation ${validated ? 'was-validated' : ''}`}>
-                <div className="row mt-4">
-                    <div className="col-md-6">
-                        <input
-                            type="text"
-                            id="newGoalName"
-                            value={newGoalName}
-                            onChange={(e) => setNewGoalName(e.target.value)}
-                            className={`form-control ${validated && !newGoalName ? 'is-invalid' : ''}`}
-                            placeholder="Goal Name"
-                            required
-                        />
-                        <div className="invalid-feedback">
-                            Please provide a goal name
+            <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                <form noValidate onSubmit={handleSubmit} className={`needs-validation ${validated ? 'was-validated' : ''}`}>
+                    <div className="row mt-4">
+                        <div className="col-md-6">
+                            <input
+                                type="text"
+                                id="newGoalName"
+                                value={newGoalName}
+                                onChange={(e) => setNewGoalName(e.target.value)}
+                                className={`form-control ${validated && !newGoalName ? 'is-invalid' : ''}`}
+                                placeholder="Goal Name"
+                                required
+                            />
+                            <div className="invalid-feedback">
+                                Please provide a goal name
+                            </div>
                         </div>
-                    </div>
-                    
 
-                    <div className="col-md-6">
-                        <input
-                            type="number"
-                            id="newGoalAmount"
-                            value={newGoalAmount}
-                            onChange={(e) => setNewGoalAmount(e.target.value)}
-                            className={`form-control ${validated && !newGoalAmount ? 'is-invalid' : ''}`}
-                            placeholder="Goal Amount"
-                            required
-                        />
-                        <div className="invalid-feedback">
-                            Please provide a goal amount
+
+                        <div className="col-md-6">
+                            <input
+                                type="number"
+                                id="newGoalAmount"
+                                value={newGoalAmount}
+                                onChange={(e) => setNewGoalAmount(e.target.value)}
+                                className={`form-control ${validated && !newGoalAmount ? 'is-invalid' : ''}`}
+                                placeholder="Goal Amount"
+                                required
+                            />
+                            <div className="invalid-feedback">
+                                Please provide a goal amount
+                            </div>
                         </div>
                     </div>
-                </div>
-                <br />
-                <button type="submit" className="btn btn-primary mt-3">Add Goal</button>
-            </form>
+                    <br />
+                    <button type="submit" className="btn btn-primary mt-3">Add Goal</button>
+                </form>
+            </div>
+            
             <div className="mt-4">
             <p style={{color: 'gray'}}><sup>YOUR ADDED GOALS</sup></p>
             {goals.map(goal => (
@@ -196,7 +199,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                         </>
                     ) : (
                         <>
-                            <div className='goal-container'>
+                            <div className={`border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                                 <h6>{goal.name}: $ {goal.target.toLocaleString()}</h6>
                                 <div className={`progress ${darkMode ? 'progress-dark' : 'progress-light'}`}>
                                     <div className={`progress-bar border border-success ${darkMode ? 'bg-info' : 'bg-success'} progress-bar-thick `} role="progressbar" style={{width: `${(goal.saved / goal.target) * 100}%`}} aria-valuemin="0" aria-valuemax="100">
