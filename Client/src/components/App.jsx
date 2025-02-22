@@ -9,6 +9,7 @@ import Transactions from '../components/Transactions';
 import Login from '../components/Login';
 import Goals from '../components/Goals';
 import Investments from '../components/Investments';
+import StartPage from './StartPage';
 import Footer from '../components/Footer';
 import '/src/App.css'
 
@@ -189,6 +190,9 @@ function App() {
       <div id="root" className={`container d-flex flex-column align-items-center ${darkMode ? 'dark-mode' : 'light-mode'}`}>
         {/* LOGOUT */}
         {/* <button onClick={handleLogout}className={`btn btn-secondary mb-3 ml-auto border ${darkMode ? 'btn-light' : 'btn-dark'}`} >Logout</button> */}
+
+        {location.pathname !== '/' && (
+        <>
         <h1> <span className='app-title metallic-shadow'>X-PENSE</span></h1>
         <h6><span className='badge badge-info border p-2'>A Budget Tracker At Your Fingertips</span></h6>
 
@@ -208,153 +212,141 @@ function App() {
             <ul className={`nav nav-tabs ${darkMode ? 'nav-tabs-bg-dark-mode' : 'nav-tabs-bg-light-mode'} rounded`}>
               <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/dashboard'>Dashboard</NavLink></li>
               <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='budget'>Budget</NavLink></li>
-              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/'>Balance</NavLink></li>
+              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/balance'>Balance</NavLink></li>
               <li className='nav-item'><NavLink className={`nav-link ${darkMode ? 'highlight-black' : 'highlight-white'} border`} to='/add'><strong>X-PENSE</strong></NavLink></li>
               <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/transactions'>Transaction</NavLink></li>
               <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/goals'>Goals</NavLink></li>
               <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/investments'>Investments</NavLink></li>
             </ul>
-        </div>
+          </div>
         </nav>
+        </>
+        )}
         <Routes>
-          <Route path='/' element={<div><Outlet darkMode={darkMode}/></div>}>
-            <Route index element ={
-              <Balance 
-                balance={balance} setBalance={setBalance}  
-                transactions={transactions} 
-                budget={budget} 
-                darkMode={darkMode} 
-                validated={validated} setValidated={setValidated} 
-                cashOnHand={cashOnHand} setCashOnHand={setCashOnHand}
-                bankAccountBalance={bankAccountBalance} setBankAccountBalance={setBankAccountBalance}
-                savings={savings} setSavings={setSavings}
-                total={total} 
-                setTotal={setTotal}
-                formatCurrency={formatCurrency}
-                balanceId={balanceId} setBalanceId={setBalanceId}
-                balances={balances} setBalances={setBalances}
-                editIndex={editIndex} setEditIndex={setEditIndex}
-                editBalance={editBalance} setEditBalance={setEditBalance}
-                balanceError={balanceError} setBalanceError={setBalanceError}
-              />}
-            />
-            <Route path='/transactions' element ={
-              <Transactions 
-                transactions={transactions} setTransactions={setTransactions} 
-                darkMode={darkMode} 
-                validated={validated} setValidated={setValidated}
-                formatCurrency={formatCurrency}
-                totalAmount={totalAmount} setTotalAmount={setTotalAmount}
-                editIndex={editIndex} setEditIndex={setEditIndex}
-                editTransaction={editTransaction} setEditTransaction={setEditTransaction}
-                reminderDate={reminderDate} setReminderDate={setReminderDate}
-                successMessage={successMessage} setSuccessMessage={setSuccessMessage}
-                parseDate={parseDate}
-              />}
-            />
-            <Route path='/add' element ={
-              <AddTransactions 
-                darkMode={darkMode} 
-                validated={validated} setValidated={setValidated}
-                amount={amount} setAmount={setAmount}
-                category={category} setCategory={setCategory}
-                date={date} setDate={setDate}
-                description={description} setDescription={setDescription}
-              />}
-            />
-            <Route path='/budget' element ={
-              <Budget 
-                balance={balance} 
-                budget={budget} setBudget={setBudget} 
-                darkMode={darkMode} 
-                validated={validated} setValidated={setValidated} 
-                formatCurrency={formatCurrency}
-                items={items} setItems={setItems}
-                name={name} setName={setName}
-                amount={amount} setAmount={setAmount}
-                newBudget={newBudget} setNewBudget={setNewBudget}
-                error={error} setError={setError}
-                editingIndex={editingIndex} setEditingIndex={setEditingIndex}
-                editAmount={editAmount} setEditAmount={setEditAmount}
-                date={date} setDate={setDate}
-                totalBudgetAmount={totalBudgetAmount}
-                parseDate={parseDate}
-              />}
-            />
-            <Route path='/dashboard' element ={
-              <Dashboard 
-                transactions={transactions} 
-                balance={totalBalance} 
-                budget={budget} 
-                investments={investments}
-                totalAmount={totalAmount} 
-                darkMode={darkMode} 
-                formatAmount={formatAmount} 
-                addedInvestments={addedInvestments} 
-                goals={goals}
-                formatCurrency={formatCurrency}
-                formatDate={formatDate}
-                handleRemoveInvestment={handleRemoveInvestment}
-                goalsProgress={goalsProgress} setGoalsProgress={setGoalsProgress}
-                totalBudgetAmount={totalBudgetAmount}
-                parseDate={parseDate}
-                setItems={setItems}
-                setBalances={setBalances}
-                setCashOnHand={setCashOnHand}
-                setBankAccountBalance={setBankAccountBalance}
-                setSavings={setSavings}
-                setTransactions={setTransactions}
-                setAddedInvestments={setAddedInvestments} 
-                setInvestments={setInvestments}
-                setAmounts={setAmounts}
-              />} 
-            />
-            <Route path='/goals' element ={
-              <Goals 
-                goalAmount={goalAmount} setGoalAmount={setGoalAmount} 
-                currentAmount={currentAmount} setCurrentAmount={setCurrentAmount} 
-                newGoalName={newGoalName} setNewGoalName={setNewGoalName}
-                newGoalAmount={newGoalAmount} setNewGoalAmount={setNewGoalAmount}
-                progPercentage={progPercentage} setProgPercentage={setProgPercentage} 
-                goals={goals} setGoals={setGoals}
-                validated={validated} setValidated={setValidated}
-                inputAmounts={inputAmounts} setInputAmounts={setInputAmounts}
-                editingGoalId={editingGoalId} setEditingGoalId={setEditingGoalId}
-                editedGoalName={editedGoalName} setEditedGoalName={setEditedGoalName}
-                formatCurrency={formatCurrency}
-                darkMode={darkMode}
-              />}
-            />
-            <Route path='/investments' element ={
-              <Investments 
-                formatAmount={formatAmount} 
-                formatCurrency={formatCurrency}
-                darkMode={darkMode} 
-                // onAddInvestment={handleAddInvestment} 
-                onAddInvestment={(newInvestment) => {
-                  const existingInvestmentIndex = addedInvestments.findIndex(inv => inv.id === newInvestment.id);
-                  if (existingInvestmentIndex !== -1) {
-                      const updatedInvestments = [...addedInvestments];
-                      updatedInvestments[existingInvestmentIndex] = {
-                          ...updatedInvestments[existingInvestmentIndex],
-                          amount: updatedInvestments[existingInvestmentIndex].amount + newInvestment.amount,
-                          totalPrice: updatedInvestments[existingInvestmentIndex].totalPrice + newInvestment.totalPrice,
-                      };
-                      setAddedInvestments(updatedInvestments);
-                  } else {
-                      setAddedInvestments([...addedInvestments, newInvestment]);
-                  }
-                }}
-                validated={validated} setValidated={setValidated} 
-                investments={investments} setInvestments={setInvestments}
-                amounts={amounts} setAmounts={setAmounts}
-                marketCaps={marketCaps} setMarketCaps={setMarketCaps}
-                addedInvestments={addedInvestments} setAddedInvestments={setAddedInvestments}
-              />}
-            />
+          <Route path='/' element={<StartPage />} />
+          <Route path='/' element={<div><Outlet /></div>}>
+            <Route path='dashboard' element={<Dashboard 
+              transactions={transactions} 
+              balance={totalBalance} 
+              budget={budget} 
+              investments={investments}
+              totalAmount={totalAmount} 
+              darkMode={darkMode} 
+              formatAmount={formatAmount} 
+              addedInvestments={addedInvestments} 
+              goals={goals}
+              formatCurrency={formatCurrency}
+              formatDate={formatDate}
+              handleRemoveInvestment={handleRemoveInvestment}
+              goalsProgress={goalsProgress} setGoalsProgress={setGoalsProgress}
+              totalBudgetAmount={totalBudgetAmount}
+              parseDate={parseDate}
+              setItems={setItems}
+              setBalances={setBalances}
+              setCashOnHand={setCashOnHand}
+              setBankAccountBalance={setBankAccountBalance}
+              setSavings={setSavings}
+              setTransactions={setTransactions}
+              setAddedInvestments={setAddedInvestments} 
+              setInvestments={setInvestments}
+              setAmounts={setAmounts}
+            />} />
+            <Route path='budget' element={<Budget 
+              balance={balance} 
+              budget={budget} setBudget={setBudget} 
+              darkMode={darkMode} 
+              validated={validated} setValidated={setValidated} 
+              formatCurrency={formatCurrency}
+              items={items} setItems={setItems}
+              name={name} setName={setName}
+              amount={amount} setAmount={setAmount}
+              newBudget={newBudget} setNewBudget={setNewBudget}
+              error={error} setError={setError}
+              editingIndex={editingIndex} setEditingIndex={setEditingIndex}
+              editAmount={editAmount} setEditAmount={setEditAmount}
+              date={date} setDate={setDate}
+              totalBudgetAmount={totalBudgetAmount}
+              parseDate={parseDate}
+            />} />
+            <Route path='balance' element={<Balance 
+              balance={balance} setBalance={setBalance}  
+              transactions={transactions} 
+              budget={budget} 
+              darkMode={darkMode} 
+              validated={validated} setValidated={setValidated} 
+              cashOnHand={cashOnHand} setCashOnHand={setCashOnHand}
+              bankAccountBalance={bankAccountBalance} setBankAccountBalance={setBankAccountBalance}
+              savings={savings} setSavings={setSavings}
+              total={total} 
+              setTotal={setTotal}
+              formatCurrency={formatCurrency}
+              balanceId={balanceId} setBalanceId={setBalanceId}
+              balances={balances} setBalances={setBalances}
+              editIndex={editIndex} setEditIndex={setEditIndex}
+              editBalance={editBalance} setEditBalance={setEditBalance}
+              balanceError={balanceError} setBalanceError={setBalanceError}
+            />} />
+            <Route path='transactions' element={<Transactions 
+              transactions={transactions} setTransactions={setTransactions} 
+              darkMode={darkMode} 
+              validated={validated} setValidated={setValidated}
+              formatCurrency={formatCurrency}
+              totalAmount={totalAmount} setTotalAmount={setTotalAmount}
+              editIndex={editIndex} setEditIndex={setEditIndex}
+              editTransaction={editTransaction} setEditTransaction={setEditTransaction}
+              reminderDate={reminderDate} setReminderDate={setReminderDate}
+              successMessage={successMessage} setSuccessMessage={setSuccessMessage}
+              parseDate={parseDate}
+            />} />
+            <Route path='add' element={<AddTransactions 
+              darkMode={darkMode} 
+              validated={validated} setValidated={setValidated}
+              amount={amount} setAmount={setAmount}
+              category={category} setCategory={setCategory}
+              date={date} setDate={setDate}
+              description={description} setDescription={setDescription}
+            />} />
+            <Route path='goals' element={<Goals 
+              goalAmount={goalAmount} setGoalAmount={setGoalAmount} 
+              currentAmount={currentAmount} setCurrentAmount={setCurrentAmount} 
+              newGoalName={newGoalName} setNewGoalName={setNewGoalName}
+              newGoalAmount={newGoalAmount} setNewGoalAmount={setNewGoalAmount}
+              progPercentage={progPercentage} setProgPercentage={setProgPercentage} 
+              goals={goals} setGoals={setGoals}
+              validated={validated} setValidated={setValidated}
+              inputAmounts={inputAmounts} setInputAmounts={setInputAmounts}
+              editingGoalId={editingGoalId} setEditingGoalId={setEditingGoalId}
+              editedGoalName={editedGoalName} setEditedGoalName={setEditedGoalName}
+              formatCurrency={formatCurrency}
+              darkMode={darkMode}
+            />} />
+            <Route path='investments' element={<Investments 
+              formatAmount={formatAmount} 
+              formatCurrency={formatCurrency}
+              darkMode={darkMode} 
+              onAddInvestment={(newInvestment) => {
+                const existingInvestmentIndex = addedInvestments.findIndex(inv => inv.id === newInvestment.id);
+                if (existingInvestmentIndex !== -1) {
+                  const updatedInvestments = [...addedInvestments];
+                  updatedInvestments[existingInvestmentIndex] = {
+                    ...updatedInvestments[existingInvestmentIndex],
+                    amount: updatedInvestments[existingInvestmentIndex].amount + newInvestment.amount,
+                    totalPrice: updatedInvestments[existingInvestmentIndex].totalPrice + newInvestment.totalPrice,
+                  };
+                  setAddedInvestments(updatedInvestments);
+                } else {
+                  setAddedInvestments([...addedInvestments, newInvestment]);
+                }
+              }}
+              validated={validated} setValidated={setValidated} 
+              investments={investments} setInvestments={setInvestments}
+              amounts={amounts} setAmounts={setAmounts}
+              marketCaps={marketCaps} setMarketCaps={setMarketCaps}
+              addedInvestments={addedInvestments} setAddedInvestments={setAddedInvestments}
+            />} />
           </Route>
         </Routes>
-        <Footer />
+        {location.pathname !== '/' && <Footer />}
       </div>
     </Router>
   )

@@ -9,11 +9,15 @@ const StartPage = () => {
     };
 
     return (
-        <div className="start-page">
-            <h4>Welcome to</h4>
-            <h1>X-PENSE</h1>
-            <button onClick={handleStartClick} className="btn btn-success">Start</button>
+        <div className="start-page-container">
+            <div className="start-page-content">
+                <h6 className="fade-in">Welcome to</h6>
+                <h1 className="intro metallic-shadow fade-in">X-PENSE</h1>
+                <p className="subtitle fade-in">Your Friendly Budget Tracker</p>
+            <button onClick={handleStartClick} className="btn btn-success fade-in">Get Started </button>
+            </div>
         </div>
+        
     );
 };
 
