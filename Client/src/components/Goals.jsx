@@ -143,6 +143,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
         <div className='container'>
             <h5>Set Your Goals</h5>
             <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                <sup style={{ color: 'grey' }}>Your Future Goals Here</sup>
                 <form noValidate onSubmit={handleSubmit} className={`needs-validation ${validated ? 'was-validated' : ''}`}>
                     <div className="row mt-4">
                         <div className="col-md-6">
@@ -183,8 +184,12 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
             
             <div className="mt-4">
             <p style={{color: 'gray'}}><sup>YOUR ADDED GOALS</sup></p>
-            {goals.map(goal => (
-                <div key={goal.id} className="mb-3">
+            {goals.length === 0 ? (
+                <p className="text-danger border border-danger rounded mc p-2 ">No Goals Have Been Added Yet !</p>
+            ) : (
+
+                goals.map((goal) => (
+                    <div key={goal.id} className="mb-3">
                     {editingGoalId === goal.id ? (
                         <>
                             <input
@@ -192,7 +197,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                                 value={editedGoalName}
                                 onChange={(e) => setEditedGoalName(e.target.value)}
                                 className="form-control mt-3"
-                            />
+                                />
                             <br />
                             <button onClick={() => handleSave(goal.id)} className="btn btn-primary btn-sm  ml-2">Save</button>
                             <button onClick={handleCancel} className="btn btn-secondary btn-sm  ml-2">Cancel</button>
@@ -221,7 +226,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                                     onChange={(e) => setInputAmounts({ ...inputAmounts, [goal.id]: e.target.value })}
                                     className="form-control mt-3"
                                     placeholder="Enter amount"
-                                />
+                                    />
                                 <br />
                                 <div className="d-flex flex-column flex-md-row justify-content-center">
                                     <button onClick={() => handleAddAmount(goal.id)} className="btn btn-success ml-2">Add Amount</button>
@@ -233,7 +238,8 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                         </>
                     )}
                 </div>
-                ))}
+                ))
+            )}
             </div>
         </div>
     );

@@ -193,7 +193,7 @@ function App() {
 
         {location.pathname !== '/' && (
         <>
-        <h1> <span className='app-title metallic-shadow'>X-PENSE</span></h1>
+        <h1> <span className='app-title metallic-shadow fade-in'>X-PENSE</span></h1>
         <h6><span className='badge badge-info border p-2'>A Budget Tracker At Your Fingertips</span></h6>
 
         <button 

@@ -108,7 +108,11 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
             <p style={{color: 'gray'}}> <sup>Tracking History</sup></p>
             {successMessage && <div className='alert alert-success'>{successMessage}</div>}
             <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
-                <div className="table-responsive">
+                {transactions.length === 0 ? (
+                    <p className="text-danger border border-danger rounded mc p-2">No Transactions Have Been Added Yet!</p> 
+                ) : (
+
+                    <div className="table-responsive">
                     <table className={`table table-striped table-hover table-bordered ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                         <thead>
                             <tr>
@@ -122,8 +126,8 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                         </thead>
                         <tbody>
                             {transactions.map((transaction, index) => {
-                                 const  formattedDate  = formatDateTime(transaction.date)
-                                 return (
+                                //  const  formattedDate  = formatDateTime(transaction.date)
+                                return (
                                     <tr key={index}>
                                         {editIndex === index ? (
                                             <>
@@ -181,6 +185,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                         </tbody>
                     </table>
                 </div>
+                )}
             </div>
         </div>
     );
