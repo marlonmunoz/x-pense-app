@@ -32,8 +32,11 @@ function App() {
   const [transactions, setTransactions] = useState([]);
   const [balance, setBalance] = useState(0);
   const [budget, setBudget] = useState(0);
-  const [darkMode, setDarkMode] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+
+  
+
+  const [darkMode, setDarkMode] = useState(true);
+  // const [loggedIn, setLoggedIn] = useState(false);
   const [addedInvestments, setAddedInvestments] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0); 
 
@@ -57,6 +60,7 @@ function App() {
   const [balances, setBalances] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [editBalance, setEditBalance] = useState({cash_on_hand: 0, bank_account_balance: 0, savings:0, total: 0});
+  const [balanceError, setBalanceError] = useState(null)
   
   // Goals State ======>>>>>>
   const [goalAmount, setGoalAmount] = useState(0); // This is an example amount
@@ -104,16 +108,30 @@ function App() {
 
 
   // Dark-Light MODE ======>>>>>>
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    if (!darkMode) {
+  // const toggleDarkMode = () => {
+  //   setDarkMode(!darkMode);
+  //   if (!darkMode) {
+  //     document.body.classList.add('dark-mode');
+  //     document.body.classList.remove('light-mode');
+  //   } else {
+  //     document.body.classList.add('light-mode');
+  //     document.body.classList.remove('dark-mode');
+  //   }
+  // };
+
+  useEffect(() => {
+    if (darkMode) {
       document.body.classList.add('dark-mode');
       document.body.classList.remove('light-mode');
     } else {
       document.body.classList.add('light-mode');
       document.body.classList.remove('dark-mode');
     }
-  };
+  }, [darkMode]);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode)
+  }
 
   // Validation ======>>>>>>
   const [validated, setValidated] = useState(false);
@@ -171,8 +189,8 @@ function App() {
       <div id="root" className={`container d-flex flex-column align-items-center ${darkMode ? 'dark-mode' : 'light-mode'}`}>
         {/* LOGOUT */}
         {/* <button onClick={handleLogout}className={`btn btn-secondary mb-3 ml-auto border ${darkMode ? 'btn-light' : 'btn-dark'}`} >Logout</button> */}
-        <h1>X-PENSE</h1>
-        <h6><span className='badge badge-info border border'>A Budget Tracker At Your Fingertips</span></h6>
+        <h1> <span className='app-title metallic-shadow'>X-PENSE</span></h1>
+        <h6><span className='badge badge-info border p-2'>A Budget Tracker At Your Fingertips</span></h6>
 
         <button 
           onClick={toggleDarkMode} 
@@ -222,6 +240,7 @@ function App() {
                 balances={balances} setBalances={setBalances}
                 editIndex={editIndex} setEditIndex={setEditIndex}
                 editBalance={editBalance} setEditBalance={setEditBalance}
+                balanceError={balanceError} setBalanceError={setBalanceError}
               />}
             />
             <Route path='/transactions' element ={

@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setBankAccountBalance, savings, setSavings, setTotal, formatCurrency, balanceId, setBalanceId, balances, setBalances, editIndex, setEditIndex, editBalance, setEditBalance }) {
+function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setBankAccountBalance, savings, setSavings, setTotal, formatCurrency, balanceId, setBalanceId, balances, setBalances, editIndex, setEditIndex, editBalance, setEditBalance, balanceError, setBalanceError}) {
+
   useEffect(() => {
+
     console.log('BALANCE COMPONENT');
     console.log('Fetching balances...');
     axios.get('http://localhost:5001/balance')
@@ -35,11 +37,13 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
         } else {
           console.error('Fetched data is not an array or object:', response.data);
         }
+        setBalanceError(null);
       })
       .catch(error => {
         console.error('There was an error fetching the balances!', error);
+        setBalanceError('No Balances Have been Added Yet!');
       });
-  }, []);
+  }, [setBalances, setCashOnHand, setBankAccountBalance, setSavings, setBalanceError]);
 
   useEffect(() => {
     setTotal(cashOnHand + bankAccountBalance + savings);
@@ -67,6 +71,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       })
       .catch(error => {
         console.error('There was an error updating the balance!', error);
+        setBalanceError('There was an error updating the balance!')
       });
   };
 
@@ -82,6 +87,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       setBalances(newBalances);
     } catch (error) {
       console.error('Error deleting balance:', error);
+      setBalanceError('Error deleting balance!');
     }
   };
 
@@ -92,6 +98,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
     })
     .catch(error => {
       console.error('There was an error updating your balance!', error);
+      setBalanceError('There was an error updating your balance!');
     })
   };
 
@@ -123,6 +130,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       })
       .catch(error => {
         console.error('There was an error saving your balance!', error);
+        setBalanceError('There was an error saving your balance!');
       });
   }
 
@@ -206,7 +214,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
             {balances.length === 0 ? (
               <tr>
                 <td colSpan="6">
-                  <p className="border border-danger rounded p-2 ml-7 text-danger">No Budgets Have Been Added Yet !</p>
+                  {balanceError && <p className="text-danger border border-danger rounded mc p-2 ">{balanceError}</p>}
                 </td>
               </tr>
             ) : (
