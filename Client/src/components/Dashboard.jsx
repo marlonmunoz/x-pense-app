@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
-import { parseISO, format } from 'date-fns';
-
-
 
 function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,formatCurrency, formatDate, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setAmounts, addedInvestments, setAddedInvestments }) {
     const navigate = useNavigate();
@@ -13,8 +10,6 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
 
     const [editIndex, setEditIndex] = useState(null);
     const [editAmount, setEditAmount] = useState("");
-
-
     
     const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.total_price), 0).toFixed(2);
     const overviewTotal = totalBudgetAmount + parseFloat(totalPrice) + balance - totalAmount;
@@ -27,7 +22,9 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
 
 
     // FETCHING DATA FOR OVERVIEW TABLE
+
     // GOAL.jsx ==============================================>>>>
+
     useEffect(() => {
         // Fetch goals from the backend
         console.log('Loaded from Goal.jsx component');
@@ -45,6 +42,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
     }, []);
 
     // BUDGET.jsx =============================================>>>>
+
     useEffect (() => {
       console.log('Loaded from Budget.jsx component');
       axios.get('http://localhost:5001/budgets')
@@ -61,6 +59,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
     },[])
 
     // BALANCE.jsx =============================================>>>>
+
     useEffect(() => {
       // Fetch balances from the backend
       console.log('Loaded from Balance.jsx component');
@@ -97,15 +96,6 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
         });
     }, []);
 
-    // TRANSACTIONS.jsx =============================================>>>>
-    // useEffect(() => {
-    //   console.log('Loaded from Transactions.jsx component');
-    //   axios.get('http://127.0.0.1:5001/transactions')
-    //   .then(response => {
-    //       setTransactions(response.data)
-    //   })
-    //   .catch(error => console.log('Error fetching transactions', error));
-    // }, []);
     useEffect(() => {
       console.log('TRANSACTIONS COMPONENT');
       
@@ -130,18 +120,12 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
           .catch(error => console.log('Error fetching investments', error));
     }, []);
 
-
     const calculateTotalPrice = (investments) => {
       const total = investments.reduce((sum, investment) => sum + investment.total_price, 0);
       setTotalPrice(total);
     };
 
     useEffect(() => {
-      // const calculateTotalPrice = (investments) => {
-      //     const total = investments.reduce((sum, investment) => sum + parseFloat(investment.totalPrice), 0);
-      //     setTotalPrice(total);
-      // };
-  
       calculateTotalPrice(addedInvestments);
     }, [addedInvestments]);
     
@@ -273,7 +257,6 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                           <tr key={index}>
                             <td data-label="ID" className="hidden">{index + 1}</td>
                             <td data-label="Name"><strong>{investment.name}</strong></td>
-                            {/* <td data-label="Amount">{investment.amount}</td> */}
                             <td data-label="Amount">
                               {editIndex === index ? (
                                 <input
@@ -320,7 +303,6 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                           <div key={index} className="d-flex align-items-center mb-2 rounded" style={{ width: '120%' }}>
                             <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
                             <div className="progress flex-grow-1 custom-progress-height border border-info " style={{ color: 'black' }}>
-                              {/* <div className="progress-bar bg-success custom-progress-height" role="progressbar" style={{ width: `${goal.progress}%` }} aria-valuemin="0" aria-valuemax="100"> */}
                               <div className={`progress-bar ${darkMode ? 'bg-info' : 'bg-success'} custom-progress-height`} role="progressbar" style={{ width: `${goal.progress}%` }} aria-valuemin="0" aria-valuemax="100">  
                                 {goal.progress.toFixed(2)}%
                               </div>

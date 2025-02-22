@@ -119,20 +119,20 @@ function App() {
   const [validated, setValidated] = useState(false);
 
   // LOGOUT ==========>>>>>>
-  const handleLogout = async () => {
-    try {
-      const response = await axios.post('http://127.0.0.1:5001/logout');
-      if (response.status === 200) {
-        setLoggedIn(false)
-      }
-    } catch (err) {
-      console.log('Logout failed');
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     const response = await axios.post('http://127.0.0.1:5001/logout');
+  //     if (response.status === 200) {
+  //       setLoggedIn(false)
+  //     }
+  //   } catch (err) {
+  //     console.log('Logout failed');
+  //   }
+  // };
 
-  if (!loggedIn) {
-    return <Login setLoggedIn={setLoggedIn} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-  }
+  // if (!loggedIn) {
+  //   return <Login setLoggedIn={setLoggedIn} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+  // }
 
   const handleAddInvestment = (investment) => {
     setAddedInvestments([...addedInvestments, investment]);
@@ -170,7 +170,7 @@ function App() {
     <Router>
       <div id="root" className={`container d-flex flex-column align-items-center ${darkMode ? 'dark-mode' : 'light-mode'}`}>
         {/* LOGOUT */}
-        <button onClick={handleLogout}className={`btn btn-secondary mb-3 ml-auto border ${darkMode ? 'btn-light' : 'btn-dark'}`} >Logout</button>
+        {/* <button onClick={handleLogout}className={`btn btn-secondary mb-3 ml-auto border ${darkMode ? 'btn-light' : 'btn-dark'}`} >Logout</button> */}
         <h1>X-PENSE</h1>
         <h6><span className='badge badge-info border border'>A Budget Tracker At Your Fingertips</span></h6>
 
