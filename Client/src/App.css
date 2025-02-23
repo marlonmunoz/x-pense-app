@@ -17,22 +17,23 @@ body.light-mode #root {
   /* border: 1px solid #000000; */
 }
 
+/* INTRO: X-PENSE */
 .app-title{
   font-size: 1.2em;
 }
 
 .intro{
-  font-size: 6em;
+  font-size: 8em;
 }
 
 .subtitle {
-  color: white;
-  font-size: 0.8em;
+  color: rgb(144, 142, 142);
+  font-size: 0.9em;
 }
 
 .metallic-shadow {
   text-shadow: 
-    1px 1px 2px #000, 
+    3px 3px 3px #000, 
     0 0 25px #fff, 
     0 0 5px #fff;
 }
@@ -75,102 +76,44 @@ body.light-mode #root {
 }
 
 .fade-in {
-  animation: fadeIn 2s ease-in-out;
+  animation: fadeIn 3s ease-in-out;
 }
 
-/* GLITCG EFFECT */
-@keyframes glitch {
-  0% {
-      clip: rect(42px, 9999px, 44px, 0);
-      transform: skew(0.3deg);
+/* X-PENSE Animation */
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
   }
-  5% {
-      clip: rect(12px, 9999px, 60px, 0);
-      transform: skew(0.3deg);
-  }
-  10% {
-      clip: rect(82px, 9999px, 90px, 0);
-      transform: skew(0.3deg);
-  }
-  15% {
-      clip: rect(56px, 9999px, 78px, 0);
-      transform: skew(0.3deg);
-  }
-  20% {
-      clip: rect(32px, 9999px, 40px, 0);
-      transform: skew(0.3deg);
-  }
-  25% {
-      clip: rect(72px, 9999px, 80px, 0);
-      transform: skew(0.3deg);
-  }
-  30% {
-      clip: rect(42px, 9999px, 44px, 0);
-      transform: skew(0.3deg);
-  }
-  35% {
-      clip: rect(12px, 9999px, 60px, 0);
-      transform: skew(0.3deg);
-  }
-  40% {
-      clip: rect(82px, 9999px, 90px, 0);
-      transform: skew(0.3deg);
-  }
-  45% {
-      clip: rect(56px, 9999px, 78px, 0);
-      transform: skew(0.3deg);
-  }
-  50% {
-      clip: rect(32px, 9999px, 40px, 0);
-      transform: skew(0.3deg);
-  }
-  55% {
-      clip: rect(72px, 9999px, 80px, 0);
-      transform: skew(0.3deg);
-  }
-  60% {
-      clip: rect(42px, 9999px, 44px, 0);
-      transform: skew(0.3deg);
-  }
-  65% {
-      clip: rect(12px, 9999px, 60px, 0);
-      transform: skew(0.3deg);
-  }
-  70% {
-      clip: rect(82px, 9999px, 90px, 0);
-      transform: skew(0.3deg);
-  }
-  75% {
-      clip: rect(56px, 9999px, 78px, 0);
-      transform: skew(0.3deg);
-  }
-  80% {
-      clip: rect(32px, 9999px, 40px, 0);
-      transform: skew(0.3deg);
-  }
-  85% {
-      clip: rect(72px, 9999px, 80px, 0);
-      transform: skew(0.3deg);
-  }
-  90% {
-      clip: rect(42px, 9999px, 44px, 0);
-      transform: skew(0.3deg);
-  }
-  95% {
-      clip: rect(12px, 9999px, 60px, 0);
-      transform: skew(0.3deg);
-  }
-  100% {
-      clip: rect(82px, 9999px, 90px, 0);
-      transform: skew(0.3deg);
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 
-.glitch {
-  position: relative;
-  color: white;
-  font-size: 2em;
-  animation: glitch 1s infinite;
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.intro .char {
+  display: inline-block;
+  animation-duration: 3s;
+  animation-fill-mode: forwards;
+}
+
+.intro .char:nth-child(odd) {
+  animation-name: slide-in-left;
+}
+
+.intro .char:nth-child(even) {
+  animation-name: slide-in-right;
 }
 
 .navbar {
@@ -551,3 +494,10 @@ body.light-mode #root {
 }
 
 
+/* FOOTER */
+
+
+.footer p {
+  margin: 0;
+  color: #6c757d;
+}
