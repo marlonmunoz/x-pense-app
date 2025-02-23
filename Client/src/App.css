@@ -78,6 +78,100 @@ body.light-mode #root {
   animation: fadeIn 2s ease-in-out;
 }
 
+/* GLITCG EFFECT */
+@keyframes glitch {
+  0% {
+      clip: rect(42px, 9999px, 44px, 0);
+      transform: skew(0.3deg);
+  }
+  5% {
+      clip: rect(12px, 9999px, 60px, 0);
+      transform: skew(0.3deg);
+  }
+  10% {
+      clip: rect(82px, 9999px, 90px, 0);
+      transform: skew(0.3deg);
+  }
+  15% {
+      clip: rect(56px, 9999px, 78px, 0);
+      transform: skew(0.3deg);
+  }
+  20% {
+      clip: rect(32px, 9999px, 40px, 0);
+      transform: skew(0.3deg);
+  }
+  25% {
+      clip: rect(72px, 9999px, 80px, 0);
+      transform: skew(0.3deg);
+  }
+  30% {
+      clip: rect(42px, 9999px, 44px, 0);
+      transform: skew(0.3deg);
+  }
+  35% {
+      clip: rect(12px, 9999px, 60px, 0);
+      transform: skew(0.3deg);
+  }
+  40% {
+      clip: rect(82px, 9999px, 90px, 0);
+      transform: skew(0.3deg);
+  }
+  45% {
+      clip: rect(56px, 9999px, 78px, 0);
+      transform: skew(0.3deg);
+  }
+  50% {
+      clip: rect(32px, 9999px, 40px, 0);
+      transform: skew(0.3deg);
+  }
+  55% {
+      clip: rect(72px, 9999px, 80px, 0);
+      transform: skew(0.3deg);
+  }
+  60% {
+      clip: rect(42px, 9999px, 44px, 0);
+      transform: skew(0.3deg);
+  }
+  65% {
+      clip: rect(12px, 9999px, 60px, 0);
+      transform: skew(0.3deg);
+  }
+  70% {
+      clip: rect(82px, 9999px, 90px, 0);
+      transform: skew(0.3deg);
+  }
+  75% {
+      clip: rect(56px, 9999px, 78px, 0);
+      transform: skew(0.3deg);
+  }
+  80% {
+      clip: rect(32px, 9999px, 40px, 0);
+      transform: skew(0.3deg);
+  }
+  85% {
+      clip: rect(72px, 9999px, 80px, 0);
+      transform: skew(0.3deg);
+  }
+  90% {
+      clip: rect(42px, 9999px, 44px, 0);
+      transform: skew(0.3deg);
+  }
+  95% {
+      clip: rect(12px, 9999px, 60px, 0);
+      transform: skew(0.3deg);
+  }
+  100% {
+      clip: rect(82px, 9999px, 90px, 0);
+      transform: skew(0.3deg);
+  }
+}
+
+.glitch {
+  position: relative;
+  color: white;
+  font-size: 2em;
+  animation: glitch 1s infinite;
+}
 
 .navbar {
   display: flex;
