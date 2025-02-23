@@ -17,7 +17,7 @@ const StartPage = () => {
     };
 
     return (
-        <div>
+        <div className="intro-margin">
             <div className="start-page-container">
                 <div className="start-page-content">
                     {/* <h6 className="fade-in">We Are</h6> */}
@@ -28,9 +28,9 @@ const StartPage = () => {
                     </h1>
                     <p className="subtitle fade-in ">Your Friendly Budget Tracker</p>
                     <button onClick={handleStartClick} className="btn btn-success fade-in">Get Started </button>
+                <Footer/>
                 </div>
             </div>
-                <Footer/>
         </div>
     );
 };
