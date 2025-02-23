@@ -320,20 +320,24 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                     <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                         <tbody>
                             <tr>
-                                <th scope="row">Balance</th>
-                                <td className="text-left" >{formatCurrency(balance)}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Investments</th>
-                                <td className="text-left" >{formatCurrency(totalPrice)}</td>
-                            </tr>
-                            <tr>
                                 <th scope="row">Budget</th>
                                 <td className="text-left" >{formatCurrency(totalBudgetAmount)}</td>
                             </tr>
                             <tr>
+                                <th scope="row">Balance</th>
+                                <td className="text-left" >{formatCurrency(balance)}</td>
+                            </tr>
+                            <tr>
                                 <th scope="row">X-penses</th>
                                 <td className="text-left" >{formatCurrency(totalAmount)}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Goals (saved)</th>
+                                <td className="text-left" >{formatCurrency(totalAmount)}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Investments</th>
+                                <td className="text-left" >{formatCurrency(totalPrice)}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Overview Total</th>
