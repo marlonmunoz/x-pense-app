@@ -19,7 +19,7 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') 
+# Key
 db.init_app(app)
 migrate = Migrate(app, db)
 
@@ -29,54 +29,6 @@ with app.app_context():
 
 
 # LOGIN ============================================================================>>>>>>>
-
-# users = {
-#     "mago": "1234***"
-# }
-
-
-# POST
-# @app.route('/login', methods=['POST'])
-# def login():
-#     data = request.json 
-    
-#     # Server-side validation code
-#     if not data:
-#         return jsonify({"message": "No input data provided"}), 400
-    
-#     username = data.get('username')
-#     password = data.get('password')
-    
-#     if not username or not password:
-#         return jsonify({"message": "Username and password are required"}), 400
-    
-#     if username in users and users[username] == password:
-#         token = jwt.encode({
-#             'username': username,
-#             'exp': datetime.utcnow() + timedelta(hours=1)
-#         }, app.config['SECRET_KEY'], algorithm="HS256")
-#         return jsonify({"message": "Login Successful", "token": token}), 200
-#     else:
-#         return jsonify({"message": "Invalid Credentials"}), 401
-
-# @app.route('/verify-token', methods=['POST'])
-# def verify_token():
-#     token = request.json.get('token')
-#     if not token:
-#         return jsonify({"message": "Token is missing"}), 400
-    
-#     try:
-#         jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-#         return jsonify ({"message": "Token is valid"}), 200
-#     except jwt.ExpiredSignatureError:
-#         return jsonify({"message": "Token has expired"}), 401
-#     except jwt.InvalidTokenError:
-#         return jsonify({"message": "Invalid token"}), 401
-
-# @app.route('/logout', methods=['POST'])
-# def logout():
-#     return jsonify({"message": "Logout Successful"}), 200
-
 
 
 # INVESTMENTS ==========================================================================>>>>>
