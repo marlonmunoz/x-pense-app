@@ -14,6 +14,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "react": "^18.3.1",
+    "react-circular-progressbar": "^2.2.0",
     "react-datepicker": "^7.6.0",
     "react-dom": "^18.3.1",
     "structured-clone": "^0.2.2"

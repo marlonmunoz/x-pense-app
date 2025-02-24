@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
+import { CircularProgressbar, buildStyles} from 'react-circular-progressbar'
 
 function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,formatCurrency, goals, setGoals, formatDate, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setAmounts, addedInvestments, setAddedInvestments }) {
     const navigate = useNavigate();
@@ -41,16 +42,17 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
           });
     }, []);
 
-    const handleDeleteGoal = (goalId) => {
-      const updateGoals = goals.filter(goal => goal.id !== goalId);
-      setGoals(updateGoals);
+    // const handleDeleteGoal = (goalId) => {
+    //   const updateGoals = goals.filter(goal => goal.id !== goalId);
+    //   setGoals(updateGoals);
+    //   console.log('Updated goals:', updateGoals); // Add this line to verify state update
   
-      // Delete the goal from the backend
-      fetch(`http://localhost:5001/goals/${goalId}`, {
-          method: 'DELETE'
-      })
-      .catch(error => console.error('Error deleting goal:', error));
-    };
+    //   // Delete the goal from the backend
+    //   fetch(`http://localhost:5001/goals/${goalId}`, {
+    //       method: 'DELETE'
+    //   })
+    //   .catch(error => console.error('Error deleting goal:', error));
+    // };
 
     // BUDGET.jsx =============================================>>>>
 
@@ -226,14 +228,14 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                 <div className="summary">
                     <h5>Recent Transactions</h5>
                     <br />
-                    <button onClick={() => navigate('/transactions')} className={`btn ${darkMode ? 'btn-light' : 'btn-dark'}`}> View All Transactions</button>
+                    <button   onClick={() => navigate('/transactions')} className={`btn ${darkMode ? 'btn-light' : 'btn-dark'} responsive`}> View All Transactions</button>
                 </div>
                 <br />
                 <div className={`charts border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                     <h6>Spending Over Time Graph</h6>
                     <p style={{color: 'gray'}}><sup>X-PENSE Transactions</sup></p>
                     {formattedTransactions.length === 0 ? (
-                      <p className="border border-danger rounded p-2 ml-7 text-danger">No Transactions Have Been Added !</p>
+                      <p  className="border border-danger rounded p-2 m-5 text-danger">No Transactions Have Been Added !</p>
                     ) : (
                       <LineChart width={390} height={350} data={formattedTransactions}>
                         <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#444' : '#ccc'} />
@@ -257,7 +259,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                   <h6>Added Investments</h6>
                   <p style={{ color: 'gray' }}><sup>Tracking All CRYPTO Transactions</sup></p>
                   {addedInvestments.length === 0 ? (
-                    <p className="border border-danger rounded p-2 ml-7 text-danger">No Investments Have Been Added !</p>
+                    <p className="border border-danger rounded p-2 m-5 text-danger">No Investments Have Been Added !</p>
                   ) : (
                     <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
                       <thead>
@@ -308,11 +310,11 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                 </div>
               
                 <br />
-                <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                {/* <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                   <h6>Goals Progress</h6>
                   <p style={{ color: 'gray' }}><sup>Tracking</sup></p>
                   {goalsProgress.length === 0 ? (
-                    <p className="border border-danger rounded p-2 ml-7 text-danger">No Goals Have Been Added !</p>
+                    <p className="border border-danger rounded p-2 m-5 text-danger">No Goals Have Been Added !</p>
                   ) : (
                     <div className="goals-progress rounded px-5 border border-info rounded p-2 ml-6" style={{ maxWidth: '600px', borderWidth: '2px' }} >
                       <div className="d-flex flex-column align-items-center">
@@ -324,13 +326,44 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                 {goal.progress.toFixed(2)}%
                               </div>
                             </div>
-                            <button onClick={() => handleDeleteGoal(goal.id)} className="btn btn-sm btn-danger ml-1">Remove</button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div> */}
+                <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                  <h6>Goals Progress</h6>
+                  <p style={{ color: 'gray' }}><sup>Tracking</sup></p>
+                  {goalsProgress.length === 0 ? (
+                    <p className="border border-danger rounded p-2 m-5 text-danger">No Goals Have Been Added !</p>
+                  ) : (
+                    <div className="goals-progress rounded px-5 border border-info rounded p-2 ml-6" style={{ maxWidth: '600px', borderWidth: '2px' }} >
+                      <div className="d-flex flex-column align-items-center">
+                        {goalsProgress.map((goal, index) => (
+                          <div key={index} className="d-flex align-items-center mb-2 rounded" style={{ width: '120%' }}>
+                            <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
+                            <div style={{ width: 90, height: 90 }}>
+                              <CircularProgressbar
+                                value={goal.progress}
+                                text={`${goal.progress.toFixed(2)}%`}
+                                styles={buildStyles({
+                                  textColor: darkMode ? 'white' : 'black',
+                                  pathColor: darkMode ? '#17a2b8' : '#28a745',
+                                  trailColor: darkMode ? '#343a40' : '#d6d6d6',
+                                })}
+                              />
+                            </div>
                           </div>
                         ))}
                       </div>
                     </div>
                   )}
                 </div>
+
+
+
+
                 <br />
                 <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                     <h6>Overview</h6>
