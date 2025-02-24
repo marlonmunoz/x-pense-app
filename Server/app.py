@@ -15,7 +15,8 @@ import requests
 load_dotenv()  
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+# CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -68,6 +69,21 @@ def add_budget():
     return jsonify(new_budget.to_dict()), 201
 
 # PUT
+# @app.route('/budgets/<int:id>', methods=['PUT'])
+# def update_budget(id):
+#     data = request.get_json()
+#     if 'item_name' not in data or 'amount' not in data or 'date' not in data:
+#         return jsonify({'error': 'Missing required fields'}), 400
+    
+#     budget = db.session.get(Budget, id)
+#     if budget is None:
+#         return jsonify({'error': 'Budget not found'}), 404
+#     budget.item_name = data['item_name']
+#     budget.amount = data['amount']
+#     budget.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
+#     db.session.commit()
+#     return jsonify(budget.to_dict())
+
 @app.route('/budgets/<int:id>', methods=['PUT'])
 def update_budget(id):
     data = request.get_json()
@@ -77,9 +93,25 @@ def update_budget(id):
     budget = db.session.get(Budget, id)
     if budget is None:
         return jsonify({'error': 'Budget not found'}), 404
+    
     budget.item_name = data['item_name']
-    budget.amount = data['amount']
-    budget.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
+    
+    if data['amount']:
+        try:
+            budget.amount = float(data['amount'])
+        except ValueError:
+            return jsonify({'error': 'Invalid amount format, should be a number'}), 400
+    else:
+        budget.amount = 0.0  # Set to a default value if needed
+    
+    if data['date']:
+        try:
+            budget.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
+        except ValueError:
+            return jsonify({'error': 'Invalid date format, should be YYYY-MM-DD'}), 400
+    else:
+        budget.date = datetime.now().date()  # Set to the current date as a default value
+    
     db.session.commit()
     return jsonify(budget.to_dict())
 

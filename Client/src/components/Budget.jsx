@@ -15,6 +15,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
 
     const [editDate, setEditDate] = useState((new Date()));
     const [budgetDate, setBudgetDate] = useState('');
+    const [budgetAmount, setBudgetAmount] = useState('');
 
     useEffect(() => {
         fetchBudgets();
@@ -125,15 +126,40 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
         }
     };
 
+    // const resetBudget = async () => {
+    //     const setBudgetItem = items.find(item => item.item_name === 'Set Budget');
+    //     if (setBudgetItem) {
+    //         const updatedItem = { ...setBudgetItem, amount: '', date: '' };
+    //         console.log('Updated Item:', updatedItem); // Debugging log
+    //         try {
+    //             const response = await axios.put(`http://localhost:5001/budgets/${setBudgetItem.id}`, updatedItem);
+    //             console.log('Response from server:', response.data); // Debugging log
+    //             setItems(items.map(item => 
+    //                 item.item_name === 'Set Budget' ? updatedItem : item
+    //             ));
+    //             console.log('Items after reset:', items); // Debugging log
+    //         } catch (error) {
+    //             console.log('Error resetting budget:', error);
+    //         }
+    //     } else {
+    //         console.log('Set Budget item not found');
+    //     }
+    // };
+
     const resetBudget = async () => {
         const setBudgetItem = items.find(item => item.item_name === 'Set Budget');
         if (setBudgetItem) {
             const updatedItem = { ...setBudgetItem, amount: '', date: '' };
+            console.log('Updated Item:', updatedItem); // Debugging log
             try {
-                await axios.put(`http://localhost:5001/budgets/${setBudgetItem.id}`, updatedItem);
+                const response = await axios.put(`http://localhost:5001/budgets/${setBudgetItem.id}`, updatedItem);
+                console.log('Response from server:', response.data); // Debugging log
                 setItems(items.map(item => 
-                    item.item_name === 'Set Budget' ? updatedItem : item  // Change to `Main Budget` or leave it as Set Budget
+                    item.item_name === 'Set Budget' ? updatedItem : item
                 ));
+                setNewBudget(''); // Reset the amount in the field
+                setBudgetDate(''); // Reset the date in the field
+                console.log('Items after reset:', items); // Debugging log
             } catch (error) {
                 console.log('Error resetting budget:', error);
             }
