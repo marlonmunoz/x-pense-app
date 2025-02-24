@@ -17,6 +17,7 @@
     "react-circular-progressbar": "^2.2.0",
     "react-datepicker": "^7.6.0",
     "react-dom": "^18.3.1",
+    "recharts": "^2.15.1",
     "structured-clone": "^0.2.2"
   },
   "devDependencies": {

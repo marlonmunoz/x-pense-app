@@ -237,11 +237,11 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                     {formattedTransactions.length === 0 ? (
                       <p  className="border border-danger rounded p-2 m-5 text-danger">No Transactions Have Been Added !</p>
                     ) : (
-                      <LineChart width={390} height={350} data={formattedTransactions}>
+                      <LineChart width={500} height={400} data={formattedTransactions}>
                         <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#444' : '#ccc'} />
                         <XAxis dataKey="date" stroke={darkMode ? '#fff' : '#000'} label={{ value: 'Date', angle: -0, position: 'insideBottomLeft', offset: -10 }}/>
                         <YAxis dataKey="amount" stroke={darkMode ? '#fff' : '#000'} label={{ value: 'Amount', angle: -90, position: 'insideLeft', offset: 0 }}  />
-                        <Tooltip content={<CustomTooltip />}/>
+                        <Tooltip content={<CustomTooltip darkMode={darkMode} />}/>
                         <Legend wrapperStyle={{ color: darkMode ? '#fff' : '#000' }} />
                         <Line 
                           type="monotone"     
@@ -249,6 +249,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                           label={{ position: 'top', fill: darkMode ? '#fff' : '#000' }}
                           stroke={darkMode ? '#08fa00' : '#8884d8'} 
                           activeDot={{ r: 8 }}
+                          animationDuration={500}
                         />
                       </LineChart>
                     )}
@@ -332,36 +333,9 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                     </div>
                   )}
                 </div> */}
-                {/* <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
-                  <h6>Goals Progress</h6>
-                  <p style={{ color: 'gray' }}><sup>Tracking</sup></p>
-                  {goalsProgress.length === 0 ? (
-                    <p className="border border-danger rounded p-2 m-5 text-danger">No Goals Have Been Added !</p>
-                  ) : (
-                    <div className="goals-progress rounded px-5 border border-info rounded p-2 ml-6" style={{ maxWidth: '600px', borderWidth: '2px' }} >
-                      <div className="d-flex flex-column align-items-center">
-                        {goalsProgress.map((goal, index) => (
-                          <div key={index} className="d-flex align-items-center mb-2 rounded" style={{ width: '120%' }}>
-                            <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
-                            <div style={{ width: 90, height: 90 }}>
-                              <CircularProgressbar
-                                value={goal.progress}
-                                text={`${goal.progress.toFixed(2)}%`}
-                                styles={buildStyles({
-                                  textColor: darkMode ? 'white' : 'black',
-                                  pathColor: darkMode ? '#17a2b8' : '#28a745',
-                                  trailColor: darkMode ? '#343a40' : '#d6d6d6',
-                                  pathTransitionDuration: 0.7
-                                })}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div> */}
-                    <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                
+                
+                  <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                     <h6>Goals Progress</h6>
                     <p style={{ color: 'gray' }}><sup>Tracking</sup></p>
                       {goalsProgress.map((goal, index) => (
