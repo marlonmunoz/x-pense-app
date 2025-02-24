@@ -49,7 +49,8 @@ function App() {
   const [error, setError] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
   const [editAmount, setEditAmount] = useState('');
-  const totalBudgetAmount = items.reduce((total, item) => total + item.amount, 0) + (isNaN(budget) ? 0 : budget);
+  // const totalBudgetAmount = items.reduce((total, item) => total + item.amount, 0) + (isNaN(budget) ? 0 : budget);
+  const totalBudgetAmount = items.reduce((total, item) => total + item.amount, 0);
 
   // BALANCE
   const [cashOnHand, setCashOnHand] = useState('');

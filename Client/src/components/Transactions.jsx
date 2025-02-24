@@ -94,7 +94,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
     }
 
     const handleSetReminderClick = (transaction) => {
-        const reminderDate = prompt('Enter the reminder date (YYYY-MM-DD)');
+        const reminderDate = prompt('Enter the reminder date (MM-DD-YYYY)');
         const amount = prompt('Enter the amount that needs to be paid:');
         if (reminderDate && amount) {
             handleReminder(transaction, reminderDate, amount)
