@@ -267,7 +267,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
       <div className="row"  >
         <div className="col-12" >
             <div className="summary">
-                <h5>Recent Transactions</h5>
+                <h5>Recent Transactions</h5> 
                 <br />
                 <button   onClick={() => navigate('/transactions')} className={`btn ${darkMode ? 'btn-light' : 'btn-dark'} responsive`}> View All Transactions</button>
             </div>
@@ -275,26 +275,11 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
             <div className={`charts border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                 <h6>Spending Over Time Graph</h6>
                 <p style={{color: 'gray'}}><sup>X-PENSE Transactions</sup></p>
-                {/* {formattedTransactions.length === 0 ? (
+                {formattedTransactions.length === 0 ? (
                   <p  className="border border-danger rounded p-2 m-5 text-danger">No Transactions Have Been Added !</p>
                 ) : (
-                  <LineChart width={500} height={400} data={formattedTransactions}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#444' : '#ccc'} />
-                    <XAxis dataKey="date" stroke={darkMode ? '#fff' : '#000'} label={{ value: 'Date', angle: -0, position: 'insideBottomLeft', offset: -10 }}/>
-                    <YAxis dataKey="amount" stroke={darkMode ? '#fff' : '#000'} label={{ value: 'Amount', angle: -90, position: 'insideLeft', offset: 0 }}  />
-                    <Tooltip content={<CustomTooltip darkMode={darkMode} />}/>
-                    <Legend wrapperStyle={{ color: darkMode ? '#fff' : '#000' }} />
-                    <Line 
-                      type="monotone"     
-                      dataKey="amount"   
-                      label={{ position: 'top', fill: darkMode ? '#fff' : '#000' }}
-                      stroke={darkMode ? '#08fa00' : '#8884d8'} 
-                      activeDot={{ r: 8 }}
-                      animationDuration={500}
-                    />
-                  </LineChart>
-                )} */}
-                <Line data={data} options={options} />
+                    <Line data={data} options={options} />
+                )}
             </div>
             <br />
             <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
@@ -333,12 +318,12 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                         <td data-label="Actions">
                           {editIndex === index ? (
                             <>
-                              <button onClick={() => handleSaveInvestment(index)} className="btn btn-sm btn-success">Save</button>
+                              <button onClick={() => handleSaveInvestment(index)} className="btn btn-sm btn-success ml-1">Save</button>
                               <button onClick={handleCancelEdit} className="btn btn-sm btn-secondary ml-1">Cancel</button>
                             </>
                           ) : (
                             <>
-                              <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger">Remove</button>
+                              <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger ml-1">Remove</button>
                               <button onClick={() => handleEditInvestment(index)} className="btn btn-sm btn-primary ml-1">Edit Amount</button>
                             </>
                           )}
@@ -349,73 +334,51 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                 </table>
               )}
             </div>
-          
             <br />
-            {/* <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+            <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
               <h6>Goals Progress</h6>
               <p style={{ color: 'gray' }}><sup>Tracking</sup></p>
               {goalsProgress.length === 0 ? (
                 <p className="border border-danger rounded p-2 m-5 text-danger">No Goals Have Been Added !</p>
               ) : (
-                <div className="goals-progress rounded px-5 border border-info rounded p-2 ml-6" style={{ maxWidth: '600px', borderWidth: '2px' }} >
-                  <div className="d-flex flex-column align-items-center">
-                    {goalsProgress.map((goal, index) => (
-                      <div key={index} className="d-flex align-items-center mb-2 rounded" style={{ width: '120%' }}>
-                        <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
-                        <div className="progress flex-grow-1 custom-progress-height border border-info " style={{ color: 'black' }}>
-                          <div className={`progress-bar ${darkMode ? 'bg-info' : 'bg-success'} custom-progress-height`} role="progressbar" style={{ width: `${goal.progress}%` }} aria-valuemin="0" aria-valuemax="100">  
-                            {goal.progress.toFixed(2)}%
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div> */}
-            
-            
-              <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
-                <h6>Goals Progress</h6>
-                <p style={{ color: 'gray' }}><sup>Tracking</sup></p>
-                  {goalsProgress.map((goal, index) => (
-                    <div key={index} className="d-flex align-items-center mb-2 rounded" style={{ width: '120%' }}>
-                      <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
-                      {/* <div style={{ width: 80, height: 80, margin: '0 auto', position: 'relative' }}> */}
-                      <div style={{ width: 80, height: 80, position: 'relative', marginLeft: 'auto', marginRight: 'auto' }}>
-                        <CircularProgressbar
-                          value={(goal.saved / goal.target) * 100}
-                          strokeWidth={25}
-                          styles={buildStyles({
-                            textColor: darkMode ? 'white' : 'black',
-                            pathColor: 'url(#gradient)', // Use the gradient
-                            trailColor: darkMode ? '#343a40' : '#d6d6d6',
-                            pathTransitionDuration: 0.9,
-                          })}
-                        />
-                        <svg style={{ height: 0 }}>
-                          <defs>
-                            <linearGradient id="gradient" gradientTransform="rotate(10)">
-                              <stop offset="0%" stopColor="#17a2b8" />
-                              <stop offset="25%" stopColor="#17a2b8" />
-                              <stop offset="100%" stopColor="red" />
-                            </linearGradient>
-                          </defs>
-                        </svg>
-                        <div style={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          fontSize: '19px',
-                          color: darkMode ? 'white' : 'black',
-                        }}>
-                          {(goal.saved / goal.target * 100).toFixed(2)}%
-                        </div>
+                goalsProgress.map((goal, index) => (
+                  <div key={index} className="d-flex align-items-center mb-2 rounded" style={{ width: '120%' }}>
+                    <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
+                    <div style={{ width: 80, height: 80, position: 'relative', marginLeft: 'auto', marginRight: 'auto' }}>
+                      <CircularProgressbar
+                        value={(goal.saved / goal.target) * 100}
+                        strokeWidth={25}
+                        styles={buildStyles({
+                          textColor: darkMode ? 'white' : 'black',
+                          pathColor: 'url(#gradient)', // Use the gradient
+                          trailColor: darkMode ? '#343a40' : '#d6d6d6',
+                          pathTransitionDuration: 0.9,
+                        })}
+                      />
+                      <svg style={{ height: 0 }}>
+                        <defs>
+                          <linearGradient id="gradient" gradientTransform="rotate(10)">
+                            <stop offset="0%" stopColor="#17a2b8" />
+                            <stop offset="25%" stopColor="#17a2b8" />
+                            <stop offset="100%" stopColor="red" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                      <div style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        fontSize: '19px',
+                        color: darkMode ? 'white' : 'black',
+                      }}>
+                        {(goal.saved / goal.target * 100).toFixed(2)}%
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))
+              )}
+            </div>
                 <br />
                 <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                     <h6>Overview</h6>
