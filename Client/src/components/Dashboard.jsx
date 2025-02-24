@@ -423,7 +423,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                 </tr>
                                 <tr>
                                     <th scope="row">Goals (saved)</th>
-                                    <td className="text-left" >{formatCurrency(totalAmount)}</td>
+                                    <td className="text-left" >{formatCurrency()}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Investments</th>
