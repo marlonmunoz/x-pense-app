@@ -234,7 +234,8 @@ function App() {
               darkMode={darkMode} 
               formatAmount={formatAmount} 
               addedInvestments={addedInvestments} 
-              goals={goals}
+              goals={goals} 
+              setGoals={setGoals}
               formatCurrency={formatCurrency}
               formatDate={formatDate}
               handleRemoveInvestment={handleRemoveInvestment}

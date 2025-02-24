@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 
-function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,formatCurrency, formatDate, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setAmounts, addedInvestments, setAddedInvestments }) {
+function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,formatCurrency, goals, setGoals, formatDate, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setAmounts, addedInvestments, setAddedInvestments }) {
     const navigate = useNavigate();
     const [investments, setInvestments] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
@@ -40,6 +40,17 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
             console.error('Error fetching goals:', error);
           });
     }, []);
+
+    const handleDeleteGoal = (goalId) => {
+      const updateGoals = goals.filter(goal => goal.id !== goalId);
+      setGoals(updateGoals);
+  
+      // Delete the goal from the backend
+      fetch(`http://localhost:5001/goals/${goalId}`, {
+          method: 'DELETE'
+      })
+      .catch(error => console.error('Error deleting goal:', error));
+    };
 
     // BUDGET.jsx =============================================>>>>
 
@@ -206,6 +217,8 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
     setEditAmount("");
   }
 
+  
+
     return (
         <div className={`container-fluid ${darkMode ? 'dark-mode' : 'light-mode'}`} >
           <div className="row"  >
@@ -311,6 +324,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                 {goal.progress.toFixed(2)}%
                               </div>
                             </div>
+                            <button onClick={() => handleDeleteGoal(goal.id)} className="btn btn-sm btn-danger ml-1">Remove</button>
                           </div>
                         ))}
                       </div>
