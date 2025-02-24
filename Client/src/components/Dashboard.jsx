@@ -332,7 +332,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                     </div>
                   )}
                 </div> */}
-                <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                {/* <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                   <h6>Goals Progress</h6>
                   <p style={{ color: 'gray' }}><sup>Tracking</sup></p>
                   {goalsProgress.length === 0 ? (
@@ -351,6 +351,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                   textColor: darkMode ? 'white' : 'black',
                                   pathColor: darkMode ? '#17a2b8' : '#28a745',
                                   trailColor: darkMode ? '#343a40' : '#d6d6d6',
+                                  pathTransitionDuration: 0.7
                                 })}
                               />
                             </div>
@@ -359,43 +360,81 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                       </div>
                     </div>
                   )}
-                </div>
+                </div> */}
+                    <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                    <h6>Goals Progress</h6>
+                    <p style={{ color: 'gray' }}><sup>Tracking</sup></p>
+                      {goalsProgress.map((goal, index) => (
+                        <div key={index} className="d-flex align-items-center mb-2 rounded" style={{ width: '120%' }}>
+                          <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
+                          {/* <div style={{ width: 80, height: 80, margin: '0 auto', position: 'relative' }}> */}
+                          <div style={{ width: 80, height: 80, position: 'relative', marginLeft: 'auto', marginRight: 'auto' }}>
+                            <CircularProgressbar
+                              value={(goal.saved / goal.target) * 100}
+                              strokeWidth={25}
+                              styles={buildStyles({
+                                textColor: darkMode ? 'white' : 'black',
+                                pathColor: 'url(#gradient)', // Use the gradient
+                                trailColor: darkMode ? '#343a40' : '#d6d6d6',
+                                pathTransitionDuration: 0.9,
+                              })}
+                            />
+                            <svg style={{ height: 0 }}>
+                              <defs>
+                                <linearGradient id="gradient" gradientTransform="rotate(10)">
+                                  <stop offset="0%" stopColor="#17a2b8" />
+                                  <stop offset="25%" stopColor="#17a2b8" />
+                                  <stop offset="100%" stopColor="red" />
+                                </linearGradient>
+                              </defs>
+                            </svg>
+                            <div style={{
+                              position: 'absolute',
+                              top: '50%',
+                              left: '50%',
+                              transform: 'translate(-50%, -50%)',
+                              fontSize: '19px',
+                              color: darkMode ? 'white' : 'black',
+                            }}>
+                              {(goal.saved / goal.target * 100).toFixed(2)}%
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
 
-
-
-
-                <br />
-                <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
-                    <h6>Overview</h6>
-                    <p style={{ color: 'gray' }}><sup>Total Summary</sup></p>
-                    <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
-                        <tbody>
-                            <tr>
-                                <th scope="row">Budget</th>
-                                <td className="text-left" >{formatCurrency(totalBudgetAmount)}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Balance</th>
-                                <td className="text-left" >{formatCurrency(balance)}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">X-penses</th>
-                                <td className="text-left" >{formatCurrency(totalAmount)}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Goals (saved)</th>
-                                <td className="text-left" >{formatCurrency(totalAmount)}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Investments</th>
-                                <td className="text-left" >{formatCurrency(totalPrice)}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Overview Total</th>
-                                <td className="text-left" >{formatCurrency(overviewTotal)}</td>
-                            </tr>
-                        </tbody>
-                     </table>
+                    <br />
+                    <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                        <h6>Overview</h6>
+                        <p style={{ color: 'gray' }}><sup>Total Summary</sup></p>
+                        <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Budget</th>
+                                    <td className="text-left" >{formatCurrency(totalBudgetAmount)}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Balance</th>
+                                    <td className="text-left" >{formatCurrency(balance)}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">X-penses</th>
+                                    <td className="text-left" >{formatCurrency(totalAmount)}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Goals (saved)</th>
+                                    <td className="text-left" >{formatCurrency(totalAmount)}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Investments</th>
+                                    <td className="text-left" >{formatCurrency(totalPrice)}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Overview Total</th>
+                                    <td className="text-left" >{formatCurrency(overviewTotal)}</td>
+                                </tr>
+                            </tbody>
+                         </table>
                   </div>
                 </div>
             </div>

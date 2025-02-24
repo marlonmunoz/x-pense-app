@@ -499,3 +499,16 @@ body.light-mode #root {
   margin: 0;
   color: #6c757d;
 }
+
+/* .circular-progressbar-gradient {
+  background: linear-gradient(to right,
+   #17a2b8, 
+   #28a745, 
+   red, 
+   yellow, 
+   purple
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+} */

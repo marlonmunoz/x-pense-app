@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { CircularProgressbar, buildStyles} from 'react-circular-progressbar'
+
 
 const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, goals, setGoals, inputAmounts, setInputAmounts, validated, setValidated, editingGoalId, setEditingGoalId, editedGoalName, setEditedGoalName, formatCurrency, darkMode } ) => {
 
@@ -203,39 +205,105 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                             <button onClick={handleCancel} className="btn btn-secondary btn-sm  ml-2">Cancel</button>
                         </>
                     ) : (
-                        <>
-                            <div className={`border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
-                                <h6>{goal.name}: $ {goal.target.toLocaleString()}</h6>
-                                <div className={`progress ${darkMode ? 'progress-dark' : 'progress-light'}`}>
-                                    <div className={`progress-bar border border-success ${darkMode ? 'bg-info' : 'bg-success'} progress-bar-thick `} role="progressbar" style={{width: `${(goal.saved / goal.target) * 100}%`}} aria-valuemin="0" aria-valuemax="100">
-                                        {(goal.saved / goal.target * 100).toFixed(2)}%
-                                    </div>
-                                </div>
-                                <div >
-                                    <br />
-                                    <span>
-                                        <sup>Saved: <span className='amounts'> {formatCurrency(goal.saved)}</span>  Remaining: <span className='amounts'>{formatCurrency(goal.target - goal.saved)}</span></sup>
-                                    </span>
-                                </div>
-                                <input 
-                                    type="number" 
-                                    id={`inputAmount-${goal.id}`}
-                                    name={`inputAmount-${goal.id}`}
-                                    // name="inputAmount"
-                                    value={inputAmounts[goal.id] || ''}
-                                    onChange={(e) => setInputAmounts({ ...inputAmounts, [goal.id]: e.target.value })}
-                                    className="form-control mt-3"
-                                    placeholder="Enter amount"
-                                    />
-                                <br />
-                                <div className="d-flex flex-column flex-md-row justify-content-center">
-                                    <button onClick={() => handleAddAmount(goal.id)} className="btn btn-success ml-2">Add Amount</button>
-                                    <button onClick={() => handleResetAmount(goal.id)} className="btn btn-warning ml-2">Reset Amount</button>
-                                    <button onClick={() => handleDeleteGoal(goal.id)} className="btn btn-danger ml-2">Delete</button>
-                                    <button onClick={() => handleEdit(goal.id, goal.name)} className="btn btn-primary ml-2">Edit</button>
-                                </div>
+                        // <>
+                        //     <div className={`border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                        //         <h6>{goal.name}: $ {goal.target.toLocaleString()}</h6>
+                        //         <div className={`progress ${darkMode ? 'progress-dark' : 'progress-light'}`}>
+                        //             <div className={`progress-bar border border-success ${darkMode ? 'bg-info' : 'bg-success'} progress-bar-thick `} role="progressbar" style={{width: `${(goal.saved / goal.target) * 100}%`}} aria-valuemin="0" aria-valuemax="100">
+                        //                 {(goal.saved / goal.target * 100).toFixed(2)}%
+                        //             </div>
+                        //         </div>
+                        //         <div >
+                        //             <br />
+                        //             <span>
+                        //                 <sup>Saved: <span className='amounts'> {formatCurrency(goal.saved)}</span>  Remaining: <span className='amounts'>{formatCurrency(goal.target - goal.saved)}</span></sup>
+                        //             </span>
+                        //         </div>
+                        //         <input 
+                        //             type="number" 
+                        //             id={`inputAmount-${goal.id}`}
+                        //             name={`inputAmount-${goal.id}`}
+                        //             // name="inputAmount"
+                        //             value={inputAmounts[goal.id] || ''}
+                        //             onChange={(e) => setInputAmounts({ ...inputAmounts, [goal.id]: e.target.value })}
+                        //             className="form-control mt-3"
+                        //             placeholder="Enter amount"
+                        //             />
+                        //         <br />
+                        //         <div className="d-flex flex-column flex-md-row justify-content-center">
+                        //             <button onClick={() => handleAddAmount(goal.id)} className="btn btn-success ml-2">Add Amount</button>
+                        //             <button onClick={() => handleResetAmount(goal.id)} className="btn btn-warning ml-2">Reset Amount</button>
+                        //             <button onClick={() => handleDeleteGoal(goal.id)} className="btn btn-danger ml-2">Delete</button>
+                        //             <button onClick={() => handleEdit(goal.id, goal.name)} className="btn btn-primary ml-2">Edit</button>
+                        //         </div>
+                        //     </div>
+                        // </>
+                    <>
+                        <div className={`border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                            <h6>{goal.name}: $ {goal.target.toLocaleString()}</h6>
+                            <br />
+                            <div style={{ width: 230, height: 230, margin: '0 auto', position: 'relative' }}>
+                              <CircularProgressbar
+                                value={(goal.saved / goal.target) * 100}
+                                strokeWidth={20}
+                                styles={buildStyles({
+                                  textColor: darkMode ? 'white' : 'black',
+                                  pathColor: 'url(#gradient)', // Use the gradient
+                                  trailColor: darkMode ? '#343a40' : '#d6d6d6',
+                                  pathTransitionDuration: 0.9,
+                               
+                                })}
+                              />
+                              <svg style={{ height: 0 }}>
+                                <defs>
+                                  <linearGradient id="gradient" gradientTransform="rotate(10)">
+                                    <stop offset="0%" stopColor="#17a2b8" />
+                                    <stop offset="25%" stopColor="#17a2b8" />
+                                    {/* <stop offset="50%" stopColor="#28a745" /> */}
+                                    {/* <stop offset="75%" stopColor="#28a745" /> */}
+                                    <stop offset="100%" stopColor="red" />
+                                    {/* <stop offset="75%" stopColor="yellow" /> */}
+                                    {/* <stop offset="100%" stopColor="green" /> */}
+                                    
+                                  </linearGradient>
+                                </defs>
+                              </svg>
+                              
+                              <div style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                fontSize: '19px',
+                                color: darkMode ? 'white' : 'black',
+                              }}>
+                                {(goal.saved / goal.target * 100).toFixed(2)}%
+                              </div>
                             </div>
-                        </>
+                            <div>
+                              <br />
+                              <span>
+                                <sup>Saved: <span className='amounts'> {formatCurrency(goal.saved)}</span>  Remaining: <span className='amounts'>{formatCurrency(goal.target - goal.saved)}</span></sup>
+                              </span>
+                            </div>
+                            <input 
+                              type="number" 
+                              id={`inputAmount-${goal.id}`}
+                              name={`inputAmount-${goal.id}`}
+                              value={inputAmounts[goal.id] || ''}
+                              onChange={(e) => setInputAmounts({ ...inputAmounts, [goal.id]: e.target.value })}
+                              className="form-control mt-3"
+                              placeholder="Enter amount"
+                            />
+                            <br />
+                            <div className="d-flex flex-column flex-md-row justify-content-center">
+                              <button onClick={() => handleAddAmount(goal.id)} className="btn btn-success ml-2">Add Amount</button>
+                              <button onClick={() => handleResetAmount(goal.id)} className="btn btn-warning ml-2">Reset Amount</button>
+                              <button onClick={() => handleDeleteGoal(goal.id)} className="btn btn-danger ml-2">Delete</button>
+                              <button onClick={() => handleEdit(goal.id, goal.name)} className="btn btn-primary ml-2">Edit</button>
+                            </div>
+                        </div>
+                    </>
                     )}
                 </div>
                 ))
