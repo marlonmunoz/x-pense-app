@@ -261,264 +261,391 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
         <div className="budget-container">
             <style>{`
                 .budget-container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
                     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 }
 
+                .budget-header {
+                    text-align: center;
+                    margin-bottom: 30px;
+                    padding: 30px;
+                    border-radius: 20px;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                }
+
+                .budget-header h5 {
+                    font-size: 2.5rem;
+                    margin: 0 0 10px 0;
+                    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+                }
+
+                .budget-subtitle {
+                    font-size: 1.1rem;
+                    opacity: 0.9;
+                    margin: 0;
+                }
+
                 .budget-section {
-                    background: ${darkMode ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'};
-                    border-radius: 15px;
-                    padding: 25px;
-                    margin-bottom: 25px;
-                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-                    backdrop-filter: blur(4px);
-                    border: 1px solid rgba(255, 255, 255, 0.18);
-                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    background: ${darkMode ? 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)' : 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'};
+                    border-radius: 20px;
+                    padding: 40px;
+                    margin-bottom: 30px;
+                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+                    border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
+                    transition: all 0.3s ease;
                 }
 
                 .budget-section:hover {
                     transform: translateY(-5px);
-                    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
                 }
 
                 .budget-title {
-                    color: white;
-                    font-size: 1.4em;
-                    font-weight: 600;
-                    margin-bottom: 20px;
-                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+                    color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+                    font-size: 1.8em;
+                    font-weight: 700;
+                    margin-bottom: 30px;
+                    text-align: center;
                 }
 
                 .input-group {
                     display: flex;
-                    gap: 12px;
+                    gap: 15px;
                     align-items: center;
                     flex-wrap: wrap;
+                    justify-content: center;
                 }
 
                 .enhanced-input {
-                    border: 2px solid transparent;
-                    border-radius: 8px;
-                    padding: 12px 15px;
-                    font-size: 14px;
+                    flex: 1;
+                    min-width: 200px;
+                    padding: 15px 20px;
+                    border: 2px solid ${darkMode ? '#4a5568' : '#e2e8f0'};
+                    border-radius: 12px;
+                    font-size: 1rem;
+                    background: ${darkMode ? '#2d3748' : '#ffffff'};
+                    color: ${darkMode ? '#e2e8f0' : '#2d3748'};
                     transition: all 0.3s ease;
-                    background-color: rgba(255, 255, 255, 0.9);
-                    color: #333;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 }
 
                 .enhanced-input:focus {
-                    border-color: #4CAF50;
-                    box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
                     outline: none;
-                    transform: scale(1.02);
+                    border-color: #667eea;
+                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+                    transform: translateY(-2px);
+                }
+
+                .enhanced-input::placeholder {
+                    color: ${darkMode ? '#a0aec0' : '#718096'};
+                    font-weight: 500;
                 }
 
                 .enhanced-input.is-valid {
-                    border-color: #28a745;
-                    background-color: rgba(40, 167, 69, 0.1);
+                    border-color: #38a169;
+                    box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.3);
                 }
 
                 .enhanced-input.is-invalid {
-                    border-color: #dc3545;
-                    background-color: rgba(220, 53, 69, 0.1);
+                    border-color: #e53e3e;
+                    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.3);
                 }
 
                 .btn-enhanced {
-                    padding: 12px 24px;
+                    padding: 18px 30px;
                     border: none;
-                    border-radius: 8px;
+                    border-radius: 12px;
                     font-weight: 600;
-                    font-size: 14px;
+                    font-size: 1.1rem;
                     cursor: pointer;
                     transition: all 0.3s ease;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
+                    margin: 0 5px;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
                     position: relative;
                     overflow: hidden;
-                }
-
-                .btn-enhanced:before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: -100%;
-                    width: 100%;
-                    height: 100%;
-                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-                    transition: left 0.5s;
-                }
-
-                .btn-enhanced:hover:before {
-                    left: 100%;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
                 }
 
                 .btn-primary-enhanced {
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
                     color: white;
+                    box-shadow: 0 4px 15px rgba(56, 161, 105, 0.4);
                 }
 
-                .btn-primary-enhanced:hover {
-                    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+                .btn-primary-enhanced:hover:not(.btn-disabled) {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 25px rgba(56, 161, 105, 0.6);
                 }
 
                 .btn-warning-enhanced {
-                    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
                     color: white;
+                    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
                 }
 
-                .btn-warning-enhanced:hover {
-                    background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+                .btn-warning-enhanced:hover:not(.btn-disabled) {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
                 }
 
                 .btn-success-enhanced {
-                    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
                     color: white;
+                    box-shadow: 0 4px 15px rgba(66, 153, 225, 0.4);
                 }
 
-                .btn-success-enhanced:hover {
-                    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+                .btn-success-enhanced:hover:not(.btn-disabled) {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 25px rgba(66, 153, 225, 0.6);
                 }
 
                 .btn-danger-enhanced {
-                    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-                    color: #d63384;
+                    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+                    color: white;
+                    box-shadow: 0 4px 15px rgba(245, 101, 101, 0.4);
                 }
 
-                .btn-danger-enhanced:hover {
-                    background: linear-gradient(135deg, #fecfef 0%, #ff9a9e 100%);
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(255, 154, 158, 0.4);
+                .btn-danger-enhanced:hover:not(.btn-disabled) {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 25px rgba(245, 101, 101, 0.6);
                 }
 
                 .btn-secondary-enhanced {
-                    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-                    color: #6c757d;
+                    background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+                    color: white;
+                    box-shadow: 0 4px 15px rgba(160, 174, 192, 0.4);
                 }
 
-                .btn-secondary-enhanced:hover {
-                    background: linear-gradient(135deg, #fed6e3 0%, #a8edea 100%);
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(168, 237, 234, 0.4);
+                .btn-secondary-enhanced:hover:not(.btn-disabled) {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 25px rgba(160, 174, 192, 0.6);
                 }
 
                 .btn-disabled {
-                    opacity: 0.6;
+                    opacity: 0.7;
                     cursor: not-allowed;
-                    pointer-events: none;
                 }
 
                 .alert-success {
-                    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-                    color: #155724;
-                    border: 1px solid #c3e6cb;
-                    border-radius: 8px;
-                    padding: 12px 20px;
-                    margin: 10px 0;
-                    animation: slideInRight 0.5s ease-out;
+                    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 12px;  
+                    margin-bottom: 20px;
+                    font-weight: 600;
+                    text-align: center;
+                    box-shadow: 0 4px 15px rgba(56, 161, 105, 0.4);
+                    animation: slideIn 0.5s ease;
                 }
 
                 .alert-danger {
-                    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-                    color: #721c24;
-                    border: 1px solid #f5c6cb;
-                    border-radius: 8px;
-                    padding: 12px 20px;
-                    margin: 10px 0;
-                    animation: shake 0.5s ease-out;
+                    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 12px;
+                    margin-bottom: 20px;
+                    font-weight: 600;
+                    text-align: center;
+                    box-shadow: 0 4px 15px rgba(245, 101, 101, 0.4);
+                    animation: slideIn 0.5s ease;
                 }
 
                 .table-enhanced {
-                    background: ${darkMode ? 'rgba(33, 37, 41, 0.95)' : 'rgba(255, 255, 255, 0.95)'};
-                    backdrop-filter: blur(10px);
-                    border-radius: 12px;
+                    background: ${darkMode ? '#2d3748' : '#ffffff'};
+                    border-radius: 15px;
                     overflow: hidden;
-                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                    border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
                 }
 
                 .table-enhanced thead th {
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    background: ${darkMode ? '#4a5568' : '#667eea'};
                     color: white;
-                    font-weight: 600;
-                    padding: 15px;
+                    font-weight: 700;
+                    padding: 18px 15px;
                     border: none;
                     text-transform: uppercase;
-                    letter-spacing: 0.5px;
+                    letter-spacing: 0.8px;
+                    font-size: 0.9rem;
+                    border-bottom: 3px solid ${darkMode ? '#2d3748' : '#5a67d8'};
                 }
 
                 .table-enhanced tbody tr {
                     transition: all 0.3s ease;
-                    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+                    border-bottom: 1px solid ${darkMode ? '#4a5568' : '#e2e8f0'};
                 }
 
                 .table-enhanced tbody tr:hover {
-                    background: ${darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(102, 126, 234, 0.1)'};
-                    transform: scale(1.01);
+                    background: ${darkMode ? '#4a5568' : '#f7fafc'};
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                 }
 
                 .table-enhanced tbody td {
-                    padding: 15px;
+                    padding: 18px 15px;
                     vertical-align: middle;
                     border: none;
+                    color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+                    transition: all 0.3s ease;
                 }
 
                 .loading-spinner {
                     display: inline-block;
-                    width: 20px;
-                    height: 20px;
-                    border: 3px solid rgba(255, 255, 255, 0.3);
+                    width: 16px;
+                    height: 16px;
+                    border: 2px solid transparent;
+                    border-top: 2px solid currentColor;
                     border-radius: 50%;
-                    border-top-color: white;
                     animation: spin 1s linear infinite;
-                    margin-right: 10px;
+                    margin-right: 8px;
                 }
 
                 .confirm-delete {
-                    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+                    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%) !important;
                     animation: pulse 1s infinite;
+                    border: 2px solid #e53e3e;
                 }
 
                 .total-row {
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
                     color: white;
-                    font-weight: 600;
+                    font-weight: 700;
+                }
+
+                .total-row td {
+                    color: white !important;
+                    font-size: 1.1rem;
                 }
 
                 .no-items {
                     text-align: center;
+                    padding: 60px 20px;
+                    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+                    color: white;
+                    border-radius: 15px;
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+                }
+
+                .loading-container {
+                    text-align: center;
                     padding: 40px;
-                    color: #6c757d;
-                    font-style: italic;
-                    background: ${darkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'};
+                    color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+                }
+
+                .large-spinner {
+                    width: 40px;
+                    height: 40px;
+                    border: 4px solid ${darkMode ? '#4a5568' : '#e2e8f0'};
+                    border-top: 4px solid #667eea;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                    margin: 0 auto 15px;
+                }
+
+                .item-name-badge {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 6px 12px;
+                    border-radius: 20px;
+                    font-weight: 600;
+                    display: inline-block;
+                    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+                }
+
+                .main-budget-badge {
+                    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+                    color: white;
+                    padding: 6px 12px;
+                    border-radius: 20px;
+                    font-weight: 600;
+                    display: inline-block;
+                    box-shadow: 0 2px 8px rgba(56, 161, 105, 0.4);
+                }
+
+                .amount-display {
+                    font-weight: 700;
+                    font-size: 1.1em;
+                    color: ${darkMode ? '#68d391' : '#38a169'};
+                }
+
+                .date-display {
+                    color: ${darkMode ? '#a0aec0' : '#718096'};
+                    font-weight: 500;
+                }
+
+                .btn-table {
+                    padding: 10px 16px;
+                    border: none;
                     border-radius: 8px;
-                    margin: 20px 0;
+                    font-weight: 600;
+                    font-size: 0.85rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    margin: 2px;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 5px;
                 }
 
-                @keyframes slideInRight {
-                    from {
-                        transform: translateX(100%);
-                        opacity: 0;
-                    }
-                    to {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
+                .btn-edit-table {
+                    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+                    color: white;
+                    box-shadow: 0 2px 8px rgba(66, 153, 225, 0.4);
                 }
 
-                @keyframes shake {
-                    0%, 100% { transform: translateX(0); }
-                    25% { transform: translateX(-5px); }
-                    75% { transform: translateX(5px); }
+                .btn-edit-table:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.6);
+                }
+
+                .btn-delete-table {
+                    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+                    color: white;
+                    box-shadow: 0 2px 8px rgba(245, 101, 101, 0.4);
+                }
+
+                .btn-delete-table:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(245, 101, 101, 0.6);
+                }
+
+                .btn-save-table {
+                    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+                    color: white;
+                    box-shadow: 0 2px 8px rgba(56, 161, 105, 0.4);
+                }
+
+                .btn-save-table:hover:not(.btn-disabled) {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(56, 161, 105, 0.6);
+                }
+
+                .btn-cancel-table {
+                    background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+                    color: white;
+                    box-shadow: 0 2px 8px rgba(160, 174, 192, 0.4);
+                }
+
+                .btn-cancel-table:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(160, 174, 192, 0.6);
+                }
+
+                @keyframes slideIn {
+                    from { transform: translateY(-20px); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
                 }
 
                 @keyframes spin {
-                    to {
-                        transform: rotate(360deg);
-                    }
+                    to { transform: rotate(360deg); }
                 }
 
                 @keyframes pulse {
@@ -532,12 +659,33 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                         align-items: stretch;
                     }
                     
-                    .enhanced-input, .btn-enhanced {
+                    .enhanced-input {
+                        min-width: unset;
                         margin-bottom: 10px;
+                    }
+                    
+                    .btn-enhanced {
+                        width: 100%;
+                        margin: 5px 0;
+                    }
+                    
+                    .budget-section {
+                        padding: 20px;
+                    }
+                    
+                    .btn-table {
+                        padding: 6px 10px;
+                        font-size: 11px;
                     }
                 }
             `}</style>
             
+            {/* Budget Header */}
+            <div className="budget-header">
+                <h5>💰 Budget Management</h5>
+                <p className="budget-subtitle">Plan and track your financial allocations</p>
+            </div>
+
             {/* Success/Error Messages */}
             {success && (
                 <div className="alert-success">
@@ -553,7 +701,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
 
             {/* Set Main Budget Section */}
             <div className="budget-section">
-                <h5 className="budget-title">💰 Set Main Budget</h5>
+                <h5 className="budget-title">🎯 Set Main Budget</h5>
                 <div className="input-group">
                     <input 
                         type="number"
@@ -597,7 +745,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
 
             {/* Add New Budget Section */}
             <div className="budget-section">
-                <h5 className="budget-title">➕ Add New Budget Item</h5>
+                <h5 className="budget-title">📝 Add New Budget Item</h5>
                 <div className="input-group">
                     <input
                         type="text"
@@ -645,9 +793,9 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
             <div className="budget-section">
                 <h5 className="budget-title">📊 Budget Overview</h5>
                 {loading && items.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '40px' }}>
-                        <span className="loading-spinner" style={{ width: '40px', height: '40px' }}></span>
-                        <p style={{ color: 'white', marginTop: '10px' }}>Loading your budget data...</p>
+                    <div className="loading-container">
+                        <div className="large-spinner"></div>
+                        <p>Loading your budget data...</p>
                     </div>
                 ) : (
                     <div className="table-enhanced">
@@ -665,10 +813,15 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                     items.map((item, index) => (
                                         <tr key={index}>
                                             <td data-label="Item Name">
-                                                <strong style={{ color: item.item_name === 'Set Budget' ? '#28a745' : 'inherit' }}>
-                                                    {item.item_name === 'Set Budget' ? '🎯 ' : '📌 '}
-                                                    {item.item_name}
-                                                </strong>
+                                                {item.item_name === 'Set Budget' ? (
+                                                    <span className="main-budget-badge">
+                                                        🎯 {item.item_name}
+                                                    </span>
+                                                ) : (
+                                                    <span className="item-name-badge">
+                                                        📌 {item.item_name}
+                                                    </span>
+                                                )}
                                             </td>
                                             <td data-label="Amount">
                                                 {editingIndex === index ? (
@@ -677,13 +830,10 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                                         value={editAmount}
                                                         onChange={(e) => setEditAmount(e.target.value)}
                                                         className="enhanced-input"
-                                                        style={{ width: '120px' }}
+                                                        style={{ width: '150px', padding: '8px 12px' }}
                                                     />
                                                 ) : (
-                                                    <span style={{ 
-                                                        fontWeight: 'bold', 
-                                                        color: item.item_name === 'Set Budget' ? '#28a745' : '#667eea' 
-                                                    }}>
+                                                    <span className="amount-display">
                                                         {formatCurrency(item.amount)}
                                                     </span>
                                                 )}
@@ -695,10 +845,10 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                                         value={editDate}
                                                         onChange={(e) => setEditDate(e.target.value)}
                                                         className="enhanced-input"
-                                                        style={{ width: '150px' }}
+                                                        style={{ width: '170px', padding: '8px 12px' }}
                                                     />
                                                 ) : (
-                                                    <span style={{ color: '#6c757d' }}>
+                                                    <span className="date-display">
                                                         📅 {item.date || 'No date set'}
                                                     </span>
                                                 )}
@@ -707,18 +857,16 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                                 {editingIndex === index ? (
                                                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                                                         <button 
-                                                            className={`btn-enhanced btn-success-enhanced ${loading ? 'btn-disabled' : ''}`} 
+                                                            className={`btn-table btn-save-table ${loading ? 'btn-disabled' : ''}`} 
                                                             onClick={() => saveBudget(index)}
                                                             disabled={loading}
-                                                            style={{ fontSize: '12px', padding: '8px 12px' }}
                                                         >
                                                             {loading ? <span className="loading-spinner" style={{ width: '12px', height: '12px' }}></span> : ''}
                                                             💾 Save
                                                         </button>
                                                         <button 
-                                                            className="btn-enhanced btn-secondary-enhanced" 
+                                                            className="btn-table btn-cancel-table" 
                                                             onClick={cancelEdit}
-                                                            style={{ fontSize: '12px', padding: '8px 12px' }}
                                                         >
                                                             ❌ Cancel
                                                         </button>
@@ -726,16 +874,14 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                                 ) : (
                                                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                                                         <button 
-                                                            className="btn-enhanced btn-primary-enhanced" 
+                                                            className="btn-table btn-edit-table" 
                                                             onClick={() => editBudget(index)}
-                                                            style={{ fontSize: '12px', padding: '8px 12px' }}
                                                         >
                                                             ✏️ Edit
                                                         </button>
                                                         <button 
-                                                            className={`btn-enhanced ${deleteConfirm === index ? 'confirm-delete' : 'btn-danger-enhanced'}`}
+                                                            className={`btn-table ${deleteConfirm === index ? 'confirm-delete' : 'btn-delete-table'}`}
                                                             onClick={() => deleteItem(index)}
-                                                            style={{ fontSize: '12px', padding: '8px 12px' }}
                                                         >
                                                             {deleteConfirm === index ? '⚠️ Confirm?' : '🗑️ Delete'}
                                                         </button>
@@ -748,9 +894,9 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                     <tr>
                                         <td colSpan="4" className="no-items">
                                             <div>
-                                                <h4>📋 No Budget Items Yet</h4>
-                                                <p>Start by setting your main budget above, then add specific budget items!</p>
-                                                <small>💡 Tip: Add categories like groceries, entertainment, utilities, etc.</small>
+                                                <h4>🎯 Start Your Budget Journey!</h4>
+                                                <p>Set your main budget above, then add specific budget categories!</p>
+                                                <small>💡 Pro tip: Create categories like groceries, entertainment, utilities, savings</small>
                                             </div>
                                         </td>
                                     </tr>
