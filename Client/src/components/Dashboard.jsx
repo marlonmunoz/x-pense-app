@@ -21,6 +21,11 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
   const [animationsEnabled, setAnimationsEnabled] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   
+  // Overview interactive states
+  const [selectedOverviewItem, setSelectedOverviewItem] = useState(null);
+  const [showOverviewChart, setShowOverviewChart] = useState(false);
+  const [overviewAnimations, setOverviewAnimations] = useState(true);
+  
   const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.total_price), 0).toFixed(2);
   
   // Calculate total saved amount from all goals
@@ -424,6 +429,103 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
 
   const options = generateChartOptions();
   
+  // Overview data for interactive visualization
+  const overviewData = {
+    labels: ['Budget', 'Balance', 'Goals Saved', 'Investments', 'X-penses'],
+    datasets: [{
+      label: 'Financial Overview ($)',
+      data: [totalBudgetAmount, balance, totalGoalsSaved, totalPrice, totalAmount],
+      backgroundColor: [
+        'rgba(40, 167, 69, 0.8)',   // Green for Budget
+        'rgba(23, 162, 184, 0.8)',  // Teal for Balance  
+        'rgba(255, 193, 7, 0.8)',   // Yellow for Goals
+        'rgba(108, 117, 125, 0.8)', // Gray for Investments
+        'rgba(220, 53, 69, 0.8)'    // Red for Expenses
+      ],
+      borderColor: [
+        'rgba(40, 167, 69, 1)',
+        'rgba(23, 162, 184, 1)', 
+        'rgba(255, 193, 7, 1)',
+        'rgba(108, 117, 125, 1)',
+        'rgba(220, 53, 69, 1)'
+      ],
+      borderWidth: 2,
+      hoverOffset: 10
+    }]
+  };
+
+  const overviewChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: overviewAnimations ? 1200 : 0,
+      easing: 'easeInOutBounce'
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: {
+          color: darkMode ? '#fff' : '#000',
+          usePointStyle: true,
+          padding: 15,
+          font: {
+            size: 11,
+            weight: 'bold'
+          }
+        }
+      },
+      tooltip: {
+        backgroundColor: darkMode ? 'rgba(51, 51, 51, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+        titleColor: darkMode ? '#fff' : '#000',
+        bodyColor: darkMode ? '#fff' : '#000',
+        borderColor: darkMode ? '#ffc107' : '#007bff',
+        borderWidth: 2,
+        cornerRadius: 8,
+        callbacks: {
+          label: function(context) {
+            const total = overviewTotal;
+            const percentage = total !== 0 ? ((context.raw / Math.abs(total)) * 100).toFixed(1) : '0.0';
+            return `${context.label}: $${context.raw.toFixed(2)} (${percentage}%)`;
+          }
+        }
+      }
+    },
+    onClick: (event, elements) => {
+      if (elements.length > 0) {
+        const elementIndex = elements[0].index;
+        const labels = ['Budget', 'Balance', 'Goals Saved', 'Investments', 'X-penses'];
+        setSelectedOverviewItem(labels[elementIndex]);
+      }
+    }
+  };
+
+  // Function to get color for overview items
+  const getOverviewItemColor = (itemName) => {
+    const colors = {
+      'Budget': '#28a745',
+      'Balance': '#17a2b8', 
+      'X-penses': '#dc3545',
+      'Goals (saved)': '#ffc107',
+      'Investments': '#6c757d',
+      'Overview Total': darkMode ? '#ffffff' : '#000000'
+    };
+    return colors[itemName] || (darkMode ? '#ffffff' : '#000000');
+  };
+
+  // Function to get icon for overview items
+  const getOverviewItemIcon = (itemName) => {
+    const icons = {
+      'Budget': '💰',
+      'Balance': '💳',
+      'X-penses': '💸',
+      'Goals (saved)': '🎯', 
+      'Investments': '📈',
+      'Overview Total': '📊'
+    };
+    return icons[itemName] || '📋';
+  };
+  
 
   return (
     <div className={`container-fluid ${darkMode ? 'dark-mode' : 'light-mode'}`} >
@@ -648,36 +750,169 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
             </div>
                 <br />
                 <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
-                    <h6>Overview</h6>
-                    <p style={{ color: 'gray' }}><sup>Total Summary</sup></p>
-                    <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
-                        <tbody>
-                            <tr>
-                                <th scope="row">Budget</th>
-                                <td className="text-left" >{formatCurrency(totalBudgetAmount)}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Balance</th>
-                                <td className="text-left" >{formatCurrency(balance)}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">X-penses</th>
-                                <td className="text-left" >{formatCurrency(totalAmount)}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Goals (saved)</th>
-                                <td className="text-left" >{formatCurrency(totalGoalsSaved)}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Investments</th>
-                                <td className="text-left" >{formatCurrency(totalPrice)}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Overview Total</th>
-                                <td className="text-left" >{formatCurrency(overviewTotal)}</td>
-                            </tr>
-                        </tbody>
-                     </table>
+                    <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                        <div>
+                            <h6>💼 Financial Overview</h6>
+                            <p style={{ color: 'gray' }}><sup>Interactive Summary Dashboard</sup></p>
+                        </div>
+                        
+                        <div className="d-flex gap-2">
+                            {/* Overview Chart Toggle */}
+                            <button 
+                                type="button"
+                                className={`btn btn-sm ${showOverviewChart ? 'btn-primary' : (darkMode ? 'btn-outline-light' : 'btn-outline-dark')}`}
+                                onClick={() => setShowOverviewChart(!showOverviewChart)}
+                                title={showOverviewChart ? 'Hide Chart' : 'Show Chart'}
+                            >
+                                {showOverviewChart ? '📊' : '📈'}
+                            </button>
+                            
+                            {/* Animation Toggle */}
+                            <button 
+                                type="button"
+                                className={`btn btn-sm ${overviewAnimations ? 'btn-success' : (darkMode ? 'btn-outline-light' : 'btn-outline-dark')}`}
+                                onClick={() => setOverviewAnimations(!overviewAnimations)}
+                                title={overviewAnimations ? 'Disable Animations' : 'Enable Animations'}
+                            >
+                                {overviewAnimations ? '🎬' : '⏸️'}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Overview Chart */}
+                    {showOverviewChart && (
+                        <div className="mb-4" style={{height: '300px', position: 'relative'}}>
+                            <Doughnut data={overviewData} options={overviewChartOptions} />
+                            {selectedOverviewItem && (
+                                <div className={`alert ${darkMode ? 'alert-dark' : 'alert-light'} mt-2`} style={{border: `2px solid ${getOverviewItemColor(selectedOverviewItem)}`}}>
+                                    <strong>{getOverviewItemIcon(selectedOverviewItem)} Selected: {selectedOverviewItem}</strong>
+                                    <br />
+                                    <small>Click on different segments to explore each category!</small>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Enhanced Overview Table */}
+                    <div className="row">
+                        {[
+                            { name: 'Budget', value: totalBudgetAmount, trend: 'up' },
+                            { name: 'Balance', value: balance, trend: 'stable' },
+                            { name: 'X-penses', value: totalAmount, trend: 'down' },
+                            { name: 'Goals (saved)', value: totalGoalsSaved, trend: 'up' },
+                            { name: 'Investments', value: totalPrice, trend: 'up' },
+                            { name: 'Overview Total', value: overviewTotal, trend: overviewTotal > 0 ? 'up' : 'down' }
+                        ].map((item, index) => (
+                            <div key={index} className="col-md-6 col-lg-4 mb-3">
+                                <div 
+                                    className={`card h-100 ${darkMode ? 'bg-dark text-light' : 'bg-light'} border-0 shadow-sm`}
+                                    style={{ 
+                                        cursor: 'pointer',
+                                        transition: overviewAnimations ? 'all 0.3s ease' : 'none',
+                                        borderLeft: `4px solid ${getOverviewItemColor(item.name)}`,
+                                        transform: selectedOverviewItem === item.name ? 'scale(1.05)' : 'scale(1)',
+                                        boxShadow: selectedOverviewItem === item.name ? 
+                                            `0 8px 25px rgba(0,123,255,0.3)` : 
+                                            '0 2px 10px rgba(0,0,0,0.1)'
+                                    }}
+                                    onClick={() => setSelectedOverviewItem(selectedOverviewItem === item.name ? null : item.name)}
+                                    onMouseEnter={(e) => {
+                                        if (overviewAnimations) {
+                                            e.currentTarget.style.transform = 'translateY(-2px)';
+                                        }
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        if (overviewAnimations) {
+                                            e.currentTarget.style.transform = selectedOverviewItem === item.name ? 'scale(1.05)' : 'scale(1)';
+                                        }
+                                    }}
+                                >
+                                    <div className="card-body p-3">
+                                        <div className="d-flex justify-content-between align-items-start">
+                                            <div className="flex-grow-1">
+                                                <h6 className="card-title mb-1" style={{color: getOverviewItemColor(item.name)}}>
+                                                    {getOverviewItemIcon(item.name)} {item.name}
+                                                </h6>
+                                                <h4 className="mb-1" style={{color: getOverviewItemColor(item.name)}}>
+                                                    {formatCurrency(item.value)}
+                                                </h4>
+                                                <small className={`text-${item.trend === 'up' ? 'success' : item.trend === 'down' ? 'danger' : 'muted'}`}>
+                                                    {item.trend === 'up' ? '📈 Positive' : item.trend === 'down' ? '📉 Negative' : '➡️ Stable'}
+                                                </small>
+                                            </div>
+                                            <div className="text-end">
+                                                <div 
+                                                    className="rounded-circle d-flex align-items-center justify-content-center"
+                                                    style={{
+                                                        width: '40px',
+                                                        height: '40px',
+                                                        backgroundColor: `${getOverviewItemColor(item.name)}20`,
+                                                        border: `2px solid ${getOverviewItemColor(item.name)}30`
+                                                    }}
+                                                >
+                                                    <span style={{fontSize: '20px'}}>
+                                                        {getOverviewItemIcon(item.name)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Progress Bar for Visual Representation */}
+                                        <div className="mt-2">
+                                            <div className="progress" style={{height: '4px'}}>
+                                                <div 
+                                                    className="progress-bar"
+                                                    style={{
+                                                        width: `${Math.min(Math.abs(item.value) / Math.max(totalBudgetAmount, balance, totalAmount, totalPrice, totalGoalsSaved) * 100, 100)}%`,
+                                                        backgroundColor: getOverviewItemColor(item.name),
+                                                        transition: overviewAnimations ? 'width 1s ease' : 'none'
+                                                    }}
+                                                ></div>
+                                            </div>
+                                        </div>
+                                        
+                                        {selectedOverviewItem === item.name && (
+                                            <div className="mt-2 p-2 rounded" style={{backgroundColor: `${getOverviewItemColor(item.name)}10`}}>
+                                                <small>
+                                                    <strong>Details:</strong><br />
+                                                    {item.name === 'Budget' && 'Total budget allocated across all categories'}
+                                                    {item.name === 'Balance' && 'Current available balance in accounts'}
+                                                    {item.name === 'X-penses' && 'Total expenses recorded in transactions'}
+                                                    {item.name === 'Goals (saved)' && 'Amount saved towards financial goals'}
+                                                    {item.name === 'Investments' && 'Total value of crypto investments'}
+                                                    {item.name === 'Overview Total' && 'Net financial position calculation'}
+                                                </small>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Summary Stats */}
+                    <div className={`mt-3 p-3 rounded ${darkMode ? 'bg-secondary' : 'bg-light'}`}>
+                        <div className="row text-center">
+                            <div className="col-md-3">
+                                <strong style={{color: '#28a745'}}>💰 Total Assets</strong><br />
+                                <span style={{color: '#28a745'}}>{formatCurrency(totalBudgetAmount + balance + totalGoalsSaved + totalPrice)}</span>
+                            </div>
+                            <div className="col-md-3">
+                                <strong style={{color: '#dc3545'}}>💸 Total Spent</strong><br />
+                                <span style={{color: '#dc3545'}}>{formatCurrency(totalAmount)}</span>
+                            </div>
+                            <div className="col-md-3">
+                                <strong style={{color: '#17a2b8'}}>📊 Net Worth</strong><br />
+                                <span style={{color: overviewTotal >= 0 ? '#28a745' : '#dc3545'}}>{formatCurrency(overviewTotal)}</span>
+                            </div>
+                            <div className="col-md-3">
+                                <strong style={{color: '#ffc107'}}>🎯 Savings Rate</strong><br />
+                                <span style={{color: '#ffc107'}}>
+                                    {totalBudgetAmount > 0 ? ((totalGoalsSaved / totalBudgetAmount) * 100).toFixed(1) : '0.0'}%
+                                </span>
+                            </div>
+                        </div>
+                    </div>
               </div>
         </div>
       </div>
