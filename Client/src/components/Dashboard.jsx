@@ -32,6 +32,12 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
   const [goalsAnimations, setGoalsAnimations] = useState(true);
   const [showGoalsChart, setShowGoalsChart] = useState(false);
   
+  // Investments interactive states
+  const [selectedInvestment, setSelectedInvestment] = useState(null);
+  const [investmentsViewMode, setInvestmentsViewMode] = useState('cards'); // 'cards', 'table', 'chart'
+  const [investmentsAnimations, setInvestmentsAnimations] = useState(true);
+  const [showInvestmentsChart, setShowInvestmentsChart] = useState(false);
+  
   const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.total_price), 0).toFixed(2);
   
   // Calculate total saved amount from all goals
@@ -639,6 +645,168 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
     }
   };
   
+  // Investments helper functions
+  const getInvestmentColor = (investment, index) => {
+    const cryptoColors = {
+      'bitcoin': '#f7931a',
+      'btc': '#f7931a',
+      'ethereum': '#627eea',
+      'eth': '#627eea',
+      'usdc': '#2775ca',
+      'xrp': '#23292f',
+      'ripple': '#23292f',
+      'cardano': '#0033ad',
+      'ada': '#0033ad',
+      'solana': '#9945ff',
+      'sol': '#9945ff'
+    };
+    
+    const name = investment.name.toLowerCase();
+    
+    // Check for specific crypto colors
+    for (const crypto in cryptoColors) {
+      if (name.includes(crypto)) {
+        return cryptoColors[crypto];
+      }
+    }
+    
+    // Fallback to dynamic colors based on performance
+    const performanceColors = [
+      '#28a745', // Green
+      '#17a2b8', // Teal
+      '#ffc107', // Yellow
+      '#fd7e14', // Orange
+      '#dc3545', // Red
+      '#6f42c1', // Purple
+      '#e83e8c', // Pink
+      '#20c997'  // Mint
+    ];
+    
+    return performanceColors[index % performanceColors.length];
+  };
+
+  const getInvestmentIcon = (investment) => {
+    const name = investment.name.toLowerCase();
+    const cryptoIcons = {
+      'bitcoin': '₿',
+      'btc': '₿',
+      'ethereum': 'Ξ',
+      'eth': 'Ξ',
+      'usdc': '💵',
+      'xrp': '🌊',
+      'ripple': '🌊',
+      'cardano': '🎴',
+      'ada': '🎴',
+      'solana': '☀️',
+      'sol': '☀️'
+    };
+    
+    for (const crypto in cryptoIcons) {
+      if (name.includes(crypto)) {
+        return cryptoIcons[crypto];
+      }
+    }
+    
+    return '🪙'; // Default crypto icon
+  };
+
+  const getInvestmentPerformance = (investment) => {
+    // Calculate performance based on price changes (mock data for demo)
+    const mockPerformance = Math.random() * 20 - 10; // -10% to +10%
+    return mockPerformance;
+  };
+
+  const getPerformanceLabel = (performance) => {
+    if (performance > 5) return { label: 'Strong Gain! 🚀', class: 'success' };
+    if (performance > 0) return { label: 'Gaining 📈', class: 'success' };
+    if (performance > -5) return { label: 'Stable 📊', class: 'warning' };
+    return { label: 'Down 📉', class: 'danger' };
+  };
+
+  // Investments chart data
+  const investmentsChartData = {
+    labels: addedInvestments.map(investment => investment.name),
+    datasets: [{
+      label: 'Investment Value ($)',
+      data: addedInvestments.map(investment => investment.total_price),
+      backgroundColor: addedInvestments.map((investment, index) => 
+        getInvestmentColor(investment, index) + '80'
+      ),
+      borderColor: addedInvestments.map((investment, index) => 
+        getInvestmentColor(investment, index)
+      ),
+      borderWidth: 3,
+      hoverOffset: 12,
+      hoverBorderWidth: 4
+    }]
+  };
+
+  const investmentsChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: investmentsAnimations ? 1800 : 0,
+      easing: 'easeInOutBack'
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: {
+          color: darkMode ? '#fff' : '#000',
+          usePointStyle: true,
+          padding: 15,
+          font: {
+            size: 11,
+            weight: 'bold'
+          },
+          generateLabels: function(chart) {
+            const original = ChartJS.defaults.plugins.legend.labels.generateLabels;
+            const labels = original.call(this, chart);
+            
+            return labels.map((label, index) => {
+              const investment = addedInvestments[index];
+              label.text = `${getInvestmentIcon(investment)} ${label.text}`;
+              return label;
+            });
+          }
+        }
+      },
+      tooltip: {
+        backgroundColor: darkMode ? 'rgba(51, 51, 51, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+        titleColor: darkMode ? '#fff' : '#000',
+        bodyColor: darkMode ? '#fff' : '#000',
+        borderColor: darkMode ? '#ffc107' : '#007bff',
+        borderWidth: 2,
+        cornerRadius: 10,
+        callbacks: {
+          title: function(context) {
+            const investment = addedInvestments[context[0].dataIndex];
+            return `${getInvestmentIcon(investment)} ${investment.name}`;
+          },
+          label: function(context) {
+            const investment = addedInvestments[context.dataIndex];
+            const performance = getInvestmentPerformance(investment);
+            return [
+              `Value: $${context.raw.toFixed(2)}`,
+              `Amount: ${investment.amount}`,
+              `Price per unit: $${investment.pricePerUnit?.toFixed(2) || 'N/A'}`,
+              `Performance: ${performance.toFixed(2)}%`,
+              `Status: ${getPerformanceLabel(performance).label}`
+            ];
+          }
+        }
+      }
+    },
+    onClick: (event, elements) => {
+      if (elements.length > 0) {
+        const elementIndex = elements[0].index;
+        const investment = addedInvestments[elementIndex];
+        setSelectedInvestment(selectedInvestment?.id === investment.id ? null : investment);
+      }
+    }
+  };
+  
 
   return (
     <div className={`container-fluid ${darkMode ? 'dark-mode' : 'light-mode'}`} >
@@ -765,55 +933,450 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
             </div>
             <br />
             <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
-              <h6>Added Investments</h6>
-              <p style={{ color: 'gray' }}><sup>Tracking All CRYPTO Transactions</sup></p>
+              <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                <div>
+                  <h6>🚀 Crypto Investments</h6>
+                  <p style={{ color: 'gray' }}><sup>Interactive Portfolio Tracking Dashboard</sup></p>
+                </div>
+                
+                <div className="d-flex gap-2 flex-wrap">
+                  {/* View Mode Selector */}
+                  <div className="btn-group" role="group">
+                    <button 
+                      type="button" 
+                      className={`btn btn-sm ${investmentsViewMode === 'cards' ? 'btn-primary' : (darkMode ? 'btn-outline-light' : 'btn-outline-dark')}`}
+                      onClick={() => setInvestmentsViewMode('cards')}
+                      title="Card View"
+                    >
+                      🎴
+                    </button>
+                    <button 
+                      type="button" 
+                      className={`btn btn-sm ${investmentsViewMode === 'table' ? 'btn-primary' : (darkMode ? 'btn-outline-light' : 'btn-outline-dark')}`}
+                      onClick={() => setInvestmentsViewMode('table')}
+                      title="Table View"
+                    >
+                      📋
+                    </button>
+                  </div>
+
+                  {/* Investments Chart Toggle */}
+                  <button 
+                    type="button"
+                    className={`btn btn-sm ${showInvestmentsChart ? 'btn-success' : (darkMode ? 'btn-outline-light' : 'btn-outline-dark')}`}
+                    onClick={() => setShowInvestmentsChart(!showInvestmentsChart)}
+                    title={showInvestmentsChart ? 'Hide Portfolio Chart' : 'Show Portfolio Chart'}
+                  >
+                    {showInvestmentsChart ? '📊' : '📈'}
+                  </button>
+                  
+                  {/* Animation Toggle */}
+                  <button 
+                    type="button"
+                    className={`btn btn-sm ${investmentsAnimations ? 'btn-warning' : (darkMode ? 'btn-outline-light' : 'btn-outline-dark')}`}
+                    onClick={() => setInvestmentsAnimations(!investmentsAnimations)}
+                    title={investmentsAnimations ? 'Disable Animations' : 'Enable Animations'}
+                  >
+                    {investmentsAnimations ? '🎬' : '⏸️'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Investments Chart */}
+              {showInvestmentsChart && addedInvestments.length > 0 && (
+                <div className="mb-4" style={{height: '350px', position: 'relative'}}>
+                  <Doughnut data={investmentsChartData} options={investmentsChartOptions} />
+                  {selectedInvestment && (
+                    <div className={`alert ${darkMode ? 'alert-dark' : 'alert-light'} mt-2`} 
+                         style={{border: `2px solid ${getInvestmentColor(selectedInvestment, 0)}`}}>
+                      <strong>{getInvestmentIcon(selectedInvestment)} Selected: {selectedInvestment.name}</strong>
+                      <br />
+                      <small>
+                        Value: ${selectedInvestment.total_price.toFixed(2)} • 
+                        Amount: {selectedInvestment.amount} • 
+                        Price: ${selectedInvestment.pricePerUnit?.toFixed(2) || 'N/A'}
+                      </small>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {addedInvestments.length === 0 ? (
-                <p className="border border-danger rounded p-2 m-5 text-danger">No Investments Have Been Added !</p>
+                <div className="text-center p-5">
+                  <div className="mb-3" style={{fontSize: '4rem'}}>🚀</div>
+                  <h5 className="text-muted">No Investments Have Been Added!</h5>
+                  <p className="text-muted">Start building your crypto portfolio today</p>
+                  <button className={`btn ${darkMode ? 'btn-outline-light' : 'btn-outline-primary'}`}>
+                    ➕ Add Your First Investment
+                  </button>
+                </div>
               ) : (
-                <table className={`table table-bordered table-hover ${darkMode ? 'table-dark' : 'table-light table-light-bordered'} table-rounded`}>
-                  <thead>
-                    <tr>
-                      <th className="hidden"> ID</th>
-                      <th>Name</th>
-                      <th>Amount</th>
-                      <th>Price</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {addedInvestments.map((investment, index) => (
-                      <tr key={index}>
-                        <td data-label="ID" className="hidden">{index + 1}</td>
-                        <td data-label="Name"><strong>{investment.name}</strong></td>
-                        <td data-label="Amount">
-                          {editIndex === index ? (
-                            <input
-                            type="number"
-                            value={editAmount}
-                            onChange={(e) => setEditAmount(e.target.value)}
-                            />
-                          ) : (
-                            investment.amount
-                          )}
-                        </td>
-                        <td data-label="Price">{formatCurrency(investment.total_price)}</td>
-                        <td data-label="Actions">
-                          {editIndex === index ? (
-                            <>
-                              <button onClick={() => handleSaveInvestment(index)} className="btn btn-sm btn-success ml-1">Save</button>
-                              <button onClick={handleCancelEdit} className="btn btn-sm btn-secondary ml-1">Cancel</button>
-                            </>
-                          ) : (
-                            <>
-                              <button onClick={() => handleRemoveInvestment(index)} className="btn btn-sm btn-danger ml-1">Remove</button>
-                              <button onClick={() => handleEditInvestment(index)} className="btn btn-sm btn-primary ml-1">Edit Amount</button>
-                            </>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <>
+                  {/* Card View */}
+                  {investmentsViewMode === 'cards' && (
+                    <div className="row">
+                      {addedInvestments.map((investment, index) => {
+                        const investmentColor = getInvestmentColor(investment, index);
+                        const performance = getInvestmentPerformance(investment);
+                        const performanceInfo = getPerformanceLabel(performance);
+                        const isSelected = selectedInvestment?.id === investment.id;
+                        
+                        return (
+                          <div key={index} className="col-md-6 col-lg-4 mb-4">
+                            <div 
+                              className={`card h-100 ${darkMode ? 'bg-dark text-light' : 'bg-light'} border-0 shadow-sm`}
+                              style={{ 
+                                cursor: 'pointer',
+                                transition: investmentsAnimations ? 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
+                                borderLeft: `5px solid ${investmentColor}`,
+                                transform: isSelected ? 'scale(1.08) rotate(-1deg)' : 'scale(1)',
+                                boxShadow: isSelected ? 
+                                  `0 15px 40px ${investmentColor}50` : 
+                                  '0 5px 20px rgba(0,0,0,0.1)',
+                                background: isSelected ? 
+                                  (darkMode ? `linear-gradient(135deg, #2d3748 0%, ${investmentColor}25 100%)` : `linear-gradient(135deg, #f8f9fa 0%, ${investmentColor}20 100%)`) :
+                                  undefined
+                              }}
+                              onClick={() => setSelectedInvestment(isSelected ? null : investment)}
+                              onMouseEnter={(e) => {
+                                if (investmentsAnimations && !isSelected) {
+                                  e.currentTarget.style.transform = 'translateY(-10px) scale(1.03)';
+                                  e.currentTarget.style.boxShadow = `0 10px 30px ${investmentColor}40`;
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                if (investmentsAnimations) {
+                                  e.currentTarget.style.transform = isSelected ? 'scale(1.08) rotate(-1deg)' : 'scale(1)';
+                                  e.currentTarget.style.boxShadow = isSelected ? 
+                                    `0 15px 40px ${investmentColor}50` : 
+                                    '0 5px 20px rgba(0,0,0,0.1)';
+                                }
+                              }}
+                            >
+                              <div className="card-body p-4">
+                                <div className="d-flex justify-content-between align-items-start mb-3">
+                                  <div className="flex-grow-1">
+                                    <h6 className="card-title mb-2 d-flex align-items-center" style={{color: investmentColor}}>
+                                      <span className="me-2" style={{fontSize: '2rem'}}>
+                                        {getInvestmentIcon(investment)}
+                                      </span>
+                                      <div>
+                                        <div>{investment.name}</div>
+                                        <small className={`badge bg-${performanceInfo.class} mt-1`}>
+                                          {performanceInfo.label}
+                                        </small>
+                                      </div>
+                                    </h6>
+                                  </div>
+                                  
+                                  <div className="text-end">
+                                    <div 
+                                      className="rounded-circle d-flex align-items-center justify-content-center"
+                                      style={{
+                                        width: '50px',
+                                        height: '50px',
+                                        backgroundColor: `${investmentColor}20`,
+                                        border: `3px solid ${investmentColor}40`
+                                      }}
+                                    >
+                                      <span style={{fontSize: '24px'}}>
+                                        {getInvestmentIcon(investment)}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Investment Value */}
+                                <div className="text-center mb-3">
+                                  <h3 className="mb-1" style={{color: investmentColor}}>
+                                    {formatCurrency(investment.total_price)}
+                                  </h3>
+                                  <small className="text-muted">Portfolio Value</small>
+                                </div>
+
+                                {/* Investment Details */}
+                                <div className="row text-center mb-3">
+                                  <div className="col-6">
+                                    <small className="text-muted">Amount</small>
+                                    <div style={{color: investmentColor, fontWeight: 'bold'}}>
+                                      {editIndex === index ? (
+                                        <input
+                                          type="number"
+                                          value={editAmount}
+                                          onChange={(e) => setEditAmount(e.target.value)}
+                                          className={`form-control form-control-sm ${darkMode ? 'bg-dark text-light' : ''}`}
+                                          style={{borderColor: investmentColor}}
+                                        />
+                                      ) : (
+                                        investment.amount
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="col-6">
+                                    <small className="text-muted">Price/Unit</small>
+                                    <div style={{color: investmentColor, fontWeight: 'bold'}}>
+                                      ${investment.pricePerUnit?.toFixed(2) || 'N/A'}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Performance Indicator */}
+                                <div className="mb-3">
+                                  <div className="d-flex justify-content-between align-items-center mb-1">
+                                    <small className="text-muted">Performance</small>
+                                    <small style={{color: performance > 0 ? '#28a745' : '#dc3545'}}>
+                                      {performance > 0 ? '+' : ''}{performance.toFixed(2)}%
+                                    </small>
+                                  </div>
+                                  <div className="progress" style={{height: '6px', borderRadius: '10px'}}>
+                                    <div 
+                                      className="progress-bar"
+                                      style={{
+                                        width: `${Math.abs(performance) * 5}%`,
+                                        backgroundColor: performance > 0 ? '#28a745' : '#dc3545',
+                                        borderRadius: '10px',
+                                        transition: investmentsAnimations ? 'width 1.5s ease-out' : 'none'
+                                      }}
+                                    ></div>
+                                  </div>
+                                </div>
+
+                                {/* Action Buttons */}
+                                <div className="d-flex gap-2">
+                                  {editIndex === index ? (
+                                    <>
+                                      <button 
+                                        onClick={() => handleSaveInvestment(index)} 
+                                        className="btn btn-sm btn-success flex-fill"
+                                        style={{borderRadius: '8px'}}
+                                      >
+                                        💾 Save
+                                      </button>
+                                      <button 
+                                        onClick={handleCancelEdit} 
+                                        className="btn btn-sm btn-secondary flex-fill"
+                                        style={{borderRadius: '8px'}}
+                                      >
+                                        ❌ Cancel
+                                      </button>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <button 
+                                        onClick={() => handleEditInvestment(index)} 
+                                        className="btn btn-sm flex-fill"
+                                        style={{
+                                          backgroundColor: `${investmentColor}20`,
+                                          color: investmentColor,
+                                          border: `1px solid ${investmentColor}40`,
+                                          borderRadius: '8px'
+                                        }}
+                                      >
+                                        ✏️ Edit
+                                      </button>
+                                      <button 
+                                        onClick={() => handleRemoveInvestment(index)} 
+                                        className="btn btn-sm btn-outline-danger flex-fill"
+                                        style={{borderRadius: '8px'}}
+                                      >
+                                        🗑️ Remove
+                                      </button>
+                                    </>
+                                  )}
+                                </div>
+
+                                {/* Expanded Details */}
+                                {isSelected && (
+                                  <div className="mt-3 p-3 rounded" 
+                                       style={{
+                                         backgroundColor: `${investmentColor}15`,
+                                         border: `1px solid ${investmentColor}40`,
+                                         animation: investmentsAnimations ? 'fadeIn 0.3s ease-in' : 'none'
+                                       }}>
+                                    <h6 style={{color: investmentColor}}>📊 Investment Analytics</h6>
+                                    <div className="row text-center">
+                                      <div className="col-4">
+                                        <small>Total Return</small><br />
+                                        <strong style={{color: performance > 0 ? '#28a745' : '#dc3545'}}>
+                                          ${(investment.total_price * performance / 100).toFixed(2)}
+                                        </strong>
+                                      </div>
+                                      <div className="col-4">
+                                        <small>Portfolio %</small><br />
+                                        <strong style={{color: investmentColor}}>
+                                          {((investment.total_price / totalPrice) * 100).toFixed(1)}%
+                                        </strong>
+                                      </div>
+                                      <div className="col-4">
+                                        <small>Risk Level</small><br />
+                                        <strong style={{color: investmentColor}}>
+                                          {Math.abs(performance) > 5 ? 'High 🔥' : Math.abs(performance) > 2 ? 'Medium ⚡' : 'Low 🛡️'}
+                                        </strong>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Table View */}
+                  {investmentsViewMode === 'table' && (
+                    <div className="table-responsive">
+                      <table className={`table table-hover ${darkMode ? 'table-dark' : 'table-light'}`} style={{borderRadius: '10px', overflow: 'hidden'}}>
+                        <thead>
+                          <tr style={{background: darkMode ? '#495057' : '#f8f9fa'}}>
+                            <th>Asset</th>
+                            <th>Amount</th>
+                            <th>Price/Unit</th>
+                            <th>Total Value</th>
+                            <th>Performance</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {addedInvestments.map((investment, index) => {
+                            const investmentColor = getInvestmentColor(investment, index);
+                            const performance = getInvestmentPerformance(investment);
+                            const performanceInfo = getPerformanceLabel(performance);
+                            const isSelected = selectedInvestment?.id === investment.id;
+                            
+                            return (
+                              <tr 
+                                key={index}
+                                className={isSelected ? 'table-active' : ''}
+                                style={{
+                                  borderLeft: `4px solid ${investmentColor}`,
+                                  cursor: 'pointer',
+                                  transition: investmentsAnimations ? 'all 0.3s ease' : 'none',
+                                  backgroundColor: isSelected ? `${investmentColor}10` : undefined
+                                }}
+                                onClick={() => setSelectedInvestment(isSelected ? null : investment)}
+                              >
+                                <td>
+                                  <div className="d-flex align-items-center">
+                                    <span style={{fontSize: '1.5rem', marginRight: '10px'}}>
+                                      {getInvestmentIcon(investment)}
+                                    </span>
+                                    <div>
+                                      <strong style={{color: investmentColor}}>{investment.name}</strong>
+                                      <br />
+                                      <small className={`badge bg-${performanceInfo.class}`}>
+                                        {performanceInfo.label}
+                                      </small>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td>
+                                  {editIndex === index ? (
+                                    <input
+                                      type="number"
+                                      value={editAmount}
+                                      onChange={(e) => setEditAmount(e.target.value)}
+                                      className={`form-control form-control-sm ${darkMode ? 'bg-dark text-light' : ''}`}
+                                      style={{borderColor: investmentColor, maxWidth: '100px'}}
+                                    />
+                                  ) : (
+                                    <strong style={{color: investmentColor}}>{investment.amount}</strong>
+                                  )}
+                                </td>
+                                <td style={{color: investmentColor}}>
+                                  ${investment.pricePerUnit?.toFixed(2) || 'N/A'}
+                                </td>
+                                <td>
+                                  <strong style={{color: investmentColor}}>
+                                    {formatCurrency(investment.total_price)}
+                                  </strong>
+                                </td>
+                                <td>
+                                  <div className="d-flex align-items-center">
+                                    <span style={{color: performance > 0 ? '#28a745' : '#dc3545', marginRight: '8px'}}>
+                                      {performance > 0 ? '📈' : '📉'}{performance.toFixed(2)}%
+                                    </span>
+                                  </div>
+                                </td>
+                                <td>
+                                  {editIndex === index ? (
+                                    <div className="btn-group">
+                                      <button 
+                                        onClick={(e) => {e.stopPropagation(); handleSaveInvestment(index);}} 
+                                        className="btn btn-sm btn-success"
+                                      >
+                                        💾
+                                      </button>
+                                      <button 
+                                        onClick={(e) => {e.stopPropagation(); handleCancelEdit();}} 
+                                        className="btn btn-sm btn-secondary"
+                                      >
+                                        ❌
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <div className="btn-group">
+                                      <button 
+                                        onClick={(e) => {e.stopPropagation(); handleEditInvestment(index);}} 
+                                        className="btn btn-sm"
+                                        style={{
+                                          backgroundColor: `${investmentColor}20`,
+                                          color: investmentColor,
+                                          border: `1px solid ${investmentColor}40`
+                                        }}
+                                      >
+                                        ✏️
+                                      </button>
+                                      <button 
+                                        onClick={(e) => {e.stopPropagation(); handleRemoveInvestment(index);}} 
+                                        className="btn btn-sm btn-outline-danger"
+                                      >
+                                        🗑️
+                                      </button>
+                                    </div>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
+                  {/* Portfolio Summary Statistics */}
+                  <div className={`mt-4 p-3 rounded ${darkMode ? 'bg-secondary' : 'bg-light'}`}>
+                    <h6 className="mb-3">💼 Portfolio Summary</h6>
+                    <div className="row text-center">
+                      <div className="col-md-3">
+                        <strong style={{color: '#28a745'}}>🚀 Total Assets</strong><br />
+                        <span style={{color: '#28a745', fontSize: '1.5rem'}}>{addedInvestments.length}</span>
+                      </div>
+                      <div className="col-md-3">
+                        <strong style={{color: '#17a2b8'}}>💰 Portfolio Value</strong><br />
+                        <span style={{color: '#17a2b8', fontSize: '1.2rem'}}>
+                          {formatCurrency(totalPrice)}
+                        </span>
+                      </div>
+                      <div className="col-md-3">
+                        <strong style={{color: '#ffc107'}}>📊 Avg. Performance</strong><br />
+                        <span style={{color: '#ffc107', fontSize: '1.2rem'}}>
+                          {addedInvestments.length > 0 ? 
+                            (addedInvestments.reduce((sum, inv) => sum + getInvestmentPerformance(inv), 0) / addedInvestments.length).toFixed(2) + '%' : 
+                            '0.0%'
+                          }
+                        </span>
+                      </div>
+                      <div className="col-md-3">
+                        <strong style={{color: '#dc3545'}}>🎯 Diversity Score</strong><br />
+                        <span style={{color: '#dc3545', fontSize: '1.2rem'}}>
+                          {addedInvestments.length > 0 ? Math.min(addedInvestments.length * 20, 100) : 0}%
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </>
               )}
             </div>
             <br />
