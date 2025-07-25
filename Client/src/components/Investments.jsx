@@ -440,6 +440,9 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                     font-weight: 600;
                     font-size: 1rem;
                     border-bottom: 3px solid ${darkMode ? '#2d3748' : '#5a67d8'};
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
 
                 .enhanced-table th:nth-child(1) { width: 22%; } /* Name */
@@ -743,13 +746,13 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                         <table className="enhanced-table">
                             <thead>
                                 <tr>
-                                    <th>🪙 Name</th>
-                                    <th>🔗 Symbol</th>
-                                    <th>📈 Type</th>
-                                    <th>💰 Price</th>
-                                    <th>📊 Market Cap</th>
-                                    <th>💵 Amount</th>
-                                    <th>⚙️ Actions</th>
+                                    <th>🪙&nbsp;Name</th>
+                                    <th>🔗&nbsp;Symbol</th>
+                                    <th>📈&nbsp;Type</th>
+                                    <th>💰&nbsp;Price</th>
+                                    <th>📊&nbsp;Market&nbsp;Cap</th>
+                                    <th>💵&nbsp;Amount</th>
+                                    <th>⚙️&nbsp;Actions</th>
                                 </tr>
                             </thead>
                             <tbody>

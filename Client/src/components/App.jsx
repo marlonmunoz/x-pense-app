@@ -488,7 +488,7 @@ function AppContent(props) {
               <li className='nav-item mb-2'>
                 <NavLink 
                   className={({ isActive }) => 
-                    `nav-link d-flex align-items-center ${darkMode ? 'highlight-black' : 'highlight-white'} border transition-all ${
+                    `nav-link d-flex align-items-center ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border transition-all ${
                       isActive ? 'active bg-success text-white' : ''
                     }`
                   } 
