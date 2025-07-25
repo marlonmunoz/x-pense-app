@@ -231,31 +231,54 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
     <div className="balance-container">
       <style>{`
         .balance-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 20px;
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        .balance-section {
-          background: ${darkMode ? 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'};
-          border-radius: 20px;
-          padding: 30px;
+        .balance-header {
+          text-align: center;
           margin-bottom: 30px;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          padding: 30px;
+          border-radius: 20px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .balance-header h5 {
+          font-size: 2.5rem;
+          margin: 0 0 10px 0;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .balance-subtitle {
+          font-size: 1.1rem;
+          opacity: 0.9;
+          margin: 0;
+        }
+
+        .balance-section {
+          background: ${darkMode ? 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)' : 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'};
+          border-radius: 20px;
+          padding: 40px;
+          margin-bottom: 30px;
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+          border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
           transition: all 0.3s ease;
         }
 
         .balance-section:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+          transform: translateY(-5px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
         .balance-title {
-          color: white;
-          font-size: 1.5em;
+          color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+          font-size: 1.8em;
           font-weight: 700;
-          margin-bottom: 25px;
-          text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+          margin-bottom: 30px;
           text-align: center;
         }
 
@@ -263,181 +286,172 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           margin-bottom: 25px;
         }
 
+        .input-label {
+          display: block;
+          margin-bottom: 8px;
+          font-weight: 600;
+          font-size: 1.1rem;
+          color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+          transition: color 0.3s ease;
+        }
+
         .balance-input {
-          border: 3px solid transparent;
-          border-radius: 12px;
+          width: 100%;
           padding: 15px 20px;
-          font-size: 16px;
-          font-weight: 500;
+          border: 2px solid ${darkMode ? '#4a5568' : '#e2e8f0'};
+          border-radius: 12px;
+          font-size: 1rem;
+          background: ${darkMode ? '#2d3748' : '#ffffff'};
+          color: ${darkMode ? '#e2e8f0' : '#2d3748'};
           transition: all 0.3s ease;
-          background: rgba(255, 255, 255, 0.95);
-          color: #333;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .balance-input:focus {
-          border-color: #28a745;
-          box-shadow: 0 0 20px rgba(40, 167, 69, 0.4);
           outline: none;
-          transform: scale(1.02);
-          background: rgba(255, 255, 255, 1);
+          border-color: #667eea;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+          transform: translateY(-2px);
         }
 
         .balance-input.error {
-          border-color: #dc3545;
-          background: rgba(220, 53, 69, 0.1);
-        }
-
-        .input-label {
-          color: white;
-          font-weight: 600;
-          margin-bottom: 10px;
-          display: block;
-          font-size: 1.1em;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-balance {
-          padding: 15px 30px;
-          border: none;
-          border-radius: 12px;
-          font-weight: 700;
-          font-size: 16px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          position: relative;
-          overflow: hidden;
-          margin: 0 10px;
-          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-balance:before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-          transition: left 0.6s;
-        }
-
-        .btn-balance:hover:before {
-          left: 100%;
-        }
-
-        .btn-set-balance {
-          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-          color: white;
-        }
-
-        .btn-set-balance:hover {
-          background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-          transform: translateY(-3px);
-          box-shadow: 0 8px 25px rgba(79, 172, 254, 0.5);
-        }
-
-        .btn-reset-balance {
-          background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-          color: white;
-        }
-
-        .btn-reset-balance:hover {
-          background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
-          transform: translateY(-3px);
-          box-shadow: 0 8px 25px rgba(245, 87, 108, 0.5);
-        }
-
-        .btn-disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-          pointer-events: none;
-        }
-
-        .alert-success-balance {
-          background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-          color: #155724;
-          border: 2px solid #c3e6cb;
-          border-radius: 12px;
-          padding: 15px 25px;
-          margin: 15px 0;
-          font-weight: 600;
-          animation: slideInLeft 0.5s ease-out;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .alert-error-balance {
-          background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-          color: #721c24;
-          border: 2px solid #f5c6cb;
-          border-radius: 12px;
-          padding: 15px 25px;
-          margin: 15px 0;
-          font-weight: 600;
-          animation: shake 0.6s ease-out;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          border-color: #e53e3e;
+          box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.3);
         }
 
         .validation-error {
-          color: #dc3545;
-          font-size: 14px;
+          color: #e53e3e;
+          font-size: 0.875rem;
           margin-top: 5px;
-          font-weight: 500;
-          animation: fadeIn 0.3s ease-out;
+          display: flex;
+          align-items: center;
+          animation: fadeIn 0.3s ease;
+        }
+
+        .btn-balance {
+          padding: 18px 30px;
+          border: none;
+          border-radius: 12px;
+          font-weight: 600;
+          font-size: 1.1rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          margin: 0 10px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .btn-set-balance {
+          background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+          color: white;
+          box-shadow: 0 4px 15px rgba(56, 161, 105, 0.4);
+        }
+
+        .btn-set-balance:hover:not(.btn-disabled) {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px rgba(56, 161, 105, 0.6);
+        }
+
+        .btn-reset-balance {
+          background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+          color: white;
+          box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-reset-balance:hover:not(.btn-disabled) {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
+        }
+
+        .btn-disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+
+        .alert-success-balance {
+          background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+          color: white;
+          padding: 15px 20px;
+          border-radius: 12px;
+          margin-bottom: 20px;
+          font-weight: 600;
+          text-align: center;
+          box-shadow: 0 4px 15px rgba(56, 161, 105, 0.4);
+          animation: slideIn 0.5s ease;
+        }
+
+        .alert-error-balance {
+          background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+          color: white;
+          padding: 15px 20px;
+          border-radius: 12px;
+          margin-bottom: 20px;
+          font-weight: 600;
+          text-align: center;
+          box-shadow: 0 4px 15px rgba(245, 101, 101, 0.4);
+          animation: slideIn 0.5s ease;
         }
 
         .overview-section {
-          background: ${darkMode ? 'rgba(33, 37, 41, 0.95)' : 'rgba(255, 255, 255, 0.95)'};
+          background: ${darkMode ? 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)' : 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'};
           border-radius: 20px;
-          padding: 25px;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-          backdrop-filter: blur(15px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          padding: 30px;
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+          border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
+          transition: all 0.3s ease;
+        }
+
+        .overview-section:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
         .overview-title {
-          color: ${darkMode ? '#ffffff' : '#333333'};
-          font-size: 1.4em;
+          color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+          font-size: 1.8em;
           font-weight: 700;
-          margin-bottom: 20px;
+          margin-bottom: 25px;
           text-align: center;
         }
 
         .balance-table {
-          background: transparent;
+          background: ${darkMode ? '#2d3748' : '#ffffff'};
           border-radius: 15px;
           overflow: hidden;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+          border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
         }
 
         .balance-table thead th {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: ${darkMode ? '#4a5568' : '#667eea'};
           color: white;
           font-weight: 700;
           padding: 18px 15px;
           border: none;
           text-transform: uppercase;
           letter-spacing: 0.8px;
-          font-size: 14px;
+          font-size: 0.9rem;
+          border-bottom: 3px solid ${darkMode ? '#2d3748' : '#5a67d8'};
         }
 
         .balance-table tbody tr {
           transition: all 0.3s ease;
-          border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+          border-bottom: 1px solid ${darkMode ? '#4a5568' : '#e2e8f0'};
         }
 
         .balance-table tbody tr:hover {
-          background: ${darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(102, 126, 234, 0.1)'};
-          transform: scale(1.01);
+          background: ${darkMode ? '#4a5568' : '#f7fafc'};
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .balance-table tbody td {
           padding: 18px 15px;
           vertical-align: middle;
           border: none;
-          font-weight: 500;
+          color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+          transition: all 0.3s ease;
         }
 
         .account-number {
@@ -449,141 +463,150 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           display: inline-block;
           min-width: 50px;
           text-align: center;
+          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
         }
 
         .currency-amount {
           font-weight: 700;
           font-size: 1.1em;
-          color: #28a745;
+          color: ${darkMode ? '#68d391' : '#38a169'};
         }
 
         .total-amount {
-          background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+          background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
           color: white;
           padding: 8px 15px;
           border-radius: 12px;
           font-weight: 700;
           display: inline-block;
+          box-shadow: 0 2px 8px rgba(56, 161, 105, 0.4);
         }
 
         .btn-table {
-          padding: 8px 15px;
+          padding: 10px 16px;
           border: none;
           border-radius: 8px;
           font-weight: 600;
-          font-size: 12px;
+          font-size: 0.85rem;
           cursor: pointer;
           transition: all 0.3s ease;
           margin: 2px;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
         }
 
         .btn-edit {
-          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+          background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
           color: white;
+          box-shadow: 0 2px 8px rgba(66, 153, 225, 0.4);
         }
 
         .btn-edit:hover {
-          background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
           transform: translateY(-2px);
-          box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+          box-shadow: 0 4px 12px rgba(66, 153, 225, 0.6);
         }
 
         .btn-delete {
-          background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+          background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
           color: white;
+          box-shadow: 0 2px 8px rgba(245, 101, 101, 0.4);
         }
 
         .btn-delete:hover {
-          background: linear-gradient(135deg, #ee5a52 0%, #ff6b6b 100%);
           transform: translateY(-2px);
-          box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+          box-shadow: 0 4px 12px rgba(245, 101, 101, 0.6);
         }
 
         .btn-save {
-          background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+          background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
           color: white;
+          box-shadow: 0 2px 8px rgba(56, 161, 105, 0.4);
         }
 
-        .btn-save:hover {
-          background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+        .btn-save:hover:not(.btn-disabled) {
           transform: translateY(-2px);
-          box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+          box-shadow: 0 4px 12px rgba(56, 161, 105, 0.6);
         }
 
         .btn-cancel {
-          background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+          background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
           color: white;
+          box-shadow: 0 2px 8px rgba(160, 174, 192, 0.4);
         }
 
         .btn-cancel:hover {
-          background: linear-gradient(135deg, #495057 0%, #6c757d 100%);
           transform: translateY(-2px);
-          box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+          box-shadow: 0 4px 12px rgba(160, 174, 192, 0.6);
         }
 
         .confirm-delete {
-          background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+          background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
           animation: pulse 1s infinite;
+          border: 2px solid #e53e3e;
         }
 
         .loading-spinner-balance {
           display: inline-block;
           width: 16px;
           height: 16px;
-          border: 2px solid rgba(255, 255, 255, 0.3);
+          border: 2px solid transparent;
+          border-top: 2px solid currentColor;
           border-radius: 50%;
-          border-top-color: white;
           animation: spin 1s linear infinite;
           margin-right: 8px;
         }
 
         .no-balances {
           text-align: center;
-          padding: 50px;
-          color: #6c757d;
-          font-style: italic;
-          background: ${darkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'};
+          padding: 60px 20px;
+          background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+          color: white;
           border-radius: 15px;
-          margin: 20px 0;
+          font-size: 1.2rem;
+          font-weight: 600;
+          box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
         }
 
         .edit-input-table {
-          border: 2px solid #4facfe;
-          border-radius: 6px;
-          padding: 8px 12px;
           width: 100%;
-          font-weight: 500;
+          padding: 8px 12px;
+          border: 2px solid #667eea;
+          border-radius: 6px;
+          background: ${darkMode ? '#2d3748' : '#ffffff'};
+          color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+          font-size: 0.9rem;
         }
 
         .edit-input-table:focus {
           outline: none;
-          border-color: #28a745;
-          box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
+          border-color: #667eea;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
         }
 
-        @keyframes slideInLeft {
-          from {
-            transform: translateX(-100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
+        .loading-container {
+          text-align: center;
+          padding: 40px;
+          color: ${darkMode ? '#e2e8f0' : '#2d3748'};
         }
 
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-8px); }
-          75% { transform: translateX(8px); }
+        .large-spinner {
+          width: 40px;
+          height: 40px;
+          border: 4px solid ${darkMode ? '#4a5568' : '#e2e8f0'};
+          border-top: 4px solid #667eea;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin: 0 auto 15px;
+        }
+
+        @keyframes slideIn {
+          from { transform: translateY(-20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
         }
 
         @keyframes spin {
-          to {
-            transform: rotate(360deg);
-          }
+          to { transform: rotate(360deg); }
         }
 
         @keyframes pulse {
@@ -602,7 +625,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
             margin: 5px 0;
           }
           
-          .balance-section {
+          .balance-section, .overview-section {
             padding: 20px;
           }
           
@@ -613,6 +636,12 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
         }
       `}</style>
       
+      {/* Balance Header */}
+      <div className="balance-header">
+        <h5>💰 Balance Management</h5>
+        <p className="balance-subtitle">Track your financial accounts in one place</p>
+      </div>
+
       {/* Success/Error Messages */}
       {success && (
         <div className="alert-success-balance">
@@ -628,7 +657,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
 
       {/* Set Balance Section */}
       <div className="balance-section">
-        <h5 className="balance-title">💰 Set Your Balance</h5>
+        <h5 className="balance-title">� Add New Balance Account</h5>
         
         <div className="input-row">
           <label htmlFor="cashOnHand" className="input-label">💵 Cash On Hand</label>
@@ -722,9 +751,9 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
         <h5 className="overview-title">📊 Account Overview</h5>
 
         {loading && balances.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '50px' }}>
-            <span className="loading-spinner-balance" style={{ width: '40px', height: '40px' }}></span>
-            <p style={{ marginTop: '15px', color: '#6c757d' }}>Loading your account data...</p>
+          <div className="loading-container">
+            <div className="large-spinner"></div>
+            <p>Loading your account data...</p>
           </div>
         ) : (
           <div className="balance-table">
@@ -744,9 +773,9 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                   <tr>
                     <td colSpan="6" className="no-balances">
                       <div>
-                        <h4>📋 No Balance Records Yet</h4>
-                        <p>Set your first balance using the form above!</p>
-                        <small>💡 Tip: Track your cash, bank account, and savings separately</small>
+                        <h4>🎯 Start Your Financial Journey!</h4>
+                        <p>Create your first balance account above to begin tracking your finances</p>
+                        <small>💡 Pro tip: Separate your money into different categories for better organization</small>
                       </div>
                     </td>
                   </tr>
