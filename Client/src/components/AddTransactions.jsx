@@ -118,7 +118,7 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                 }
 
                 .form-header h5 {
-                    font-size: 2rem;
+                    font-size: 1.8rem;
                     margin: 0;
                     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
                 }

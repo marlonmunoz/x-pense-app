@@ -248,7 +248,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
         }
 
         .balance-header h5 {
-          font-size: 2.5rem;
+          font-size: 1.8rem;
           margin: 0 0 10px 0;
           text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
