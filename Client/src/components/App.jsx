@@ -14,7 +14,7 @@ import Footer from '../components/Footer';
 import '/src/App.css'
 
 function App() {
-  // FORMATTING 
+  // FORMATTING   
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
   };
@@ -318,27 +318,322 @@ function AppContent(props) {
       ) : (
         <div className="d-flex" style={{minHeight: '100vh'}}>
           {/* Left Sidebar Navigation */}
-          <nav className={`d-flex flex-column p-3 ${darkMode ? 'navbar-dark-mode' : 'navbar-light-mode'}`} style={{width: '250px', minHeight: '100vh'}}>
+          <nav 
+            className={`d-flex flex-column p-3 ${darkMode ? 'navbar-dark-mode' : 'navbar-light-mode'}`} 
+            style={{
+              width: '250px', 
+              minHeight: '100vh',
+              transition: 'all 0.3s ease',
+              borderRight: `2px solid ${darkMode ? '#495057' : '#dee2e6'}`,
+              boxShadow: '2px 0 10px rgba(0, 0, 0, 0.1)'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.boxShadow = '2px 0 15px rgba(0, 0, 0, 0.2)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.boxShadow = '2px 0 10px rgba(0, 0, 0, 0.1)';
+            }}
+          >
             <div className="text-center mb-4">
-              <h3><span className='app-title metallic-shadow'>X-PENSE</span></h3>
-              <p><span className='badge badge-info border p-2'>Budget Tracker</span></p>
+              <h3>
+                <span 
+                  className='app-title metallic-shadow'
+                  style={{
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'scale(1.1)';
+                    e.target.style.textShadow = '0 0 10px rgba(0, 123, 255, 0.5)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.textShadow = '';
+                  }}
+                  onClick={() => window.location.href = '/dashboard'}
+                >
+                  X-PENSE
+                </span>
+              </h3>
+              <p>
+                <span 
+                  className='badge badge-info border p-2'
+                  style={{
+                    transition: 'all 0.3s ease',
+                    cursor: 'default'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'scale(1.05)';
+                    e.target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.boxShadow = '';
+                  }}
+                >
+                  💼 Budget Tracker
+                </span>
+              </p>
               <button 
                 onClick={toggleDarkMode} 
                 className={`btn btn-sm ${darkMode ? 'btn-light' : 'btn-dark'}`}
+                style={{
+                  transition: 'all 0.3s ease',
+                  transform: 'scale(1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'scale(1.1)';
+                  e.target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'scale(1)';
+                  e.target.style.boxShadow = '';
+                }}
               >
-                {darkMode ? 'Light' : 'Dark'} Mode
+                {darkMode ? '☀️ Light' : '🌙 Dark'} Mode
               </button>
             </div>
             
             <ul className={`nav nav-pills flex-column ${darkMode ? 'nav-tabs-bg-dark-mode' : 'nav-tabs-bg-light-mode'}`}>
-              <li className='nav-item mb-2'><NavLink className={`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/dashboard'>Dashboard</NavLink></li>
-              <li className='nav-item mb-2'><NavLink className={`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/budget'>Budget</NavLink></li>
-              <li className='nav-item mb-2'><NavLink className={`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/balance'>Balance</NavLink></li>
-              <li className='nav-item mb-2'><NavLink className={`nav-link ${darkMode ? 'highlight-black' : 'highlight-white'} border`} to='/add'><strong>X-PENSE</strong></NavLink></li>
-              <li className='nav-item mb-2'><NavLink className={`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/transactions'>Transaction</NavLink></li>
-              <li className='nav-item mb-2'><NavLink className={`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/goals'>Goals</NavLink></li>
-              <li className='nav-item mb-2'><NavLink className={`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/investments'>Investments</NavLink></li>
+              <li className='nav-item mb-2'>
+                <NavLink 
+                  className={({ isActive }) => 
+                    `nav-link d-flex align-items-center ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border transition-all ${
+                      isActive ? 'active bg-primary text-white' : ''
+                    }`
+                  } 
+                  to='/dashboard'
+                  style={({ isActive }) => ({
+                    backgroundColor: isActive ? '#007bff' : '',
+                    transform: 'scale(1)',
+                    transition: 'all 0.3s ease'
+                  })}
+                  onMouseEnter={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1.05)';
+                      e.target.style.backgroundColor = darkMode ? '#495057' : '#e9ecef';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1)';
+                      e.target.style.backgroundColor = '';
+                    }
+                  }}
+                >
+                  <span className="me-2">📊</span>
+                  Dashboard
+                </NavLink>
+              </li>
+              <li className='nav-item mb-2'>
+                <NavLink 
+                  className={({ isActive }) => 
+                    `nav-link d-flex align-items-center ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border transition-all ${
+                      isActive ? 'active bg-primary text-white' : ''
+                    }`
+                  } 
+                  to='/budget'
+                  style={({ isActive }) => ({
+                    backgroundColor: isActive ? '#007bff' : '',
+                    transform: 'scale(1)',
+                    transition: 'all 0.3s ease'
+                  })}
+                  onMouseEnter={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1.05)';
+                      e.target.style.backgroundColor = darkMode ? '#495057' : '#e9ecef';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1)';
+                      e.target.style.backgroundColor = '';
+                    }
+                  }}
+                >
+                  <span className="me-2">💰</span>
+                  Budget
+                </NavLink>
+              </li>
+              <li className='nav-item mb-2'>
+                <NavLink 
+                  className={({ isActive }) => 
+                    `nav-link d-flex align-items-center ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border transition-all ${
+                      isActive ? 'active bg-primary text-white' : ''
+                    }`
+                  } 
+                  to='/balance'
+                  style={({ isActive }) => ({
+                    backgroundColor: isActive ? '#007bff' : '',
+                    transform: 'scale(1)',
+                    transition: 'all 0.3s ease'
+                  })}
+                  onMouseEnter={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1.05)';
+                      e.target.style.backgroundColor = darkMode ? '#495057' : '#e9ecef';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1)';
+                      e.target.style.backgroundColor = '';
+                    }
+                  }}
+                >
+                  <span className="me-2">⚖️</span>
+                  Balance
+                </NavLink>
+              </li>
+              <li className='nav-item mb-2'>
+                <NavLink 
+                  className={({ isActive }) => 
+                    `nav-link d-flex align-items-center ${darkMode ? 'highlight-black' : 'highlight-white'} border transition-all ${
+                      isActive ? 'active bg-success text-white' : ''
+                    }`
+                  } 
+                  to='/add'
+                  style={({ isActive }) => ({
+                    backgroundColor: isActive ? '#28a745' : '',
+                    transform: 'scale(1)',
+                    transition: 'all 0.3s ease',
+                    fontWeight: 'bold'
+                  })}
+                  onMouseEnter={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1.05)';
+                      e.target.style.backgroundColor = '#28a745';
+                      e.target.style.color = 'white';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1)';
+                      e.target.style.backgroundColor = '';
+                      e.target.style.color = '';
+                    }
+                  }}
+                >
+                  <span className="me-2">➕</span>
+                  <strong>X-PENSE</strong>
+                </NavLink>
+              </li>
+              <li className='nav-item mb-2'>
+                <NavLink 
+                  className={({ isActive }) => 
+                    `nav-link d-flex align-items-center ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border transition-all ${
+                      isActive ? 'active bg-primary text-white' : ''
+                    }`
+                  } 
+                  to='/transactions'
+                  style={({ isActive }) => ({
+                    backgroundColor: isActive ? '#007bff' : '',
+                    transform: 'scale(1)',
+                    transition: 'all 0.3s ease'
+                  })}
+                  onMouseEnter={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1.05)';
+                      e.target.style.backgroundColor = darkMode ? '#495057' : '#e9ecef';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1)';
+                      e.target.style.backgroundColor = '';
+                    }
+                  }}
+                >
+                  <span className="me-2">📝</span>
+                  Transactions
+                </NavLink>
+              </li>
+              <li className='nav-item mb-2'>
+                <NavLink 
+                  className={({ isActive }) => 
+                    `nav-link d-flex align-items-center ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border transition-all ${
+                      isActive ? 'active bg-primary text-white' : ''
+                    }`
+                  } 
+                  to='/goals'
+                  style={({ isActive }) => ({
+                    backgroundColor: isActive ? '#007bff' : '',
+                    transform: 'scale(1)',
+                    transition: 'all 0.3s ease'
+                  })}
+                  onMouseEnter={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1.05)';
+                      e.target.style.backgroundColor = darkMode ? '#495057' : '#e9ecef';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1)';
+                      e.target.style.backgroundColor = '';
+                    }
+                  }}
+                >
+                  <span className="me-2">🎯</span>
+                  Goals
+                </NavLink>
+              </li>
+              <li className='nav-item mb-2'>
+                <NavLink 
+                  className={({ isActive }) => 
+                    `nav-link d-flex align-items-center ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border transition-all ${
+                      isActive ? 'active bg-primary text-white' : ''
+                    }`
+                  } 
+                  to='/investments'
+                  style={({ isActive }) => ({
+                    backgroundColor: isActive ? '#007bff' : '',
+                    transform: 'scale(1)',
+                    transition: 'all 0.3s ease'
+                  })}
+                  onMouseEnter={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1.05)';
+                      e.target.style.backgroundColor = darkMode ? '#495057' : '#e9ecef';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1)';
+                      e.target.style.backgroundColor = '';
+                    }
+                  }}
+                >
+                  <span className="me-2">📈</span>
+                  Investments
+                </NavLink>
+              </li>
             </ul>
+            
+            {/* User Status/Info Section */}
+            <div className="mt-auto pt-3">
+              <hr className={`${darkMode ? 'border-light' : 'border-dark'}`} />
+              <div 
+                className={`text-center p-2 rounded ${darkMode ? 'bg-secondary' : 'bg-light'}`}
+                style={{
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'scale(1.02)';
+                  e.target.style.backgroundColor = darkMode ? '#6c757d' : '#f8f9fa';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'scale(1)';
+                  e.target.style.backgroundColor = '';
+                }}
+              >
+                <small className={`${darkMode ? 'text-light' : 'text-dark'}`}>
+                  <div>👤 Welcome User</div>
+                  <div>🟢 Online</div>
+                </small>
+              </div>
+            </div>
           </nav>
           
           {/* Main Content Area */}
