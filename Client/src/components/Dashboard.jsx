@@ -810,16 +810,28 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
 
   return (
     <div className={`container-fluid ${darkMode ? 'dark-mode' : 'light-mode'}`} >
+      <style>{`
+        .dashboard-header {
+          text-align: center;
+          margin-bottom: 30px;
+          padding: 30px;
+          border-radius: 20px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .dashboard-header h1 {
+          font-size: 2.5rem;
+          margin: 0;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+          font-weight: bold;
+        }
+      `}</style>
       <div className="row"  >
         <div className="col-12" >
-            <div className="text-center mb-4">
-                <h1 style={{ 
-                    fontSize: '2.5rem', 
-                    margin: '20px 0', 
-                    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
-                    color: darkMode ? '#e2e8f0' : '#2d3748',
-                    fontWeight: 'bold'
-                }}>Main Dashboard</h1>
+            <div className="dashboard-header">
+                <h1>Main Dashboard</h1>
             </div>
             <div className="summary">
                 <h5 style={{ 
