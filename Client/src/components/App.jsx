@@ -629,7 +629,7 @@ function AppContent(props) {
                 }}
               >
                 <small className={`${darkMode ? 'text-light' : 'text-dark'}`}>
-                  <div>👤 Welcome User</div>
+                  <div>👤 Welcome Marlon</div>
                   <div>🟢 Online</div>
                 </small>
               </div>
