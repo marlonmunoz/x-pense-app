@@ -1042,7 +1042,10 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                   <div className="mb-3" style={{fontSize: '4rem'}}>🚀</div>
                   <h5 className="text-muted">No Investments Have Been Added!</h5>
                   <p className="text-muted">Start building your crypto portfolio today</p>
-                  <button className={`btn ${darkMode ? 'btn-outline-light' : 'btn-outline-primary'}`}>
+                  <button 
+                    className={`btn ${darkMode ? 'btn-outline-light' : 'btn-outline-primary'}`}
+                    onClick={() => navigate('/investments')}
+                  >
                     ➕ Add Your First Investment
                   </button>
                 </div>
@@ -1499,7 +1502,10 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                   <div className="mb-3" style={{fontSize: '4rem'}}>🎯</div>
                   <h5 className="text-muted">No Goals Have Been Added!</h5>
                   <p className="text-muted">Start setting financial goals to track your progress</p>
-                  <button className={`btn ${darkMode ? 'btn-outline-light' : 'btn-outline-primary'}`}>
+                  <button 
+                    className={`btn ${darkMode ? 'btn-outline-light' : 'btn-outline-primary'}`}
+                    onClick={() => navigate('/goals')}
+                  >
                     ➕ Add Your First Goal
                   </button>
                 </div>
