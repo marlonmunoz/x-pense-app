@@ -371,7 +371,7 @@ function AppContent(props) {
                     e.target.style.boxShadow = '';
                   }}
                 >
-                  💼 Budget Tracker
+                  Budget Tracker
                 </span>
               </p>
               <button 
