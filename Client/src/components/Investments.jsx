@@ -429,6 +429,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                     width: 100%;
                     border-collapse: collapse;
                     background: ${darkMode ? '#2d3748' : '#ffffff'};
+                    table-layout: fixed;
                 }
 
                 .enhanced-table th {
@@ -441,11 +442,22 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                     border-bottom: 3px solid ${darkMode ? '#2d3748' : '#5a67d8'};
                 }
 
+                .enhanced-table th:nth-child(1) { width: 22%; } /* Name */
+                .enhanced-table th:nth-child(2) { width: 10%; } /* Symbol */
+                .enhanced-table th:nth-child(3) { width: 12%; } /* Type */
+                .enhanced-table th:nth-child(4) { width: 15%; } /* Price */
+                .enhanced-table th:nth-child(5) { width: 17%; } /* Market Cap */
+                .enhanced-table th:nth-child(6) { width: 10%; } /* Amount */
+                .enhanced-table th:nth-child(7) { width: 14%; } /* Actions */
+
                 .enhanced-table td {
                     padding: 15px;
                     border-bottom: 1px solid ${darkMode ? '#4a5568' : '#e2e8f0'};
                     color: ${darkMode ? '#e2e8f0' : '#2d3748'};
                     transition: all 0.3s ease;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
 
                 .table-row {
@@ -498,12 +510,14 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                 }
 
                 .type-badge {
-                    padding: 6px 12px;
-                    border-radius: 20px;
-                    font-size: 0.8rem;
+                    padding: 4px 8px;
+                    border-radius: 12px;
+                    font-size: 0.7rem;
                     font-weight: 600;
                     text-transform: uppercase;
-                    letter-spacing: 0.5px;
+                    letter-spacing: 0.3px;
+                    display: inline-block;
+                    white-space: nowrap;
                 }
 
                 .type-crypto {
@@ -518,10 +532,10 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
 
                 .price-cell {
                     font-weight: 700;
-                    font-size: 1.1rem;
+                    font-size: 0.95rem;
                     display: flex;
                     align-items: center;
-                    gap: 8px;
+                    gap: 4px;
                     transition: all 0.3s ease;
                 }
 
@@ -542,17 +556,19 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
 
                 .market-cap-cell {
                     font-weight: 600;
+                    font-size: 0.9rem;
                     color: ${darkMode ? '#68d391' : '#38a169'};
                 }
 
                 .amount-input {
-                    width: 80px;
-                    padding: 10px 12px;
+                    width: 100%;
+                    max-width: 80px;
+                    padding: 8px 10px;
                     border: 2px solid ${darkMode ? '#4a5568' : '#e2e8f0'};
                     border-radius: 8px;
                     background: ${darkMode ? '#2d3748' : '#ffffff'};
                     color: ${darkMode ? '#e2e8f0' : '#2d3748'};
-                    font-size: 0.9rem;
+                    font-size: 0.85rem;
                     text-align: center;
                     transition: all 0.3s ease;
                 }
@@ -566,23 +582,24 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
 
                 .action-buttons {
                     display: flex;
-                    gap: 8px;
+                    gap: 6px;
                     flex-wrap: wrap;
+                    justify-content: center;
                 }
 
                 .btn-modern {
-                    padding: 10px 16px;
+                    padding: 8px 12px;
                     border: none;
-                    border-radius: 8px;
+                    border-radius: 6px;
                     font-weight: 600;
-                    font-size: 0.85rem;
+                    font-size: 0.75rem;
                     cursor: pointer;
                     transition: all 0.3s ease;
                     text-decoration: none;
                     display: inline-flex;
                     align-items: center;
-                    gap: 6px;
-                    min-width: 80px;
+                    gap: 4px;
+                    min-width: 60px;
                     justify-content: center;
                 }
 
@@ -655,10 +672,32 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                     
                     .btn-modern {
                         width: 100%;
+                        font-size: 0.8rem;
+                        padding: 10px 12px;
                     }
                     
                     .amount-input {
                         width: 100%;
+                        max-width: none;
+                    }
+
+                    .enhanced-table th,
+                    .enhanced-table td {
+                        padding: 10px 8px;
+                        font-size: 0.85rem;
+                    }
+
+                    .crypto-name-cell {
+                        font-size: 1rem;
+                    }
+
+                    .price-cell {
+                        font-size: 0.9rem;
+                    }
+
+                    .type-badge {
+                        font-size: 0.65rem;
+                        padding: 3px 6px;
                     }
                 }
             `}</style>
@@ -718,19 +757,16 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                                             <span>{investment.name}</span>
                                         </td>
                                         <td>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                {getCryptoIcon(investment.name)}
-                                                <span style={{ fontWeight: '600', textTransform: 'uppercase' }}>
-                                                    {investment.id === 'bitcoin' ? 'BTC' : 
-                                                     investment.id === 'ethereum' ? 'ETH' : 
-                                                     investment.id === 'usd-coin' ? 'USDC' : 
-                                                     investment.name.substring(0, 3).toUpperCase()}
-                                                </span>
-                                            </div>
+                                            <span style={{ fontWeight: '600', textTransform: 'uppercase', fontSize: '0.9rem' }}>
+                                                {investment.id === 'bitcoin' ? 'BTC' : 
+                                                 investment.id === 'ethereum' ? 'ETH' : 
+                                                 investment.id === 'usd-coin' ? 'USDC' : 
+                                                 investment.name.substring(0, 3).toUpperCase()}
+                                            </span>
                                         </td>
                                         <td>
                                             <span className={`type-badge ${investment.type === 'Cryptocurrency' ? 'type-crypto' : 'type-stablecoin'}`}>
-                                                {investment.type === 'Cryptocurrency' ? '🪙 Crypto' : '🏦 Stable'}
+                                                {investment.type === 'Cryptocurrency' ? 'Crypto' : 'Stable'}
                                             </span>
                                         </td>
                                         <td className={`price-cell ${getPriceChangeClass(investment.id)}`}>
