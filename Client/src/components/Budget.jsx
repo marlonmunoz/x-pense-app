@@ -306,7 +306,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
 
                 .budget-title {
                     color: ${darkMode ? '#e2e8f0' : '#2d3748'};
-                    font-size: 1.8em;
+                    font-size: 1.2em;
                     font-weight: 700;
                     margin-bottom: 30px;
                     text-align: center;
@@ -316,7 +316,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                     display: flex;
                     gap: 15px;
                     align-items: center;
-                    flex-wrap: wrap;
+                    flex-wrap: nowrap;
                     justify-content: center;
                 }
 
@@ -356,11 +356,11 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                 }
 
                 .btn-enhanced {
-                    padding: 18px 30px;
+                    padding: 12px 20px;
                     border: none;
                     border-radius: 12px;
                     font-weight: 600;
-                    font-size: 1.1rem;
+                    font-size: 0.95rem;
                     cursor: pointer;
                     transition: all 0.3s ease;
                     margin: 0 5px;
@@ -370,6 +370,8 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                     display: inline-flex;
                     align-items: center;
                     gap: 8px;
+                    white-space: nowrap;
+                    min-width: auto;
                 }
 
                 .btn-primary-enhanced {
@@ -582,17 +584,19 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                 }
 
                 .btn-table {
-                    padding: 10px 16px;
+                    padding: 8px 12px;
                     border: none;
                     border-radius: 8px;
                     font-weight: 600;
-                    font-size: 0.85rem;
+                    font-size: 0.8rem;
                     cursor: pointer;
                     transition: all 0.3s ease;
                     margin: 2px;
                     display: inline-flex;
                     align-items: center;
-                    gap: 5px;
+                    gap: 4px;
+                    white-space: nowrap;
+                    min-width: auto;
                 }
 
                 .btn-edit-table {
@@ -667,6 +671,8 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                     .btn-enhanced {
                         width: 100%;
                         margin: 5px 0;
+                        padding: 10px 16px;
+                        font-size: 0.9rem;
                     }
                     
                     .budget-section {
@@ -674,8 +680,9 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                     }
                     
                     .btn-table {
-                        padding: 6px 10px;
-                        font-size: 11px;
+                        padding: 4px 8px;
+                        font-size: 0.7rem;
+                        gap: 2px;
                     }
                 }
             `}</style>
@@ -855,7 +862,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                             </td>
                                             <td data-label="Actions">
                                                 {editingIndex === index ? (
-                                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'nowrap', alignItems: 'center' }}>
                                                         <button 
                                                             className={`btn-table btn-save-table ${loading ? 'btn-disabled' : ''}`} 
                                                             onClick={() => saveBudget(index)}
@@ -872,7 +879,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                                         </button>
                                                     </div>
                                                 ) : (
-                                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'nowrap', alignItems: 'center' }}>
                                                         <button 
                                                             className="btn-table btn-edit-table" 
                                                             onClick={() => editBudget(index)}
