@@ -928,7 +928,17 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                 {/* Chart Display */}
                 <div style={{height: '400px', position: 'relative'}}>
                   {formattedTransactions.length === 0 ? (
-                    <p className="border border-danger rounded p-2 m-5 text-danger">No Transactions Have Been Added !</p>
+                    <div className="text-center p-5">
+                      <div className="mb-3" style={{fontSize: '4rem'}}>📊</div>
+                      <h5 className="text-muted">No Transactions Have Been Added!</h5>
+                      <p className="text-muted">Start tracking your expenses to see spending patterns</p>
+                      <button 
+                        className={`btn ${darkMode ? 'btn-outline-light' : 'btn-outline-primary'}`}
+                        onClick={() => navigate('/transactions')}
+                      >
+                        ➕ Add Your First Transaction
+                      </button>
+                    </div>
                   ) : (
                     <>
                       {chartType === 'line' && <Line data={data} options={options} />}
