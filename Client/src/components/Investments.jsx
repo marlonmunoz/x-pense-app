@@ -583,24 +583,26 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                 .action-buttons {
                     display: flex;
                     gap: 6px;
-                    flex-wrap: wrap;
+                    flex-wrap: nowrap;
                     justify-content: center;
+                    align-items: center;
                 }
 
                 .btn-modern {
-                    padding: 8px 12px;
+                    padding: 6px 10px;
                     border: none;
                     border-radius: 6px;
                     font-weight: 600;
-                    font-size: 0.75rem;
+                    font-size: 0.7rem;
                     cursor: pointer;
                     transition: all 0.3s ease;
                     text-decoration: none;
                     display: inline-flex;
                     align-items: center;
-                    gap: 4px;
-                    min-width: 60px;
+                    gap: 3px;
+                    min-width: 55px;
                     justify-content: center;
+                    white-space: nowrap;
                 }
 
                 .btn-add {
@@ -667,13 +669,14 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                     }
                     
                     .action-buttons {
-                        flex-direction: column;
+                        flex-wrap: nowrap;
+                        gap: 4px;
                     }
                     
                     .btn-modern {
-                        width: 100%;
-                        font-size: 0.8rem;
-                        padding: 10px 12px;
+                        font-size: 0.65rem;
+                        padding: 8px 10px;
+                        min-width: 50px;
                     }
                     
                     .amount-input {
@@ -683,7 +686,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
 
                     .enhanced-table th,
                     .enhanced-table td {
-                        padding: 10px 8px;
+                        padding: 10px 6px;
                         font-size: 0.85rem;
                     }
 
