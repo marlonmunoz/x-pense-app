@@ -812,8 +812,22 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
     <div className={`container-fluid ${darkMode ? 'dark-mode' : 'light-mode'}`} >
       <div className="row"  >
         <div className="col-12" >
+            <div className="text-center mb-4">
+                <h1 style={{ 
+                    fontSize: '2.5rem', 
+                    margin: '20px 0', 
+                    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
+                    color: darkMode ? '#e2e8f0' : '#2d3748',
+                    fontWeight: 'bold'
+                }}>Main Dashboard</h1>
+            </div>
             <div className="summary">
-                <h5>Recent Transactions</h5> 
+                <h5 style={{ 
+                    fontSize: '1.8rem', 
+                    margin: '0 0 10px 0', 
+                    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
+                    color: darkMode ? '#e2e8f0' : '#2d3748'
+                }}>Recent Transactions</h5> 
                 <br />
                 <button   onClick={() => navigate('/transactions')} className={`btn ${darkMode ? 'btn-light' : 'btn-dark'} responsive`}> View All Transactions</button>
             </div>
@@ -822,7 +836,12 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                 {/* Interactive Chart Controls */}
                 <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
                   <div>
-                    <h6>Spending Over Time Graph</h6>
+                    <h6 style={{ 
+                        fontSize: '1.8rem', 
+                        margin: '0 0 10px 0', 
+                        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
+                        color: darkMode ? '#e2e8f0' : '#2d3748'
+                    }}>Spending Over Time Graph</h6>
                     <p style={{color: 'gray'}}><sup>X-PENSE Transactions</sup></p>
                   </div>
                   
@@ -935,7 +954,12 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
             <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
               <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
                 <div>
-                  <h6>🚀 Crypto Investments</h6>
+                  <h6 style={{ 
+                      fontSize: '1.8rem', 
+                      margin: '0 0 10px 0', 
+                      textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
+                      color: darkMode ? '#e2e8f0' : '#2d3748'
+                  }}>🚀 Crypto Investments</h6>
                   <p style={{ color: 'gray' }}><sup>Interactive Portfolio Tracking Dashboard</sup></p>
                 </div>
                 
@@ -1347,7 +1371,11 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
 
                   {/* Portfolio Summary Statistics */}
                   <div className={`mt-4 p-3 rounded ${darkMode ? 'bg-secondary' : 'bg-light'}`}>
-                    <h6 className="mb-3">💼 Portfolio Summary</h6>
+                    <h6 className="mb-3" style={{ 
+                        fontSize: '1.2rem', 
+                        fontWeight: '700',
+                        color: darkMode ? '#e2e8f0' : '#2d3748'
+                    }}>💼 Portfolio Summary</h6>
                     <div className="row text-center">
                       <div className="col-md-3">
                         <strong style={{color: '#28a745'}}>🚀 Total Assets</strong><br />
@@ -1383,7 +1411,12 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
             <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
               <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
                 <div>
-                  <h6>🎯 Goals Progress</h6>
+                  <h6 style={{ 
+                      fontSize: '1.8rem', 
+                      margin: '0 0 10px 0', 
+                      textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
+                      color: darkMode ? '#e2e8f0' : '#2d3748'
+                  }}>🎯 Goals Progress</h6>
                   <p style={{ color: 'gray' }}><sup>Interactive Goal Tracking Dashboard</sup></p>
                 </div>
                 
@@ -1687,7 +1720,11 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
 
                   {/* Summary Statistics */}
                   <div className={`mt-4 p-3 rounded ${darkMode ? 'bg-secondary' : 'bg-light'}`}>
-                    <h6 className="mb-3">📈 Goals Summary</h6>
+                    <h6 className="mb-3" style={{ 
+                        fontSize: '1.2rem', 
+                        fontWeight: '700',
+                        color: darkMode ? '#e2e8f0' : '#2d3748'
+                    }}>📈 Goals Summary</h6>
                     <div className="row text-center">
                       <div className="col-md-3">
                         <strong style={{color: '#28a745'}}>🎯 Total Goals</strong><br />
@@ -1720,7 +1757,12 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                 <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                     <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
                         <div>
-                            <h6>💼 Financial Overview</h6>
+                            <h6 style={{ 
+                                fontSize: '1.8rem', 
+                                margin: '0 0 10px 0', 
+                                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
+                                color: darkMode ? '#e2e8f0' : '#2d3748'
+                            }}>💼 Financial Overview</h6>
                             <p style={{ color: 'gray' }}><sup>Interactive Summary Dashboard</sup></p>
                         </div>
                         
