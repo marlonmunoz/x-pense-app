@@ -26,6 +26,12 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
   const [showOverviewChart, setShowOverviewChart] = useState(false);
   const [overviewAnimations, setOverviewAnimations] = useState(true);
   
+  // Goals interactive states
+  const [selectedGoal, setSelectedGoal] = useState(null);
+  const [goalsViewMode, setGoalsViewMode] = useState('cards'); // 'cards', 'list', 'chart'
+  const [goalsAnimations, setGoalsAnimations] = useState(true);
+  const [showGoalsChart, setShowGoalsChart] = useState(false);
+  
   const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.total_price), 0).toFixed(2);
   
   // Calculate total saved amount from all goals
@@ -525,6 +531,113 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
     };
     return icons[itemName] || '📋';
   };
+
+  // Goals helper functions
+  const getGoalColor = (progress, index) => {
+    if (progress >= 100) return '#28a745'; // Green for completed
+    if (progress >= 75) return '#17a2b8';  // Teal for near completion
+    if (progress >= 50) return '#ffc107';  // Yellow for halfway
+    if (progress >= 25) return '#fd7e14';  // Orange for started
+    return '#dc3545'; // Red for just started
+  };
+
+  const getGoalIcon = (progress, category) => {
+    // Icons based on goal category or progress
+    const categoryIcons = {
+      'savings': '💰',
+      'vacation': '✈️',
+      'car': '🚗',
+      'house': '🏠',
+      'education': '🎓',
+      'emergency': '🚨',
+      'retirement': '👴',
+      'investment': '📈'
+    };
+    
+    // Default icons based on progress
+    if (progress >= 100) return '🎉';
+    if (progress >= 75) return '🔥';
+    if (progress >= 50) return '⭐';
+    if (progress >= 25) return '📈';
+    return '🚀';
+  };
+
+  const getProgressLabel = (progress) => {
+    if (progress >= 100) return 'Completed! 🎉';
+    if (progress >= 75) return 'Almost there! 🔥';
+    if (progress >= 50) return 'Halfway! ⭐';
+    if (progress >= 25) return 'Good start! 📈';
+    return 'Just started 🚀';
+  };
+
+  // Goals chart data
+  const goalsChartData = {
+    labels: goalsProgress.map(goal => goal.name),
+    datasets: [{
+      label: 'Goals Progress (%)',
+      data: goalsProgress.map(goal => (goal.saved / goal.target) * 100),
+      backgroundColor: goalsProgress.map((goal, index) => {
+        const progress = (goal.saved / goal.target) * 100;
+        return getGoalColor(progress, index) + '80'; // Add transparency
+      }),
+      borderColor: goalsProgress.map((goal, index) => {
+        const progress = (goal.saved / goal.target) * 100;
+        return getGoalColor(progress, index);
+      }),
+      borderWidth: 2,
+      hoverOffset: 8
+    }]
+  };
+
+  const goalsChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: goalsAnimations ? 1500 : 0,
+      easing: 'easeInOutElastic'
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: {
+          color: darkMode ? '#fff' : '#000',
+          usePointStyle: true,
+          padding: 12,
+          font: {
+            size: 10,
+            weight: 'bold'
+          }
+        }
+      },
+      tooltip: {
+        backgroundColor: darkMode ? 'rgba(51, 51, 51, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+        titleColor: darkMode ? '#fff' : '#000',
+        bodyColor: darkMode ? '#fff' : '#000',
+        borderColor: darkMode ? '#ffc107' : '#007bff',
+        borderWidth: 2,
+        cornerRadius: 8,
+        callbacks: {
+          label: function(context) {
+            const goal = goalsProgress[context.dataIndex];
+            return [
+              `Progress: ${context.raw.toFixed(1)}%`,
+              `Saved: $${goal.saved.toFixed(2)}`,
+              `Target: $${goal.target.toFixed(2)}`,
+              `Remaining: $${(goal.target - goal.saved).toFixed(2)}`
+            ];
+          }
+        }
+      }
+    },
+    onClick: (event, elements) => {
+      if (elements.length > 0) {
+        const elementIndex = elements[0].index;
+        const goal = goalsProgress[elementIndex];
+        setSelectedGoal(selectedGoal?.id === goal.id ? null : goal);
+      }
+    }
+  };
   
 
   return (
@@ -705,47 +818,339 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
             </div>
             <br />
             <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
-              <h6>Goals Progress</h6>
-              <p style={{ color: 'gray' }}><sup>Tracking</sup></p>
+              <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                <div>
+                  <h6>🎯 Goals Progress</h6>
+                  <p style={{ color: 'gray' }}><sup>Interactive Goal Tracking Dashboard</sup></p>
+                </div>
+                
+                <div className="d-flex gap-2 flex-wrap">
+                  {/* View Mode Selector */}
+                  <div className="btn-group" role="group">
+                    <button 
+                      type="button" 
+                      className={`btn btn-sm ${goalsViewMode === 'cards' ? 'btn-primary' : (darkMode ? 'btn-outline-light' : 'btn-outline-dark')}`}
+                      onClick={() => setGoalsViewMode('cards')}
+                      title="Card View"
+                    >
+                      🎴
+                    </button>
+                    <button 
+                      type="button" 
+                      className={`btn btn-sm ${goalsViewMode === 'list' ? 'btn-primary' : (darkMode ? 'btn-outline-light' : 'btn-outline-dark')}`}
+                      onClick={() => setGoalsViewMode('list')}
+                      title="List View"
+                    >
+                      📋
+                    </button>
+                  </div>
+
+                  {/* Goals Chart Toggle */}
+                  <button 
+                    type="button"
+                    className={`btn btn-sm ${showGoalsChart ? 'btn-success' : (darkMode ? 'btn-outline-light' : 'btn-outline-dark')}`}
+                    onClick={() => setShowGoalsChart(!showGoalsChart)}
+                    title={showGoalsChart ? 'Hide Goals Chart' : 'Show Goals Chart'}
+                  >
+                    {showGoalsChart ? '📊' : '📈'}
+                  </button>
+                  
+                  {/* Animation Toggle */}
+                  <button 
+                    type="button"
+                    className={`btn btn-sm ${goalsAnimations ? 'btn-warning' : (darkMode ? 'btn-outline-light' : 'btn-outline-dark')}`}
+                    onClick={() => setGoalsAnimations(!goalsAnimations)}
+                    title={goalsAnimations ? 'Disable Animations' : 'Enable Animations'}
+                  >
+                    {goalsAnimations ? '🎬' : '⏸️'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Goals Chart */}
+              {showGoalsChart && goalsProgress.length > 0 && (
+                <div className="mb-4" style={{height: '300px', position: 'relative'}}>
+                  <Doughnut data={goalsChartData} options={goalsChartOptions} />
+                  {selectedGoal && (
+                    <div className={`alert ${darkMode ? 'alert-dark' : 'alert-light'} mt-2`} 
+                         style={{border: `2px solid ${getGoalColor((selectedGoal.saved / selectedGoal.target) * 100)}`}}>
+                      <strong>{getGoalIcon((selectedGoal.saved / selectedGoal.target) * 100)} Selected: {selectedGoal.name}</strong>
+                      <br />
+                      <small>
+                        Progress: {((selectedGoal.saved / selectedGoal.target) * 100).toFixed(1)}% • 
+                        Saved: ${selectedGoal.saved.toFixed(2)} • 
+                        Target: ${selectedGoal.target.toFixed(2)}
+                      </small>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {goalsProgress.length === 0 ? (
-                <p className="border border-danger rounded p-2 m-5 text-danger">No Goals Have Been Added !</p>
+                <div className="text-center p-5">
+                  <div className="mb-3" style={{fontSize: '4rem'}}>🎯</div>
+                  <h5 className="text-muted">No Goals Have Been Added!</h5>
+                  <p className="text-muted">Start setting financial goals to track your progress</p>
+                  <button className={`btn ${darkMode ? 'btn-outline-light' : 'btn-outline-primary'}`}>
+                    ➕ Add Your First Goal
+                  </button>
+                </div>
               ) : (
-                goalsProgress.map((goal, index) => (
-                  <div key={index} className="d-flex align-items-center mb-2 rounded" style={{ width: '120%' }}>
-                    <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>{goal.name}:</span>
-                    <div style={{ width: 80, height: 80, position: 'relative', marginLeft: 'auto', marginRight: 'auto' }}>
-                      <CircularProgressbar
-                        value={(goal.saved / goal.target) * 100}
-                        strokeWidth={25}
-                        styles={buildStyles({
-                          textColor: darkMode ? 'white' : 'black',
-                          pathColor: 'url(#gradient)', // Use the gradient
-                          trailColor: darkMode ? '#343a40' : '#d6d6d6',
-                          pathTransitionDuration: 0.9,
-                        })}
-                      />
-                      <svg style={{ height: 0 }}>
-                        <defs>
-                          <linearGradient id="gradient" gradientTransform="rotate(10)">
-                            <stop offset="0%" stopColor="#17a2b8" />
-                            <stop offset="25%" stopColor="#17a2b8" />
-                            <stop offset="100%" stopColor="red" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                      <div style={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        fontSize: '19px',
-                        color: darkMode ? 'white' : 'black',
-                      }}>
-                        {(goal.saved / goal.target * 100).toFixed(2)}%
+                <>
+                  {/* Card View */}
+                  {goalsViewMode === 'cards' && (
+                    <div className="row">
+                      {goalsProgress.map((goal, index) => {
+                        const progress = (goal.saved / goal.target) * 100;
+                        const goalColor = getGoalColor(progress, index);
+                        const isSelected = selectedGoal?.id === goal.id;
+                        
+                        return (
+                          <div key={index} className="col-md-6 col-lg-4 mb-4">
+                            <div 
+                              className={`card h-100 ${darkMode ? 'bg-dark text-light' : 'bg-light'} border-0 shadow-sm`}
+                              style={{ 
+                                cursor: 'pointer',
+                                transition: goalsAnimations ? 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
+                                borderLeft: `5px solid ${goalColor}`,
+                                transform: isSelected ? 'scale(1.08) rotate(1deg)' : 'scale(1)',
+                                boxShadow: isSelected ? 
+                                  `0 12px 35px ${goalColor}40` : 
+                                  '0 4px 15px rgba(0,0,0,0.1)',
+                                background: isSelected ? 
+                                  (darkMode ? `linear-gradient(135deg, #2d3748 0%, ${goalColor}20 100%)` : `linear-gradient(135deg, #f8f9fa 0%, ${goalColor}15 100%)`) :
+                                  undefined
+                              }}
+                              onClick={() => setSelectedGoal(isSelected ? null : goal)}
+                              onMouseEnter={(e) => {
+                                if (goalsAnimations && !isSelected) {
+                                  e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+                                  e.currentTarget.style.boxShadow = `0 8px 25px ${goalColor}30`;
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                if (goalsAnimations) {
+                                  e.currentTarget.style.transform = isSelected ? 'scale(1.08) rotate(1deg)' : 'scale(1)';
+                                  e.currentTarget.style.boxShadow = isSelected ? 
+                                    `0 12px 35px ${goalColor}40` : 
+                                    '0 4px 15px rgba(0,0,0,0.1)';
+                                }
+                              }}
+                            >
+                              <div className="card-body p-4">
+                                <div className="d-flex justify-content-between align-items-start mb-3">
+                                  <div className="flex-grow-1">
+                                    <h6 className="card-title mb-1 d-flex align-items-center" style={{color: goalColor}}>
+                                      <span className="me-2" style={{fontSize: '1.5rem'}}>
+                                        {getGoalIcon(progress, goal.category)}
+                                      </span>
+                                      {goal.name}
+                                    </h6>
+                                    <small className={`badge ${progress >= 100 ? 'bg-success' : progress >= 50 ? 'bg-warning' : 'bg-danger'}`}>
+                                      {getProgressLabel(progress)}
+                                    </small>
+                                  </div>
+                                </div>
+
+                                {/* Circular Progress */}
+                                <div className="d-flex justify-content-center mb-3">
+                                  <div style={{ width: 100, height: 100, position: 'relative' }}>
+                                    <CircularProgressbar
+                                      value={progress}
+                                      strokeWidth={8}
+                                      styles={buildStyles({
+                                        textColor: darkMode ? 'white' : 'black',
+                                        pathColor: goalColor,
+                                        trailColor: darkMode ? '#4a5568' : '#e2e8f0',
+                                        pathTransitionDuration: goalsAnimations ? 1.5 : 0,
+                                        pathTransition: goalsAnimations ? 'stroke-dashoffset 1.5s ease-in-out' : 'none',
+                                      })}
+                                    />
+                                    <div style={{
+                                      position: 'absolute',
+                                      top: '50%',
+                                      left: '50%',
+                                      transform: 'translate(-50%, -50%)',
+                                      fontSize: '14px',
+                                      fontWeight: 'bold',
+                                      color: goalColor,
+                                    }}>
+                                      {progress.toFixed(1)}%
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Goal Details */}
+                                <div className="text-center">
+                                  <div className="row text-center">
+                                    <div className="col-6">
+                                      <small className="text-muted">Saved</small>
+                                      <div style={{color: goalColor, fontWeight: 'bold'}}>
+                                        ${goal.saved.toFixed(2)}
+                                      </div>
+                                    </div>
+                                    <div className="col-6">
+                                      <small className="text-muted">Target</small>
+                                      <div style={{color: goalColor, fontWeight: 'bold'}}>
+                                        ${goal.target.toFixed(2)}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Progress Bar */}
+                                <div className="mt-3">
+                                  <div className="progress" style={{height: '8px', borderRadius: '10px'}}>
+                                    <div 
+                                      className="progress-bar"
+                                      style={{
+                                        width: `${Math.min(progress, 100)}%`,
+                                        backgroundColor: goalColor,
+                                        borderRadius: '10px',
+                                        transition: goalsAnimations ? 'width 2s ease-out' : 'none',
+                                        background: `linear-gradient(90deg, ${goalColor} 0%, ${goalColor}80 100%)`
+                                      }}
+                                    ></div>
+                                  </div>
+                                  <div className="d-flex justify-content-between mt-1">
+                                    <small style={{color: goalColor}}>
+                                      ${(goal.target - goal.saved).toFixed(2)} remaining
+                                    </small>
+                                    <small style={{color: goalColor}}>
+                                      {progress >= 100 ? '🎉 Complete!' : `${(100 - progress).toFixed(1)}% to go`}
+                                    </small>
+                                  </div>
+                                </div>
+
+                                {/* Expanded Details */}
+                                {isSelected && (
+                                  <div className="mt-3 p-3 rounded" 
+                                       style={{
+                                         backgroundColor: `${goalColor}15`,
+                                         border: `1px solid ${goalColor}40`,
+                                         animation: goalsAnimations ? 'fadeIn 0.3s ease-in' : 'none'
+                                       }}>
+                                    <h6 style={{color: goalColor}}>📊 Goal Analytics</h6>
+                                    <div className="row text-center">
+                                      <div className="col-4">
+                                        <small>Monthly Need</small><br />
+                                        <strong style={{color: goalColor}}>
+                                          ${((goal.target - goal.saved) / 12).toFixed(2)}
+                                        </strong>
+                                      </div>
+                                      <div className="col-4">
+                                        <small>Weekly Need</small><br />
+                                        <strong style={{color: goalColor}}>
+                                          ${((goal.target - goal.saved) / 52).toFixed(2)}
+                                        </strong>
+                                      </div>
+                                      <div className="col-4">
+                                        <small>Daily Need</small><br />
+                                        <strong style={{color: goalColor}}>
+                                          ${((goal.target - goal.saved) / 365).toFixed(2)}
+                                        </strong>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* List View */}
+                  {goalsViewMode === 'list' && (
+                    <div className="space-y-3">
+                      {goalsProgress.map((goal, index) => {
+                        const progress = (goal.saved / goal.target) * 100;
+                        const goalColor = getGoalColor(progress, index);
+                        const isSelected = selectedGoal?.id === goal.id;
+                        
+                        return (
+                          <div 
+                            key={index} 
+                            className={`p-4 rounded-lg border ${darkMode ? 'border-secondary' : 'border-light'} mb-3`}
+                            style={{
+                              backgroundColor: isSelected ? `${goalColor}10` : 'transparent',
+                              borderLeft: `5px solid ${goalColor}`,
+                              cursor: 'pointer',
+                              transition: goalsAnimations ? 'all 0.3s ease' : 'none'
+                            }}
+                            onClick={() => setSelectedGoal(isSelected ? null : goal)}
+                          >
+                            <div className="d-flex align-items-center justify-content-between">
+                              <div className="d-flex align-items-center flex-grow-1">
+                                <span style={{fontSize: '2rem', marginRight: '1rem'}}>
+                                  {getGoalIcon(progress, goal.category)}
+                                </span>
+                                <div className="flex-grow-1">
+                                  <h6 className="mb-1" style={{color: goalColor}}>
+                                    {goal.name}
+                                  </h6>
+                                  <div className="d-flex align-items-center">
+                                    <div className="progress flex-grow-1 me-3" style={{height: '8px'}}>
+                                      <div 
+                                        className="progress-bar"
+                                        style={{
+                                          width: `${Math.min(progress, 100)}%`,
+                                          backgroundColor: goalColor,
+                                          transition: goalsAnimations ? 'width 1.5s ease-out' : 'none'
+                                        }}
+                                      ></div>
+                                    </div>
+                                    <small style={{color: goalColor, minWidth: '60px'}}>
+                                      {progress.toFixed(1)}%
+                                    </small>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="text-end ms-3">
+                                <div style={{color: goalColor, fontWeight: 'bold'}}>
+                                  ${goal.saved.toFixed(2)} / ${goal.target.toFixed(2)}
+                                </div>
+                                <small className="text-muted">
+                                  ${(goal.target - goal.saved).toFixed(2)} remaining
+                                </small>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Summary Statistics */}
+                  <div className={`mt-4 p-3 rounded ${darkMode ? 'bg-secondary' : 'bg-light'}`}>
+                    <h6 className="mb-3">📈 Goals Summary</h6>
+                    <div className="row text-center">
+                      <div className="col-md-3">
+                        <strong style={{color: '#28a745'}}>🎯 Total Goals</strong><br />
+                        <span style={{color: '#28a745', fontSize: '1.5rem'}}>{goalsProgress.length}</span>
+                      </div>
+                      <div className="col-md-3">
+                        <strong style={{color: '#17a2b8'}}>✅ Completed</strong><br />
+                        <span style={{color: '#17a2b8', fontSize: '1.5rem'}}>
+                          {goalsProgress.filter(goal => (goal.saved / goal.target) * 100 >= 100).length}
+                        </span>
+                      </div>
+                      <div className="col-md-3">
+                        <strong style={{color: '#ffc107'}}>💰 Total Saved</strong><br />
+                        <span style={{color: '#ffc107', fontSize: '1.2rem'}}>
+                          ${totalGoalsSaved.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="col-md-3">
+                        <strong style={{color: '#dc3545'}}>🎪 Total Target</strong><br />
+                        <span style={{color: '#dc3545', fontSize: '1.2rem'}}>
+                          ${goalsProgress.reduce((sum, goal) => sum + goal.target, 0).toFixed(2)}
+                        </span>
                       </div>
                     </div>
                   </div>
-                ))
+                </>
               )}
             </div>
                 <br />
