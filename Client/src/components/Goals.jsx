@@ -437,7 +437,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                 }
 
                 .goal-title {
-                    font-size: 1.5rem;
+                    font-size: 1.2rem;
                     font-weight: 700;
                     color: ${darkMode ? '#e2e8f0' : '#2d3748'};
                     margin-bottom: 10px;
