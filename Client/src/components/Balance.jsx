@@ -276,7 +276,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
 
         .balance-title {
           color: ${darkMode ? '#e2e8f0' : '#2d3748'};
-          font-size: 1.8em;
+          font-size: 1.2em;
           font-weight: 700;
           margin-bottom: 30px;
           text-align: center;
@@ -329,17 +329,21 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
         }
 
         .btn-balance {
-          padding: 18px 30px;
+          padding: 12px 20px;
           border: none;
           border-radius: 12px;
           font-weight: 600;
-          font-size: 1.1rem;
+          font-size: 0.95rem;
           cursor: pointer;
           transition: all 0.3s ease;
-          margin: 0 10px;
+          margin: 0 8px;
           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
           position: relative;
           overflow: hidden;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          white-space: nowrap;
         }
 
         .btn-set-balance {
@@ -409,7 +413,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
 
         .overview-title {
           color: ${darkMode ? '#e2e8f0' : '#2d3748'};
-          font-size: 1.8em;
+          font-size: 1.2em;
           font-weight: 700;
           margin-bottom: 25px;
           text-align: center;
@@ -483,17 +487,19 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
         }
 
         .btn-table {
-          padding: 10px 16px;
+          padding: 8px 12px;
           border: none;
           border-radius: 8px;
           font-weight: 600;
-          font-size: 0.85rem;
+          font-size: 0.8rem;
           cursor: pointer;
           transition: all 0.3s ease;
           margin: 2px;
           display: inline-flex;
           align-items: center;
-          gap: 5px;
+          gap: 4px;
+          white-space: nowrap;
+          min-width: auto;
         }
 
         .btn-edit {
@@ -621,8 +627,9 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
 
         @media (max-width: 768px) {
           .btn-balance {
-            width: 100%;
-            margin: 5px 0;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            margin: 5px 4px;
           }
           
           .balance-section, .overview-section {
@@ -630,8 +637,9 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           }
           
           .btn-table {
-            padding: 6px 10px;
-            font-size: 11px;
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            gap: 2px;
           }
         }
       `}</style>
@@ -728,7 +736,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           </div>
         )}
 
-        <div style={{ textAlign: 'center', marginTop: '25px' }}>
+        <div style={{ textAlign: 'center', marginTop: '25px', display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'nowrap', alignItems: 'center' }}>
           <button 
             className={`btn-balance btn-set-balance ${loading ? 'btn-disabled' : ''}`} 
             onClick={totalBalance}
@@ -823,23 +831,25 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                             </span>
                           </td>
                           <td data-label="Actions">
-                            <button 
-                              onClick={() => handleEditSave(index)} 
-                              className={`btn-table btn-save ${loading ? 'btn-disabled' : ''}`}
-                              disabled={loading}
-                            >
-                              {loading ? <span className="loading-spinner-balance"></span> : ''}
-                              💾 Save
-                            </button>
-                            <button 
-                              onClick={() => {
-                                setEditIndex(null);
-                                showSuccess('Edit cancelled');
-                              }} 
-                              className="btn-table btn-cancel"
-                            >
-                              ❌ Cancel
-                            </button>
+                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'nowrap', alignItems: 'center' }}>
+                              <button 
+                                onClick={() => handleEditSave(index)} 
+                                className={`btn-table btn-save ${loading ? 'btn-disabled' : ''}`}
+                                disabled={loading}
+                              >
+                                {loading ? <span className="loading-spinner-balance"></span> : ''}
+                                💾 Save
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  setEditIndex(null);
+                                  showSuccess('Edit cancelled');
+                                }} 
+                                className="btn-table btn-cancel"
+                              >
+                                ❌ Cancel
+                              </button>
+                            </div>
                           </td>
                         </>
                       ) : (
@@ -862,21 +872,23 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                             </span>
                           </td>
                           <td data-label="Actions">
-                            <button 
-                              onClick={() => { 
-                                setEditIndex(index); 
-                                setEditBalance(balance); 
-                              }} 
-                              className="btn-table btn-edit"
-                            >
-                              ✏️ Edit
-                            </button>
-                            <button 
-                              onClick={() => handleDelete(index)} 
-                              className={`btn-table ${deleteConfirm === index ? 'confirm-delete' : 'btn-delete'}`}
-                            >
-                              {deleteConfirm === index ? '⚠️ Confirm?' : '🗑️ Delete'}
-                            </button>
+                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'nowrap', alignItems: 'center' }}>
+                              <button 
+                                onClick={() => { 
+                                  setEditIndex(index); 
+                                  setEditBalance(balance); 
+                                }} 
+                                className="btn-table btn-edit"
+                              >
+                                ✏️ Edit
+                              </button>
+                              <button 
+                                onClick={() => handleDelete(index)} 
+                                className={`btn-table ${deleteConfirm === index ? 'confirm-delete' : 'btn-delete'}`}
+                              >
+                                {deleteConfirm === index ? '⚠️ Confirm?' : '🗑️ Delete'}
+                              </button>
+                            </div>
                           </td>
                         </>
                       )}
