@@ -382,21 +382,25 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                 .action-buttons {
                     display: flex;
                     gap: 8px;
-                    flex-wrap: wrap;
+                    flex-wrap: nowrap;
+                    justify-content: flex-start;
+                    align-items: center;
                 }
 
                 .btn-modern {
-                    padding: 8px 16px;
+                    padding: 6px 12px;
                     border: none;
                     border-radius: 8px;
                     font-weight: 600;
-                    font-size: 0.85rem;
+                    font-size: 0.8rem;
                     cursor: pointer;
                     transition: all 0.3s ease;
                     text-decoration: none;
                     display: inline-flex;
                     align-items: center;
-                    gap: 5px;
+                    gap: 4px;
+                    white-space: nowrap;
+                    min-width: auto;
                 }
 
                 .btn-edit {
@@ -475,12 +479,14 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                     }
                     
                     .action-buttons {
-                        flex-direction: column;
+                        flex-wrap: nowrap;
+                        gap: 4px;
                     }
                     
                     .btn-modern {
-                        width: 100%;
-                        justify-content: center;
+                        padding: 4px 8px;
+                        font-size: 0.7rem;
+                        gap: 2px;
                     }
                 }
             `}</style>
