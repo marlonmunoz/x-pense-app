@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-import { BrowserRouter as Router, Routes, Route, NavLink, Outlet }  from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink, Outlet, useLocation, Navigate }  from 'react-router-dom';
 import AddTransactions from '../components/AddTransactions';
 import Balance from '../components/Balance'
 import Budget from '../components/Budget'
@@ -185,172 +185,292 @@ function App() {
         });
   }
 
-
   return (
     <Router>
-      <div id="root" className={`container d-flex flex-column align-items-center ${darkMode ? 'dark-mode' : 'light-mode'}`}>
-        {/* LOGOUT */}
-        {/* <button onClick={handleLogout}className={`btn btn-secondary mb-3 ml-auto border ${darkMode ? 'btn-light' : 'btn-dark'}`} >Logout</button> */}
-
-        {location.pathname !== '/' && (
-        <>
-        <h1> <span className='app-title metallic-shadow fade-in'>X-PENSE</span></h1>
-        <h6><span className='badge badge-info border p-2'>A Budget Tracker At Your Fingertips</span></h6>
-
-        <button 
-          onClick={toggleDarkMode} 
-          className={`btn mb-3 ${darkMode ? 'btn-light' : 'btn-dark'}`}
-        >
-          {darkMode ? 'Light' : 'Dark'} Mode
-        </button>
-       
-
-        <nav className={`navbar navbar-expand-lg ${darkMode ? 'navbar-dark-mode' : 'navbar-light-mode'}`}>
-          <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toogle navigation'>
-              <span className={`navbar-toggler-icon ${darkMode ? 'dark-mode-icon' : 'light-mode-icon'} align-left`}></span>
-          </button>
-          <div className='collapse navbar-collapse justify-content-center' id='navbarNav'>
-            <ul className={`nav nav-tabs ${darkMode ? 'nav-tabs-bg-dark-mode' : 'nav-tabs-bg-light-mode'} rounded`}>
-              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/dashboard'>Dashboard</NavLink></li>
-              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='budget'>Budget</NavLink></li>
-              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/balance'>Balance</NavLink></li>
-              <li className='nav-item'><NavLink className={`nav-link ${darkMode ? 'highlight-black' : 'highlight-white'} border`} to='/add'><strong>X-PENSE</strong></NavLink></li>
-              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border `} to='/transactions'>Transaction</NavLink></li>
-              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/goals'>Goals</NavLink></li>
-              <li className='nav-item'><NavLink className= {`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/investments'>Investments</NavLink></li>
-            </ul>
-          </div>
-        </nav>
-        </>
-        )}
-        <Routes>
-          <Route path='/' element={<StartPage />} />
-          <Route path='/' element={<div><Outlet /></div>}>
-            <Route path='dashboard' element={<Dashboard 
-              transactions={transactions} 
-              balance={totalBalance} 
-              budget={budget} 
-              investments={investments}
-              totalAmount={totalAmount} 
-              darkMode={darkMode} 
-              formatAmount={formatAmount} 
-              addedInvestments={addedInvestments} 
-              goals={goals} 
-              setGoals={setGoals}
-              formatCurrency={formatCurrency}
-              formatDate={formatDate}
-              handleRemoveInvestment={handleRemoveInvestment}
-              goalsProgress={goalsProgress} setGoalsProgress={setGoalsProgress}
-              totalBudgetAmount={totalBudgetAmount}
-              parseDate={parseDate}
-              setItems={setItems}
-              setBalances={setBalances}
-              setCashOnHand={setCashOnHand}
-              setBankAccountBalance={setBankAccountBalance}
-              setSavings={setSavings}
-              setTransactions={setTransactions}
-              setAddedInvestments={setAddedInvestments} 
-              setInvestments={setInvestments}
-              setAmounts={setAmounts}
-            />} />
-            <Route path='budget' element={<Budget 
-              balance={balance} 
-              budget={budget} setBudget={setBudget} 
-              darkMode={darkMode} 
-              validated={validated} setValidated={setValidated} 
-              formatCurrency={formatCurrency}
-              items={items} setItems={setItems}
-              name={name} setName={setName}
-              amount={amount} setAmount={setAmount}
-              newBudget={newBudget} setNewBudget={setNewBudget}
-              error={error} setError={setError}
-              editingIndex={editingIndex} setEditingIndex={setEditingIndex}
-              editAmount={editAmount} setEditAmount={setEditAmount}
-              date={date} setDate={setDate}
-              totalBudgetAmount={totalBudgetAmount}
-              parseDate={parseDate}
-            />} />
-            <Route path='balance' element={<Balance 
-              balance={balance} setBalance={setBalance}  
-              transactions={transactions} 
-              budget={budget} 
-              darkMode={darkMode} 
-              validated={validated} setValidated={setValidated} 
-              cashOnHand={cashOnHand} setCashOnHand={setCashOnHand}
-              bankAccountBalance={bankAccountBalance} setBankAccountBalance={setBankAccountBalance}
-              savings={savings} setSavings={setSavings}
-              total={total} 
-              setTotal={setTotal}
-              formatCurrency={formatCurrency}
-              balanceId={balanceId} setBalanceId={setBalanceId}
-              balances={balances} setBalances={setBalances}
-              editIndex={editIndex} setEditIndex={setEditIndex}
-              editBalance={editBalance} setEditBalance={setEditBalance}
-              balanceError={balanceError} setBalanceError={setBalanceError}
-            />} />
-            <Route path='transactions' element={<Transactions 
-              transactions={transactions} setTransactions={setTransactions} 
-              darkMode={darkMode} 
-              validated={validated} setValidated={setValidated}
-              formatCurrency={formatCurrency}
-              totalAmount={totalAmount} setTotalAmount={setTotalAmount}
-              editIndex={editIndex} setEditIndex={setEditIndex}
-              editTransaction={editTransaction} setEditTransaction={setEditTransaction}
-              reminderDate={reminderDate} setReminderDate={setReminderDate}
-              successMessage={successMessage} setSuccessMessage={setSuccessMessage}
-              parseDate={parseDate}
-            />} />
-            <Route path='add' element={<AddTransactions 
-              darkMode={darkMode} 
-              validated={validated} setValidated={setValidated}
-              amount={amount} setAmount={setAmount}
-              category={category} setCategory={setCategory}
-              date={date} setDate={setDate}
-              description={description} setDescription={setDescription}
-            />} />
-            <Route path='goals' element={<Goals 
-              goalAmount={goalAmount} setGoalAmount={setGoalAmount} 
-              currentAmount={currentAmount} setCurrentAmount={setCurrentAmount} 
-              newGoalName={newGoalName} setNewGoalName={setNewGoalName}
-              newGoalAmount={newGoalAmount} setNewGoalAmount={setNewGoalAmount}
-              progPercentage={progPercentage} setProgPercentage={setProgPercentage} 
-              goals={goals} setGoals={setGoals}
-              validated={validated} setValidated={setValidated}
-              inputAmounts={inputAmounts} setInputAmounts={setInputAmounts}
-              editingGoalId={editingGoalId} setEditingGoalId={setEditingGoalId}
-              editedGoalName={editedGoalName} setEditedGoalName={setEditedGoalName}
-              formatCurrency={formatCurrency}
-              darkMode={darkMode}
-            />} />
-            <Route path='investments' element={<Investments 
-              formatAmount={formatAmount} 
-              formatCurrency={formatCurrency}
-              darkMode={darkMode} 
-              onAddInvestment={(newInvestment) => {
-                const existingInvestmentIndex = addedInvestments.findIndex(inv => inv.id === newInvestment.id);
-                if (existingInvestmentIndex !== -1) {
-                  const updatedInvestments = [...addedInvestments];
-                  updatedInvestments[existingInvestmentIndex] = {
-                    ...updatedInvestments[existingInvestmentIndex],
-                    amount: updatedInvestments[existingInvestmentIndex].amount + newInvestment.amount,
-                    totalPrice: updatedInvestments[existingInvestmentIndex].totalPrice + newInvestment.totalPrice,
-                  };
-                  setAddedInvestments(updatedInvestments);
-                } else {
-                  setAddedInvestments([...addedInvestments, newInvestment]);
-                }
-              }}
-              validated={validated} setValidated={setValidated} 
-              investments={investments} setInvestments={setInvestments}
-              amounts={amounts} setAmounts={setAmounts}
-              marketCaps={marketCaps} setMarketCaps={setMarketCaps}
-              addedInvestments={addedInvestments} setAddedInvestments={setAddedInvestments}
-            />} />
-          </Route>
-        </Routes>
-        {location.pathname !== '/' && <Footer />}
-      </div>
+      <AppContent 
+        darkMode={darkMode}
+        toggleDarkMode={toggleDarkMode}
+        transactions={transactions}
+        setTransactions={setTransactions}
+        balance={balance}
+        setBalance={setBalance}
+        budget={budget}
+        setBudget={setBudget}
+        addedInvestments={addedInvestments}
+        setAddedInvestments={setAddedInvestments}
+        totalAmount={totalAmount}
+        setTotalAmount={setTotalAmount}
+        items={items}
+        setItems={setItems}
+        name={name}
+        setName={setName}
+        amount={amount}
+        setAmount={setAmount}
+        newBudget={newBudget}
+        setNewBudget={setNewBudget}
+        error={error}
+        setError={setError}
+        editingIndex={editingIndex}
+        setEditingIndex={setEditingIndex}
+        editAmount={editAmount}
+        setEditAmount={setEditAmount}
+        totalBudgetAmount={totalBudgetAmount}
+        cashOnHand={cashOnHand}
+        setCashOnHand={setCashOnHand}
+        bankAccountBalance={bankAccountBalance}
+        setBankAccountBalance={setBankAccountBalance}
+        savings={savings}
+        setSavings={setSavings}
+        total={total}
+        setTotal={setTotal}
+        totalBalance={totalBalance}
+        balanceId={balanceId}
+        setBalanceId={setBalanceId}
+        balances={balances}
+        setBalances={setBalances}
+        editIndex={editIndex}
+        setEditIndex={setEditIndex}
+        editBalance={editBalance}
+        setEditBalance={setEditBalance}
+        balanceError={balanceError}
+        setBalanceError={setBalanceError}
+        goalAmount={goalAmount}
+        setGoalAmount={setGoalAmount}
+        currentAmount={currentAmount}
+        setCurrentAmount={setCurrentAmount}
+        inputAmount={inputAmount}
+        setInputAmount={setInputAmount}
+        newGoalName={newGoalName}
+        setNewGoalName={setNewGoalName}
+        newGoalAmount={newGoalAmount}
+        setNewGoalAmount={setNewGoalAmount}
+        progPercentage={progPercentage}
+        setProgPercentage={setProgPercentage}
+        goals={goals}
+        setGoals={setGoals}
+        goalsProgress={goalsProgress}
+        setGoalsProgress={setGoalsProgress}
+        inputAmounts={inputAmounts}
+        setInputAmounts={setInputAmounts}
+        editingGoalId={editingGoalId}
+        setEditingGoalId={setEditingGoalId}
+        editedGoalName={editedGoalName}
+        setEditedGoalName={setEditedGoalName}
+        editTransaction={editTransaction}
+        setEditTransaction={setEditTransaction}
+        reminderDate={reminderDate}
+        setReminderDate={setReminderDate}
+        successMessage={successMessage}
+        setSuccessMessage={setSuccessMessage}
+        investments={investments}
+        setInvestments={setInvestments}
+        amounts={amounts}
+        setAmounts={setAmounts}
+        marketCaps={marketCaps}
+        setMarketCaps={setMarketCaps}
+        category={category}
+        setCategory={setCategory}
+        date={date}
+        setDate={setDate}
+        description={description}
+        setDescription={setDescription}
+        validated={validated}
+        setValidated={setValidated}
+        formatCurrency={formatCurrency}
+        formatDate={formatDate}
+        parseDate={parseDate}
+        formatAmount={formatAmount}
+        handleAddInvestment={handleAddInvestment}
+        handleRemoveInvestment={handleRemoveInvestment}
+      />
     </Router>
+  )
+}
+
+function AppContent(props) {
+  const location = useLocation();
+  const {
+    darkMode, toggleDarkMode, transactions, setTransactions, balance, setBalance,
+    budget, setBudget, addedInvestments, setAddedInvestments, totalAmount, setTotalAmount,
+    items, setItems, name, setName, amount, setAmount, newBudget, setNewBudget,
+    error, setError, editingIndex, setEditingIndex, editAmount, setEditAmount,
+    totalBudgetAmount, cashOnHand, setCashOnHand, bankAccountBalance, setBankAccountBalance,
+    savings, setSavings, total, setTotal, totalBalance, balanceId, setBalanceId,
+    balances, setBalances, editIndex, setEditIndex, editBalance, setEditBalance,
+    balanceError, setBalanceError, goalAmount, setGoalAmount, currentAmount, setCurrentAmount,
+    inputAmount, setInputAmount, newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount,
+    progPercentage, setProgPercentage, goals, setGoals, goalsProgress, setGoalsProgress,
+    inputAmounts, setInputAmounts, editingGoalId, setEditingGoalId, editedGoalName, setEditedGoalName,
+    editTransaction, setEditTransaction, reminderDate, setReminderDate, successMessage, setSuccessMessage,
+    investments, setInvestments, amounts, setAmounts, marketCaps, setMarketCaps,
+    category, setCategory, date, setDate, description, setDescription,
+    validated, setValidated, formatCurrency, formatDate, parseDate, formatAmount,
+    handleAddInvestment, handleRemoveInvestment
+  } = props;
+  return (
+    <div id="root" className={`${darkMode ? 'dark-mode' : 'light-mode'}`}>
+      {location.pathname === '/' ? (
+        <div className="container d-flex flex-column align-items-center">
+          <Routes>
+            <Route path='/' element={<StartPage />} />
+          </Routes>
+        </div>
+      ) : (
+        <div className="d-flex" style={{minHeight: '100vh'}}>
+          {/* Left Sidebar Navigation */}
+          <nav className={`d-flex flex-column p-3 ${darkMode ? 'navbar-dark-mode' : 'navbar-light-mode'}`} style={{width: '250px', minHeight: '100vh'}}>
+            <div className="text-center mb-4">
+              <h3><span className='app-title metallic-shadow'>X-PENSE</span></h3>
+              <p><span className='badge badge-info border p-2'>Budget Tracker</span></p>
+              <button 
+                onClick={toggleDarkMode} 
+                className={`btn btn-sm ${darkMode ? 'btn-light' : 'btn-dark'}`}
+              >
+                {darkMode ? 'Light' : 'Dark'} Mode
+              </button>
+            </div>
+            
+            <ul className={`nav nav-pills flex-column ${darkMode ? 'nav-tabs-bg-dark-mode' : 'nav-tabs-bg-light-mode'}`}>
+              <li className='nav-item mb-2'><NavLink className={`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/dashboard'>Dashboard</NavLink></li>
+              <li className='nav-item mb-2'><NavLink className={`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/budget'>Budget</NavLink></li>
+              <li className='nav-item mb-2'><NavLink className={`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/balance'>Balance</NavLink></li>
+              <li className='nav-item mb-2'><NavLink className={`nav-link ${darkMode ? 'highlight-black' : 'highlight-white'} border`} to='/add'><strong>X-PENSE</strong></NavLink></li>
+              <li className='nav-item mb-2'><NavLink className={`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/transactions'>Transaction</NavLink></li>
+              <li className='nav-item mb-2'><NavLink className={`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/goals'>Goals</NavLink></li>
+              <li className='nav-item mb-2'><NavLink className={`nav-link ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border`} to='/investments'>Investments</NavLink></li>
+            </ul>
+          </nav>
+          
+          {/* Main Content Area */}
+          <div className="flex-grow-1 p-4">
+            <Routes>
+              <Route path='/' element={<Navigate to='/dashboard' replace />} />
+              <Route path='/dashboard' element={<Dashboard 
+                transactions={transactions} 
+                balance={totalBalance} 
+                budget={budget} 
+                investments={investments}
+                totalAmount={totalAmount} 
+                darkMode={darkMode} 
+                formatAmount={formatAmount} 
+                addedInvestments={addedInvestments} 
+                goals={goals} 
+                setGoals={setGoals}
+                formatCurrency={formatCurrency}
+                formatDate={formatDate}
+                handleRemoveInvestment={handleRemoveInvestment}
+                goalsProgress={goalsProgress} setGoalsProgress={setGoalsProgress}
+                totalBudgetAmount={totalBudgetAmount}
+                parseDate={parseDate}
+                setItems={setItems}
+                setBalances={setBalances}
+                setCashOnHand={setCashOnHand}
+                setBankAccountBalance={setBankAccountBalance}
+                setSavings={setSavings}
+                setTransactions={setTransactions}
+                setAddedInvestments={setAddedInvestments} 
+                setInvestments={setInvestments}
+                setAmounts={setAmounts}
+              />} />
+              <Route path='/budget' element={<Budget 
+                balance={balance} 
+                budget={budget} setBudget={setBudget} 
+                darkMode={darkMode} 
+                validated={validated} setValidated={setValidated} 
+                formatCurrency={formatCurrency}
+                items={items} setItems={setItems}
+                name={name} setName={setName}
+                amount={amount} setAmount={setAmount}
+                newBudget={newBudget} setNewBudget={setNewBudget}
+                error={error} setError={setError}
+                editingIndex={editingIndex} setEditingIndex={setEditingIndex}
+                editAmount={editAmount} setEditAmount={setEditAmount}
+                date={date} setDate={setDate}
+                totalBudgetAmount={totalBudgetAmount}
+                parseDate={parseDate}
+              />} />
+              <Route path='/balance' element={<Balance 
+                balance={balance} setBalance={setBalance}  
+                transactions={transactions} 
+                budget={budget} 
+                darkMode={darkMode} 
+                validated={validated} setValidated={setValidated} 
+                cashOnHand={cashOnHand} setCashOnHand={setCashOnHand}
+                bankAccountBalance={bankAccountBalance} setBankAccountBalance={setBankAccountBalance}
+                savings={savings} setSavings={setSavings}
+                total={total} 
+                setTotal={setTotal}
+                formatCurrency={formatCurrency}
+                balanceId={balanceId} setBalanceId={setBalanceId}
+                balances={balances} setBalances={setBalances}
+                editIndex={editIndex} setEditIndex={setEditIndex}
+                editBalance={editBalance} setEditBalance={setEditBalance}
+                balanceError={balanceError} setBalanceError={setBalanceError}
+              />} />
+              <Route path='/transactions' element={<Transactions 
+                transactions={transactions} setTransactions={setTransactions} 
+                darkMode={darkMode} 
+                validated={validated} setValidated={setValidated}
+                formatCurrency={formatCurrency}
+                totalAmount={totalAmount} setTotalAmount={setTotalAmount}
+                editIndex={editIndex} setEditIndex={setEditIndex}
+                editTransaction={editTransaction} setEditTransaction={setEditTransaction}
+                reminderDate={reminderDate} setReminderDate={setReminderDate}
+                successMessage={successMessage} setSuccessMessage={setSuccessMessage}
+                parseDate={parseDate}
+              />} />
+              <Route path='/add' element={<AddTransactions 
+                darkMode={darkMode} 
+                validated={validated} setValidated={setValidated}
+                amount={amount} setAmount={setAmount}
+                category={category} setCategory={setCategory}
+                date={date} setDate={setDate}
+                description={description} setDescription={setDescription}
+              />} />
+              <Route path='/goals' element={<Goals 
+                goalAmount={goalAmount} setGoalAmount={setGoalAmount} 
+                currentAmount={currentAmount} setCurrentAmount={setCurrentAmount} 
+                newGoalName={newGoalName} setNewGoalName={setNewGoalName}
+                newGoalAmount={newGoalAmount} setNewGoalAmount={setNewGoalAmount}
+                progPercentage={progPercentage} setProgPercentage={setProgPercentage} 
+                goals={goals} setGoals={setGoals}
+                validated={validated} setValidated={setValidated}
+                inputAmounts={inputAmounts} setInputAmounts={setInputAmounts}
+                editingGoalId={editingGoalId} setEditingGoalId={setEditingGoalId}
+                editedGoalName={editedGoalName} setEditedGoalName={setEditedGoalName}
+                formatCurrency={formatCurrency}
+                darkMode={darkMode}
+              />} />
+              <Route path='/investments' element={<Investments 
+                formatAmount={formatAmount} 
+                formatCurrency={formatCurrency}
+                darkMode={darkMode} 
+                onAddInvestment={(newInvestment) => {
+                  const existingInvestmentIndex = addedInvestments.findIndex(inv => inv.id === newInvestment.id);
+                  if (existingInvestmentIndex !== -1) {
+                    const updatedInvestments = [...addedInvestments];
+                    updatedInvestments[existingInvestmentIndex] = {
+                      ...updatedInvestments[existingInvestmentIndex],
+                      amount: updatedInvestments[existingInvestmentIndex].amount + newInvestment.amount,
+                      totalPrice: updatedInvestments[existingInvestmentIndex].totalPrice + newInvestment.totalPrice,
+                    };
+                    setAddedInvestments(updatedInvestments);
+                  } else {
+                    setAddedInvestments([...addedInvestments, newInvestment]);
+                  }
+                }}
+                validated={validated} setValidated={setValidated} 
+                investments={investments} setInvestments={setInvestments}
+                amounts={amounts} setAmounts={setAmounts}
+                marketCaps={marketCaps} setMarketCaps={setMarketCaps}
+                addedInvestments={addedInvestments} setAddedInvestments={setAddedInvestments}
+              />} />
+            </Routes>
+            <Footer />
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
 
