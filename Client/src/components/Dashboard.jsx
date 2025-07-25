@@ -22,7 +22,11 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
   const [selectedCategory, setSelectedCategory] = useState('all');
   
   const totalInvestments = addedInvestments.reduce((sum, investment) => sum + parseFloat(investment.total_price), 0).toFixed(2);
-  const overviewTotal = totalBudgetAmount + parseFloat(totalPrice) + balance - totalAmount;
+  
+  // Calculate total saved amount from all goals
+  const totalGoalsSaved = goalsProgress.reduce((sum, goal) => sum + parseFloat(goal.saved || 0), 0);
+  
+  const overviewTotal = totalBudgetAmount + parseFloat(totalPrice) + balance + totalGoalsSaved - totalAmount;
   
   // Enhanced data processing for interactive charts
   const filterTransactionsByTimeRange = (transactions, range) => {
@@ -662,7 +666,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                             </tr>
                             <tr>
                                 <th scope="row">Goals (saved)</th>
-                                <td className="text-left" >{formatCurrency()}</td>
+                                <td className="text-left" >{formatCurrency(totalGoalsSaved)}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Investments</th>
