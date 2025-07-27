@@ -56,12 +56,6 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           }));
           console.log('Fetched balances:', fetchedBalances);
           setBalances(fetchedBalances);
-          if (fetchedBalances.length > 0) {
-            const firstBalance = fetchedBalances[0];
-            setCashOnHand(firstBalance.cash_on_hand);
-            setBankAccountBalance(firstBalance.bank_account_balance);
-            setSavings(firstBalance.savings);
-          }
         } else if (response.data && typeof response.data === 'object') {
           const balance = {
             ...response.data,
@@ -69,9 +63,6 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           };
           console.log('Fetched single balance:', balance);
           setBalances([balance]);
-          setCashOnHand(balance.cash_on_hand);
-          setBankAccountBalance(balance.bank_account_balance);
-          setSavings(balance.savings);
         } else {
           console.error('Fetched data is not an array or object:', response.data);
         }
@@ -188,9 +179,9 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
   };
 
   const resetFields = () => {
-    setCashOnHand(0);
-    setBankAccountBalance(0);
-    setSavings(0);
+    setCashOnHand('');
+    setBankAccountBalance('');
+    setSavings('');
     setTotal(0);
     setValidationErrors({});
     showSuccess('Fields have been reset!');
