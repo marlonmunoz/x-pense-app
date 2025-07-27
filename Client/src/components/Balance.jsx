@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FinancialCalculator } from "../services/financialCalculator";
+import SmartUpdateService from "../services/smartUpdateService";
+import BulkUpdatePanel from "./BulkUpdatePanel";
 
 function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setBankAccountBalance, savings, setSavings, setTotal, formatCurrency, balanceId, setBalanceId, balances, setBalances, editIndex, setEditIndex, editBalance, setEditBalance, balanceError, setBalanceError}) {
 
@@ -15,9 +17,31 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
   const [monthlyExpenses, setMonthlyExpenses] = useState(0);
   const [showAllocation, setShowAllocation] = useState(false);
   const [allocationSuggestion, setAllocationSuggestion] = useState(null);
+  
+  // Smart update features
+  const [showBulkUpdate, setShowBulkUpdate] = useState(false);
+  const [smartValidation, setSmartValidation] = useState(null);
+  const [updateSuggestions, setUpdateSuggestions] = useState([]);
 
-  // Initialize financial calculator
+  // Initialize services with error handling
   const financialCalculator = new FinancialCalculator();
+  const [smartUpdateService, setSmartUpdateService] = useState(null);
+  const [servicesReady, setServicesReady] = useState(false);
+  
+  // Initialize smart update service safely
+  useEffect(() => {
+    let service = null;
+    try {
+      service = new SmartUpdateService();
+      setSmartUpdateService(service);
+      console.log('SmartUpdateService initialized successfully');
+    } catch (error) {
+      console.warn('SmartUpdateService failed to initialize:', error);
+      setSmartUpdateService(null);
+    } finally {
+      setServicesReady(true);
+    }
+  }, []);
 
   // Helper functions for better UX
   const showSuccess = (message) => {
@@ -35,6 +59,19 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
     setValidationErrors(errors);
     return Object.keys(errors).filter(key => key !== 'warning').length === 0;
   };
+
+  // Generate update suggestions when balances change
+  useEffect(() => {
+    if (balances.length > 0 && smartUpdateService && servicesReady) {
+      try {
+        const suggestions = smartUpdateService.generateUpdateSuggestions('balance', balances);
+        setUpdateSuggestions(suggestions);
+      } catch (error) {
+        console.warn('Failed to generate update suggestions:', error);
+        setUpdateSuggestions([]);
+      }
+    }
+  }, [balances, smartUpdateService, servicesReady]);
 
   // Calculate financial metrics when balances change
   useEffect(() => {
@@ -119,16 +156,52 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
     const { name, value } = e.target;
     const numValue = Number(value);
     
-    // Validate input
+    // Validate input with smart update service
     if (numValue < 0) {
       showError('Values cannot be negative');
       return;
     }
     
     setEditBalance({ ...editBalance, [name]: numValue });
+    
+    // Get smart validation suggestions (only if service is available)
+    if (smartUpdateService) {
+      try {
+        const validation = smartUpdateService.validateUpdate('balance', {
+          ...editBalance,
+          [name]: numValue
+        }, editBalance);
+        setSmartValidation(validation);
+      } catch (error) {
+        console.warn('Smart validation failed:', error);
+        setSmartValidation(null);
+      }
+    }
   };
 
   const handleEditSave = async (index) => {
+    // Smart validation before save (only if service is available)
+    if (smartUpdateService) {
+      try {
+        const validation = smartUpdateService.validateUpdate('balance', editBalance, balances[index]);
+        
+        if (!validation.isValid) {
+          showError(`Validation failed: ${validation.errors.join(', ')}`);
+          return;
+        }
+
+        // Show warnings if any
+        if (validation.warnings.length > 0) {
+          const confirmWarning = window.confirm(
+            `Warning: ${validation.warnings.join(' ')} Do you want to continue?`
+          );
+          if (!confirmWarning) return;
+        }
+      } catch (error) {
+        console.warn('Smart validation failed:', error);
+      }
+    }
+
     // Validate edit balance
     if (editBalance.cash_on_hand < 0 || editBalance.bank_account_balance < 0 || editBalance.savings < 0) {
       showError('All values must be non-negative');
@@ -148,10 +221,29 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       setBalances(updatedBalances);
       setEditIndex(null);
       
+      // Track the update (only if service is available)
+      if (smartUpdateService) {
+        try {
+          smartUpdateService.trackUpdate('balance', updatedBalance, { success: true });
+        } catch (error) {
+          console.warn('Failed to track update:', error);
+        }
+      }
+      
       showSuccess(`Successfully updated account #${index + 1}!`);
       console.log('Balance updated:', updatedBalance);
     } catch (error) {
       console.error('There was an error updating the balance!', error);
+      
+      // Track the error (only if service is available)
+      if (smartUpdateService) {
+        try {
+          smartUpdateService.trackUpdate('balance', updatedBalance, { success: false, error: error.message });
+        } catch (trackError) {
+          console.warn('Failed to track update error:', trackError);
+        }
+      }
+      
       showError('Failed to update balance. Please try again.');
     } finally {
       setLoading(false);
@@ -186,15 +278,53 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
     }
   };
 
-  const updateBalance = (id, updatedValues) => {
-    axios.put(`http://localhost:5001/balance/${id}`, updatedValues)
-    .then(response => {
-      console.log('Balance updated:', response.data);
-    })
-    .catch(error => {
-      console.error('There was an error updating your balance!', error);
-      setBalanceError('There was an error updating your balance!');
-    })
+  // Bulk update handler
+  const handleBulkUpdate = async (updates) => {
+    try {
+      setLoading(true);
+      
+      // Process all updates
+      const updatePromises = updates.map(update => 
+        axios.put(`http://localhost:5001/balance/${update.id}`, update.data)
+      );
+      
+      await Promise.all(updatePromises);
+      
+      // Update local state
+      const updatedBalances = balances.map(balance => {
+        const update = updates.find(u => u.id === balance.id);
+        return update ? { ...balance, ...update.data } : balance;
+      });
+      
+      setBalances(updatedBalances);
+      setShowBulkUpdate(false);
+      
+      // Track bulk update (only if service is available)
+      if (smartUpdateService) {
+        try {
+          smartUpdateService.trackUpdate('bulk_balance', { count: updates.length }, { success: true });
+        } catch (error) {
+          console.warn('Failed to track bulk update:', error);
+        }
+      }
+      
+      showSuccess(`Successfully updated ${updates.length} accounts!`);
+    } catch (error) {
+      console.error('Bulk update failed:', error);
+      
+      // Track bulk update error (only if service is available)
+      if (smartUpdateService) {
+        try {
+          smartUpdateService.trackUpdate('bulk_balance', { count: updates.length }, { success: false, error: error.message });
+        } catch (trackError) {
+          console.warn('Failed to track bulk update error:', trackError);
+        }
+      }
+      
+      showError('Bulk update failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const resetFields = () => {
@@ -865,6 +995,51 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
         <p className="balance-subtitle">Track your financial accounts in one place</p>
       </div>
 
+      {/* Smart Update Suggestions Section */}
+      {updateSuggestions && updateSuggestions.priority && updateSuggestions.optimization && 
+       (updateSuggestions.priority.length > 0 || updateSuggestions.optimization.length > 0) && (
+        <div className="insights-section">
+          <h5 className="balance-title">🤖 Smart Update Recommendations</h5>
+          
+          {updateSuggestions.priority.length > 0 && (
+            <div className="mb-3">
+              <h6 style={{color: '#f56565', fontWeight: '700'}}>🔥 High Priority</h6>
+              {updateSuggestions.priority.map((suggestion, index) => (
+                <div key={index} className="insight-card critical">
+                  <strong>{suggestion.message}</strong>
+                  <br />
+                  <small>{suggestion.action}</small>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {updateSuggestions.optimization.length > 0 && (
+            <div className="mb-3">
+              <h6 style={{color: '#4299e1', fontWeight: '700'}}>⚡ Optimization Opportunities</h6>
+              {updateSuggestions.optimization.map((suggestion, index) => (
+                <div key={index} className="insight-card opportunity">
+                  <strong>{suggestion.message}</strong>
+                  <br />
+                  <small>{suggestion.action}</small>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Bulk Update Panel */}
+      {showBulkUpdate && (
+        <BulkUpdatePanel
+          darkMode={darkMode}
+          updateType="balance"
+          items={balances}
+          onBulkUpdate={handleBulkUpdate}
+          onClose={() => setShowBulkUpdate(false)}
+        />
+      )}
+
       {/* Success/Error Messages */}
       {success && (
         <div className="alert-success-balance">
@@ -967,6 +1142,16 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           >
             🔄 Reset Fields
           </button>
+          {balances.length > 1 && (
+            <button 
+              className="btn-balance btn-set-balance"
+              onClick={() => setShowBulkUpdate(true)}
+              disabled={loading}
+              title="Update multiple accounts at once"
+            >
+              ⚡ Bulk Update
+            </button>
+          )}
         </div>
       </div>
 
@@ -1180,6 +1365,11 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                               className="edit-input-table"
                               min="0"
                             />
+                            {smartValidation && smartValidation.warnings && smartValidation.warnings.length > 0 && (
+                              <div style={{fontSize: '0.8rem', color: '#f59e0b', marginTop: '2px'}}>
+                                ⚠️ {smartValidation.warnings[0]}
+                              </div>
+                            )}
                           </td>
                           <td data-label="Bank Acc Balance">
                             <input 
@@ -1190,6 +1380,11 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                               className="edit-input-table"
                               min="0"
                             />
+                            {smartValidation && smartValidation.suggestions && smartValidation.suggestions.length > 0 && (
+                              <div style={{fontSize: '0.8rem', color: '#4299e1', marginTop: '2px'}}>
+                                💡 {smartValidation.suggestions[0]}
+                              </div>
+                            )}
                           </td>
                           <td data-label="Savings">
                             <input 
