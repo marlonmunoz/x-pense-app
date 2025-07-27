@@ -170,6 +170,47 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 }
 
+                select.form-control {
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    text-align: left;
+                    text-align-last: left;
+                    line-height: 1.5;
+                    vertical-align: middle;
+                    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='${darkMode ? '%23ffffff' : '%23000000'}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+                    background-repeat: no-repeat;
+                    background-position: right 15px center;
+                    background-size: 18px;
+                    padding-right: 50px !important;
+                    padding-left: 15px !important;
+                    padding-top: 0 !important;
+                    padding-bottom: 0 !important;
+                    height: 54px !important;
+                    box-sizing: border-box;
+                    display: flex;
+                    align-items: center;
+                }
+
+                select.form-control option {
+                    color: ${darkMode ? '#ffffff' : '#000000'} !important;
+                    background: ${darkMode ? '#2d3748' : '#ffffff'} !important;
+                    padding: 12px;
+                    font-size: 1rem;
+                    font-weight: 500;
+                    line-height: 1.5;
+                }
+
+                /* Style for placeholder option */
+                select.form-control option[value=""] {
+                    color: ${darkMode ? '#a0aec0' : '#718096'} !important;
+                    font-style: italic;
+                }
+
+                select.form-control::-ms-expand {
+                    display: none;
+                }
+
                 .form-control:focus {
                     outline: none;
                     border-color: #667eea;
@@ -306,6 +347,13 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                             name="category"
                             className={`form-control ${errors.category ? 'error' : ''}`}
                             value={category}
+                            style={{
+                                color: category === "" ? (darkMode ? '#a0aec0' : '#718096') : (darkMode ? '#ffffff' : '#000000'),
+                                backgroundColor: darkMode ? '#2d3748' : '#ffffff',
+                                fontSize: '1rem',
+                                fontWeight: category === "" ? '400' : '600',
+                                fontStyle: category === "" ? 'italic' : 'normal'
+                            }}
                             onChange={(e) => {
                                 setCategory(e.target.value);
                                 if (errors.category) {
