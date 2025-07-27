@@ -40,7 +40,12 @@ class TransactionCategorizer {
       'Finance': [
         'bank', 'atm', 'fee', 'interest', 'loan', 'credit', 'investment',
         'transfer', 'payment', 'financial'
-      ]
+      ],
+      'Phone Service': [
+        'phone', 'cell', 'cellular', 'mobile', 'verizon', 'att', 'at&t',
+        'tmobile', 't-mobile', 'sprint', 'boost', 'cricket', 'mint mobile',
+        'visible', 'metro pcs', 'tracfone', 'straight talk', 'ting', 'spectrum'
+    ]
     };
 
     // Load user corrections from localStorage
