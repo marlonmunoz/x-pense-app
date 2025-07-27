@@ -11,6 +11,7 @@ import Goals from '../components/Goals';
 import Investments from '../components/Investments';
 import StartPage from './StartPage';
 import Footer from '../components/Footer';
+import AiDemo from '../components/AiDemo';
 import '/src/App.css'
 
 function App() {
@@ -375,7 +376,7 @@ function AppContent(props) {
                     e.target.style.boxShadow = '';
                   }}
                 >
-                  Your Friendly Budget Tracker
+                  Your AI-Powered Budget Tracker
                 </span>
               </p>
               <button 
@@ -612,6 +613,38 @@ function AppContent(props) {
                   Investments
                 </NavLink>
               </li>
+              <li className='nav-item mb-2'>
+                <NavLink 
+                  className={({ isActive }) => 
+                    `nav-link d-flex align-items-center ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border transition-all ${
+                      isActive ? 'active bg-info text-white' : ''
+                    }`
+                  } 
+                  to='/ai-demo'
+                  style={({ isActive }) => ({
+                    backgroundColor: isActive ? '#17a2b8' : '',
+                    transform: 'scale(1)',
+                    transition: 'all 0.3s ease'
+                  })}
+                  onMouseEnter={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1.05)';
+                      e.target.style.backgroundColor = '#17a2b8';
+                      e.target.style.color = 'white';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!e.target.classList.contains('active')) {
+                      e.target.style.transform = 'scale(1)';
+                      e.target.style.backgroundColor = '';
+                      e.target.style.color = '';
+                    }
+                  }}
+                >
+                  <span className="me-2">🤖</span>
+                  <strong>AI Demo</strong>
+                </NavLink>
+              </li>
             </ul>
             
             {/* User Status/Info Section */}
@@ -764,6 +797,7 @@ function AppContent(props) {
                 marketCaps={marketCaps} setMarketCaps={setMarketCaps}
                 addedInvestments={addedInvestments} setAddedInvestments={setAddedInvestments}
               />} />
+              <Route path='/ai-demo' element={<AiDemo darkMode={darkMode} />} />
             </Routes>
             <Footer />
           </div>

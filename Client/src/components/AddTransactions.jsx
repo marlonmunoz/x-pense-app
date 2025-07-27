@@ -1,6 +1,7 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
+import { aiCategorizer, TRANSACTION_CATEGORIES } from '../services/aiCategorization';
 
 // X-PENSE Tab
 function AddTransactions( {amount, setAmount, category, setCategory, date, setDate, description, setDescription, darkMode } ) {
@@ -10,6 +11,45 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
     const [showSuccess, setShowSuccess] = useState(false);
     const [errors, setErrors] = useState({});
     const [shake, setShake] = useState(false);
+    
+    // AI Categorization states
+    const [aiSuggestion, setAiSuggestion] = useState(null);
+    const [showAiSuggestion, setShowAiSuggestion] = useState(false);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+    // AI Categorization when description changes
+    useEffect(() => {
+        if (description.trim().length > 2) {
+            setIsAnalyzing(true);
+            
+            // Debounce the AI analysis
+            const timeout = setTimeout(() => {
+                const suggestion = aiCategorizer.categorizeTransaction(description, amount);
+                setAiSuggestion(suggestion);
+                setShowAiSuggestion(suggestion.confidence > 60 && suggestion.category !== category);
+                setIsAnalyzing(false);
+            }, 500);
+
+            return () => clearTimeout(timeout);
+        } else {
+            setShowAiSuggestion(false);
+            setAiSuggestion(null);
+            setIsAnalyzing(false);
+        }
+    }, [description, amount, category]);
+
+    // Accept AI suggestion
+    const acceptAiSuggestion = () => {
+        if (aiSuggestion) {
+            setCategory(aiSuggestion.category);
+            setShowAiSuggestion(false);
+        }
+    };
+
+    // Dismiss AI suggestion
+    const dismissAiSuggestion = () => {
+        setShowAiSuggestion(false);
+    };
 
     const handleAmountChange = (e) => {
         const value = parseFloat(e.target.value);
@@ -74,6 +114,12 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
             const response = await axios.post('http://127.0.0.1:5001/transactions', newTransaction);
             console.log('Transaction added:', response.data);
             
+            // Learn from user's category choice if AI suggested something different
+            if (aiSuggestion && aiSuggestion.category !== category && aiSuggestion.confidence > 50) {
+                aiCategorizer.learnFromCorrection(description, aiSuggestion.category, category);
+                console.log(`AI learned: "${description}" should be categorized as "${category}" not "${aiSuggestion.category}"`);
+            }
+            
             // Show success message
             setShowSuccess(true);
             
@@ -82,6 +128,8 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
             setDate('');
             setDescription('');
             setAmount(0);
+            setAiSuggestion(null);
+            setShowAiSuggestion(false);
             
             // Navigate after showing success
             setTimeout(() => {
@@ -371,6 +419,120 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                 .amount-input {
                     padding-left: 40px !important;
                 }
+
+                /* AI Suggestion Styles */
+                .ai-suggestion-banner {
+                    margin-top: 10px;
+                    border: 2px solid #4299e1;
+                    border-radius: 12px;
+                    background: ${darkMode ? 
+                        'linear-gradient(135deg, #2d3748 0%, #4a5568 100%)' : 
+                        'linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%)'
+                    };
+                    padding: 15px;
+                    animation: slideIn 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+                }
+
+                .ai-suggestion-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                }
+
+                .ai-icon {
+                    font-size: 1.5rem;
+                    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    flex-shrink: 0;
+                }
+
+                .ai-text {
+                    flex-grow: 1;
+                }
+
+                .ai-main-text {
+                    font-weight: 600;
+                    color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+                    margin-bottom: 4px;
+                }
+
+                .ai-confidence {
+                    font-size: 0.85rem;
+                    color: ${darkMode ? '#a0aec0' : '#718096'};
+                }
+
+                .ai-actions {
+                    display: flex;
+                    gap: 8px;
+                    flex-shrink: 0;
+                }
+
+                .btn-ai-accept,
+                .btn-ai-dismiss {
+                    padding: 6px 12px;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .btn-ai-accept {
+                    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+                    color: white;
+                }
+
+                .btn-ai-accept:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(56, 161, 105, 0.4);
+                }
+
+                .btn-ai-dismiss {
+                    background: ${darkMode ? '#4a5568' : '#e2e8f0'};
+                    color: ${darkMode ? '#e2e8f0' : '#4a5568'};
+                }
+
+                .btn-ai-dismiss:hover {
+                    background: ${darkMode ? '#718096' : '#cbd5e0'};
+                }
+
+                .ai-analyzing {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-top: 8px;
+                    padding: 8px 12px;
+                    background: ${darkMode ? '#4a5568' : '#f7fafc'};
+                    border-radius: 8px;
+                    font-size: 0.9rem;
+                    color: ${darkMode ? '#a0aec0' : '#718096'};
+                }
+
+                .spinner {
+                    width: 16px;
+                    height: 16px;
+                    border: 2px solid ${darkMode ? '#718096' : '#cbd5e0'};
+                    border-top: 2px solid #4299e1;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                }
+
+                @keyframes slideIn {
+                    from { transform: translateY(-10px); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
+                }
+
+                @keyframes spin {
+                    to { transform: rotate(360deg); }
+                }
             `}</style>
 
             <div className="form-header">
@@ -413,25 +575,69 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                             }}
                         > 
                             <option value="">🎯 Select A Category</option> 
-                            <option value="Cable">📺 Cable</option>
-                            <option value="Child Support">👶 Child Support</option>
-                            <option value="Clothes">👔 Clothes</option>
-                            <option value="Debt">💳 Debt</option>
-                            <option value="Entertainment">🎬 Entertainment</option>
-                            <option value="Food">🍕 Food</option>
-                            <option value="Housing">🏠 Housing</option>
-                            <option value="Insurance">🛡️ Insurance</option>
-                            <option value="Medical & Healthcare">🏥 Medical & Healthcare</option>
-                            <option value="Mortgage">🏘️ Mortgage</option>
-                            <option value="Personal Care">💄 Personal Care</option>
-                            <option value="Pets">🐕 Pets</option>
-                            <option value="Restaurants">🍽️ Restaurants</option>
-                            <option value="Savings & Investments">💰 Savings & Investments</option>
-                            <option value="Shopping">🛍️ Shopping</option>
-                            <option value="Transportation">🚗 Transportation</option>
-                            <option value="Utilities">⚡ Utilities</option>
+                            {TRANSACTION_CATEGORIES.map(cat => (
+                                <option key={cat} value={cat}>
+                                    {cat === 'Food & Dining' && '🍕'} 
+                                    {cat === 'Transportation' && '🚗'} 
+                                    {cat === 'Shopping' && '🛍️'} 
+                                    {cat === 'Groceries' && '🛒'} 
+                                    {cat === 'Entertainment' && '🎬'} 
+                                    {cat === 'Utilities' && '⚡'} 
+                                    {cat === 'Healthcare' && '�'} 
+                                    {cat === 'Finance' && '💳'} 
+                                    {cat === 'Housing' && '🏠'} 
+                                    {cat === 'Bills & Utilities' && '📄'} 
+                                    {cat === 'Education' && '📚'} 
+                                    {cat === 'Travel' && '✈️'} 
+                                    {cat === 'Personal Care' && '💄'} 
+                                    {cat === 'Gifts & Donations' && '�'} 
+                                    {cat === 'Other' && '❓'} 
+                                    {' ' + cat}
+                                </option>
+                            ))}
                         </select>
                         {errors.category && <div className="error-message">❌ {errors.category}</div>}
+                        
+                        {/* AI Suggestion Banner */}
+                        {showAiSuggestion && aiSuggestion && (
+                            <div className="ai-suggestion-banner">
+                                <div className="ai-suggestion-content">
+                                    <div className="ai-icon">🤖</div>
+                                    <div className="ai-text">
+                                        <div className="ai-main-text">
+                                            AI suggests: <strong>{aiSuggestion.category}</strong>
+                                        </div>
+                                        <div className="ai-confidence">
+                                            Confidence: {aiSuggestion.confidence}%
+                                        </div>
+                                    </div>
+                                    <div className="ai-actions">
+                                        <button 
+                                            type="button"
+                                            className="btn-ai-accept"
+                                            onClick={acceptAiSuggestion}
+                                        >
+                                            ✅ Use This
+                                        </button>
+                                        <button 
+                                            type="button"
+                                            className="btn-ai-dismiss"
+                                            onClick={dismissAiSuggestion}
+                                        >
+                                            ❌ Dismiss
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        
+                        {/* AI Analysis Indicator */}
+                        {isAnalyzing && (
+                            <div className="ai-analyzing">
+                                <div className="spinner"></div>
+                                <span>🤖 AI is analyzing...</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="form-group">
