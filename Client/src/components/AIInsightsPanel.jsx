@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { dashboardAI, formatInsight, prioritizeAlerts } from '../services/dashboardAI';
 
 const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, darkMode }) => {
+  const navigate = useNavigate();
   const [insights, setInsights] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
@@ -10,6 +12,48 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
   const [nlResponse, setNlResponse] = useState(null);
   const [activeTab, setActiveTab] = useState('insights');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Handle action button clicks
+  const handleActionClick = (action) => {
+    switch(action) {
+      case 'Set Category Budget':
+      case 'Review Budget':
+      case 'Monitor Spending':
+        navigate('/budget');
+        break;
+      case 'View Category Details':
+      case 'Review Expenses':
+      case 'Review Categories':
+        navigate('/transactions');
+        break;
+      case 'Explore Investments':
+      case 'Invest Surplus':
+      case 'Explore Diversification':
+        navigate('/investments');
+        break;
+      case 'Set New Goal':
+      case 'Boost Savings':
+      case 'Optimize Savings':
+      case 'Review Goal Strategy':
+        navigate('/goals');
+        break;
+      case 'Analyze Trend':
+        navigate('/transactions');
+        break;
+      default:
+        console.log('Action not implemented:', action);
+        // For unimplemented actions, navigate to appropriate page based on action content
+        if (action.toLowerCase().includes('budget')) {
+          navigate('/budget');
+        } else if (action.toLowerCase().includes('investment')) {
+          navigate('/investments');
+        } else if (action.toLowerCase().includes('goal')) {
+          navigate('/goals');
+        } else {
+          navigate('/transactions');
+        }
+    }
+  };
 
   // Generate AI insights when data changes
   useEffect(() => {
@@ -101,7 +145,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
 
         .ai-header h4 {
           margin: 0;
-          font-size: 1.5rem;
+          font-size: 1.2rem;
           text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
@@ -386,8 +430,8 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
       `}</style>
 
       <div className="ai-header">
-        <h4>🤖 AI Financial Assistant</h4>
-        <p style={{ margin: '5px 0 0 0', opacity: 0.9 }}>
+        <h4>AI Financial Assistant</h4>
+        <p style={{ margin: '2px 0 0 0', opacity: 0.9, fontSize: '15px' }}>
           Powered by intelligent insights and predictive analytics
         </p>
       </div>
@@ -487,7 +531,10 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
                       {insight.message}
                     </div>
                     {insight.actionable && (
-                      <button className="action-btn">
+                      <button 
+                        className="action-btn"
+                        onClick={() => handleActionClick(insight.action)}
+                      >
                         {insight.action}
                       </button>
                     )}

@@ -63,7 +63,7 @@ class DashboardAI {
         message: `You're spending ${((avgMonthlySpending / budget) * 100).toFixed(0)}% of your budget monthly. Consider reviewing your expenses.`,
         confidence: 85,
         actionable: true,
-        action: 'Review Categories',
+        action: 'View Category Details',
         priority: 'high'
       });
     }
@@ -75,10 +75,10 @@ class DashboardAI {
       insights.push({
         type: 'info',
         title: '📊 Spending Pattern Insight',
-        message: `${topCategory.percentage.toFixed(0)}% of your spending is on ${topCategory.category}. This is higher than recommended.`,
+        message: `${topCategory.percentage.toFixed(0)}% of your spending is on ${topCategory.category}. Consider reviewing this category's transactions.`,
         confidence: 92,
         actionable: true,
-        action: 'Set Category Budget',
+        action: 'View Category Details',
         priority: 'medium'
       });
     }
@@ -108,10 +108,10 @@ class DashboardAI {
         insights.push({
           type: 'motivation',
           title: '🎯 Goal Achievement Tip',
-          message: `You have ${strugglingGoals.length} goals with low progress. Try automated savings to boost progress!`,
+          message: `You have ${strugglingGoals.length} goals with low progress. Consider reviewing your goals and adjusting target amounts.`,
           confidence: 88,
           actionable: true,
-          action: 'Set Auto-Save',
+          action: 'Review Goal Strategy',
           priority: 'medium'
         });
       }
