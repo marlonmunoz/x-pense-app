@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { FinancialCalculator } from "../services/financialCalculator";
 
 function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setBankAccountBalance, savings, setSavings, setTotal, formatCurrency, balanceId, setBalanceId, balances, setBalances, editIndex, setEditIndex, editBalance, setEditBalance, balanceError, setBalanceError}) {
 
-  // Enhanced state variables for better UX
+  // Enhanced state variables for better UX and financial logic
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
+  const [financialMetrics, setFinancialMetrics] = useState(null);
+  const [showInsights, setShowInsights] = useState(false);
+  const [monthlyIncome, setMonthlyIncome] = useState(0);
+  const [monthlyExpenses, setMonthlyExpenses] = useState(0);
+  const [showAllocation, setShowAllocation] = useState(false);
+  const [allocationSuggestion, setAllocationSuggestion] = useState(null);
+
+  // Initialize financial calculator
+  const financialCalculator = new FinancialCalculator();
 
   // Helper functions for better UX
   const showSuccess = (message) => {
@@ -21,24 +31,33 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
   };
 
   const validateInputs = () => {
-    const errors = {};
-    
-    if (cashOnHand < 0) {
-      errors.cashOnHand = 'Cash on hand cannot be negative';
-    }
-    if (bankAccountBalance < 0) {
-      errors.bankAccountBalance = 'Bank account balance cannot be negative';
-    }
-    if (savings < 0) {
-      errors.savings = 'Savings cannot be negative';
-    }
-    if (cashOnHand === 0 && bankAccountBalance === 0 && savings === 0) {
-      errors.general = 'Please enter at least one balance amount';
-    }
-
+    const errors = financialCalculator.validateBalanceInputs(cashOnHand, bankAccountBalance, savings);
     setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+    return Object.keys(errors).filter(key => key !== 'warning').length === 0;
   };
+
+  // Calculate financial metrics when balances change
+  useEffect(() => {
+    if (balances.length > 0) {
+      const metrics = financialCalculator.calculateFinancialMetrics(
+        balances, 
+        monthlyIncome, 
+        monthlyExpenses
+      );
+      setFinancialMetrics(metrics);
+    }
+  }, [balances, monthlyIncome, monthlyExpenses]);
+
+  // Generate allocation suggestion when amount changes
+  useEffect(() => {
+    const totalAmount = cashOnHand + bankAccountBalance + savings;
+    if (totalAmount > 0) {
+      const suggestion = financialCalculator.suggestOptimalAllocation(totalAmount);
+      setAllocationSuggestion(suggestion);
+    } else {
+      setAllocationSuggestion(null);
+    }
+  }, [cashOnHand, bankAccountBalance, savings]);
 
   useEffect(() => {
     console.log('BALANCE COMPONENT');
@@ -199,7 +218,8 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       cash_on_hand: cashOnHand,
       bank_account_balance: bankAccountBalance,
       savings: savings,
-      total: newTotal
+      total: newTotal,
+      created_at: new Date().toISOString()
     };
 
     try {
@@ -215,6 +235,62 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       showError('Failed to save balance. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Apply optimal allocation suggestion
+  const applyOptimalAllocation = () => {
+    if (!allocationSuggestion) return;
+    
+    setCashOnHand(Math.round(allocationSuggestion.cash));
+    setBankAccountBalance(Math.round(allocationSuggestion.bank));
+    setSavings(Math.round(allocationSuggestion.savings));
+    showSuccess('Applied optimal allocation suggestion!');
+  };
+
+  // Quick balance presets
+  const applyQuickPreset = (presetType) => {
+    switch(presetType) {
+      case 'emergency':
+        setCashOnHand(500);
+        setBankAccountBalance(1500);
+        setSavings(3000);
+        showSuccess('Applied emergency fund preset!');
+        break;
+      case 'student':
+        setCashOnHand(200);
+        setBankAccountBalance(800);
+        setSavings(500);
+        showSuccess('Applied student budget preset!');
+        break;
+      case 'family':
+        setCashOnHand(1000);
+        setBankAccountBalance(5000);
+        setSavings(10000);
+        showSuccess('Applied family budget preset!');
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Bulk account operations
+  const consolidateLowBalanceAccounts = () => {
+    const lowBalanceAccounts = balances.filter(account => {
+      const total = account.cash_on_hand + account.bank_account_balance + account.savings;
+      return total < 100;
+    });
+
+    if (lowBalanceAccounts.length > 1) {
+      const totalCash = lowBalanceAccounts.reduce((sum, acc) => sum + acc.cash_on_hand, 0);
+      const totalBank = lowBalanceAccounts.reduce((sum, acc) => sum + acc.bank_account_balance, 0);
+      const totalSavings = lowBalanceAccounts.reduce((sum, acc) => sum + acc.savings, 0);
+      
+      setCashOnHand(totalCash);
+      setBankAccountBalance(totalBank);
+      setSavings(totalSavings);
+      
+      showSuccess(`Consolidated ${lowBalanceAccounts.length} accounts. Review and save the combined account.`);
     }
   };
 
@@ -616,6 +692,141 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           to { opacity: 1; }
         }
 
+        .financial-metrics-section {
+          background: ${darkMode ? 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)' : 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'};
+          border-radius: 20px;
+          padding: 30px;
+          margin-bottom: 30px;
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+          border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
+        }
+
+        .metrics-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 20px;
+          margin-bottom: 25px;
+        }
+
+        .metric-card {
+          background: ${darkMode ? '#4a5568' : '#ffffff'};
+          border-radius: 12px;
+          padding: 20px;
+          text-align: center;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .metric-value {
+          font-size: 1.8rem;
+          font-weight: 700;
+          margin-bottom: 5px;
+        }
+
+        .metric-label {
+          color: ${darkMode ? '#a0aec0' : '#718096'};
+          font-size: 0.9rem;
+          font-weight: 600;
+        }
+
+        .health-score {
+          color: #38a169;
+        }
+
+        .health-score.warning {
+          color: #f59e0b;
+        }
+
+        .health-score.critical {
+          color: #f56565;
+        }
+
+        .allocation-section {
+          background: ${darkMode ? 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)' : 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'};
+          border-radius: 20px;
+          padding: 30px;
+          margin-bottom: 30px;
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+          border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
+        }
+
+        .allocation-suggestion {
+          background: ${darkMode ? '#4a5568' : '#ffffff'};
+          border-radius: 12px;
+          padding: 20px;
+          margin-bottom: 20px;
+          border-left: 4px solid #38a169;
+        }
+
+        .preset-buttons {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+          margin-bottom: 20px;
+        }
+
+        .btn-preset {
+          background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+          color: white;
+          padding: 8px 16px;
+          border: none;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .btn-preset:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+        }
+
+        .insights-section {
+          background: ${darkMode ? 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)' : 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'};
+          border-radius: 20px;
+          padding: 30px;
+          margin-bottom: 30px;
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+          border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
+        }
+
+        .insight-card {
+          background: ${darkMode ? '#4a5568' : '#ffffff'};
+          border-radius: 12px;
+          padding: 20px;
+          margin-bottom: 15px;
+          border-left: 5px solid;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .insight-card.critical {
+          border-left-color: #f56565;
+        }
+
+        .insight-card.warning {
+          border-left-color: #f59e0b;
+        }
+
+        .insight-card.success {
+          border-left-color: #38a169;
+        }
+
+        .insight-card.opportunity {
+          border-left-color: #4299e1;
+        }
+
+        .monthly-inputs {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+          margin-bottom: 20px;
+        }
+
         @media (max-width: 768px) {
           .btn-balance {
             padding: 10px 16px;
@@ -631,6 +842,19 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
             padding: 4px 8px;
             font-size: 0.7rem;
             gap: 2px;
+          }
+
+          .metrics-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .monthly-inputs {
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
+
+          .preset-buttons {
+            flex-direction: column;
           }
         }
       `}</style>
@@ -745,6 +969,167 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           </button>
         </div>
       </div>
+
+      {/* Financial Metrics Section */}
+      {financialMetrics && (
+        <div className="financial-metrics-section">
+          <h5 className="balance-title">📈 Financial Health Dashboard</h5>
+          
+          <div className="monthly-inputs">
+            <div>
+              <label className="input-label">📊 Monthly Income</label>
+              <input
+                type="number"
+                value={monthlyIncome}
+                onChange={(e) => setMonthlyIncome(Number(e.target.value))}
+                placeholder="Enter monthly income"
+                className="balance-input"
+              />
+            </div>
+            <div>
+              <label className="input-label">💸 Monthly Expenses</label>
+              <input
+                type="number"
+                value={monthlyExpenses}
+                onChange={(e) => setMonthlyExpenses(Number(e.target.value))}
+                placeholder="Enter monthly expenses"
+                className="balance-input"
+              />
+            </div>
+          </div>
+
+          <div className="metrics-grid">
+            <div className="metric-card">
+              <div className="metric-value" style={{color: '#38a169'}}>
+                {formatCurrency(financialMetrics.totalAssets)}
+              </div>
+              <div className="metric-label">Total Assets</div>
+            </div>
+            
+            <div className="metric-card">
+              <div className={`metric-value health-score ${
+                financialMetrics.financialHealthScore >= 80 ? '' : 
+                financialMetrics.financialHealthScore >= 60 ? 'warning' : 'critical'
+              }`}>
+                {financialMetrics.financialHealthScore}/100
+              </div>
+              <div className="metric-label">Health Score</div>
+            </div>
+            
+            <div className="metric-card">
+              <div className="metric-value" style={{color: '#4299e1'}}>
+                {financialMetrics.liquidityRatio.toFixed(1)}%
+              </div>
+              <div className="metric-label">Liquidity Ratio</div>
+            </div>
+            
+            <div className="metric-card">
+              <div className="metric-value" style={{color: '#8b5cf6'}}>
+                {financialMetrics.emergencyFundStatus.months.toFixed(1)}
+              </div>
+              <div className="metric-label">Emergency Fund (Months)</div>
+            </div>
+          </div>
+
+          <div style={{textAlign: 'center'}}>
+            <button 
+              className="btn-balance btn-set-balance"
+              onClick={() => setShowInsights(!showInsights)}
+            >
+              {showInsights ? '🔼 Hide' : '🔽 Show'} Financial Insights
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Financial Insights Section */}
+      {showInsights && financialMetrics && (
+        <div className="insights-section">
+          <h5 className="balance-title">💡 Financial Insights & Recommendations</h5>
+          
+          {financialCalculator.generateFinancialInsights(financialMetrics, balances).map((insight, index) => (
+            <div key={index} className={`insight-card ${insight.type}`}>
+              <h6 style={{fontWeight: '700', marginBottom: '10px'}}>
+                {insight.title}
+              </h6>
+              <p style={{margin: 0}}>{insight.message}</p>
+            </div>
+          ))}
+          
+          {financialCalculator.generateFinancialInsights(financialMetrics, balances).length === 0 && (
+            <div className="insight-card success">
+              <h6 style={{fontWeight: '700', marginBottom: '10px'}}>
+                🎉 Great Financial Health!
+              </h6>
+              <p style={{margin: 0}}>Your financial metrics look healthy. Keep up the good work!</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Smart Allocation Section */}
+      {(cashOnHand > 0 || bankAccountBalance > 0 || savings > 0) && (
+        <div className="allocation-section">
+          <h5 className="balance-title">🎯 Smart Allocation Assistant</h5>
+          
+          <div className="preset-buttons">
+            <button className="btn-preset" onClick={() => applyQuickPreset('emergency')}>
+              🚨 Emergency Fund Preset
+            </button>
+            <button className="btn-preset" onClick={() => applyQuickPreset('student')}>
+              🎓 Student Budget Preset
+            </button>
+            <button className="btn-preset" onClick={() => applyQuickPreset('family')}>
+              👨‍👩‍👧‍👦 Family Budget Preset
+            </button>
+          </div>
+
+          {allocationSuggestion && (
+            <div className="allocation-suggestion">
+              <h6 style={{fontWeight: '700', marginBottom: '15px'}}>
+                💡 Optimal Allocation Suggestion
+              </h6>
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px', marginBottom: '15px'}}>
+                <div>
+                  <strong>💵 Cash: {formatCurrency(allocationSuggestion.cash)}</strong>
+                </div>
+                <div>
+                  <strong>🏦 Bank: {formatCurrency(allocationSuggestion.bank)}</strong>
+                </div>
+                <div>
+                  <strong>🐷 Savings: {formatCurrency(allocationSuggestion.savings)}</strong>
+                </div>
+              </div>
+              <div style={{marginBottom: '15px'}}>
+                <strong>Reasoning:</strong>
+                <ul style={{margin: '5px 0', paddingLeft: '20px'}}>
+                  {allocationSuggestion.reasoning.map((reason, index) => (
+                    <li key={index}>{reason}</li>
+                  ))}
+                </ul>
+              </div>
+              <button 
+                className="btn-balance btn-set-balance"
+                onClick={applyOptimalAllocation}
+              >
+                ✨ Apply Suggestion
+              </button>
+            </div>
+          )}
+
+          {balances.length > 1 && (
+            <div style={{textAlign: 'center', marginTop: '20px'}}>
+              <button 
+                className="btn-balance btn-reset-balance"
+                onClick={consolidateLowBalanceAccounts}
+              >
+                🔄 Consolidate Low Balance Accounts
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Account Overview Section */}
       <div className="overview-section">
         <h5 className="overview-title">📊 Account Overview</h5>
