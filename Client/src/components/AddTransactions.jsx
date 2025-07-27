@@ -43,6 +43,8 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
         if (aiSuggestion) {
             setCategory(aiSuggestion.category);
             setShowAiSuggestion(false);
+            // Learn from user acceptance
+            aiCategorizer.learnFromCorrection(description, amount, aiSuggestion.category);
         }
     };
 
@@ -270,31 +272,25 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                 input[type="date"].form-control {
                     color-scheme: ${darkMode ? 'dark' : 'light'};
                     position: relative;
+                    cursor: pointer;
                 }
 
                 input[type="date"].form-control::-webkit-calendar-picker-indicator {
-                    ${darkMode ? 'display: none;' : 'cursor: pointer;'}
+                    cursor: pointer;
+                    ${darkMode ? `
+                        filter: invert(1);
+                        opacity: 0.8;
+                    ` : ''}
                 }
 
                 /* For Firefox */
                 input[type="date"].form-control::-moz-calendar-picker-indicator {
-                    ${darkMode ? 'display: none;' : 'cursor: pointer;'}
-                }
-
-                /* Custom date picker icon for dark mode only */
-                ${darkMode ? `
-                input[type="date"].form-control {
-                    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3e%3c/rect%3e%3cline x1='16' y1='2' x2='16' y2='6'%3e%3c/line%3e%3cline x1='8' y1='2' x2='8' y2='6'%3e%3c/line%3e%3cline x1='3' y1='10' x2='21' y2='10'%3e%3c/line%3e%3c/svg%3e") !important;
-                    background-repeat: no-repeat !important;
-                    background-position: right 15px center !important;
-                    background-size: 18px !important;
                     cursor: pointer;
+                    ${darkMode ? `
+                        filter: invert(1);
+                        opacity: 0.8;
+                    ` : ''}
                 }
-
-                input[type="date"].form-control:hover {
-                    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e2e8f0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3e%3c/rect%3e%3cline x1='16' y1='2' x2='16' y2='6'%3e%3c/line%3e%3cline x1='8' y1='2' x2='8' y2='6'%3e%3c/line%3e%3cline x1='3' y1='10' x2='21' y2='10'%3e%3c/line%3e%3c/svg%3e") !important;
-                }
-                ` : ''}
 
                 /* Additional styling for better visibility in dark mode */
                 ${darkMode ? `
@@ -313,6 +309,12 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                 }
                 
                 input[type="date"].form-control::-webkit-datetime-edit-text {
+                    color: #e2e8f0 !important;
+                }
+                
+                input[type="date"].form-control::-webkit-datetime-edit-year-field,
+                input[type="date"].form-control::-webkit-datetime-edit-month-field,
+                input[type="date"].form-control::-webkit-datetime-edit-day-field {
                     color: #e2e8f0 !important;
                 }
                 ` : ''}
@@ -568,7 +570,15 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                                 fontStyle: category === "" ? 'italic' : 'normal'
                             }}
                             onChange={(e) => {
-                                setCategory(e.target.value);
+                                const newCategory = e.target.value;
+                                setCategory(newCategory);
+                                
+                                // If user manually selects a category after AI suggestion, learn from it
+                                if (aiSuggestion && newCategory && newCategory !== aiSuggestion.category) {
+                                    aiCategorizer.learnFromCorrection(description, amount, newCategory);
+                                    setShowAiSuggestion(false); // Hide suggestion after manual selection
+                                }
+                                
                                 if (errors.category) {
                                     setErrors(prev => ({ ...prev, category: '' }));
                                 }
