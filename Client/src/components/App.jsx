@@ -325,7 +325,8 @@ function AppContent(props) {
               minHeight: '100vh',
               transition: 'all 0.3s ease',
               borderRight: `2px solid ${darkMode ? '#495057' : '#dee2e6'}`,
-              boxShadow: '2px 0 10px rgba(0, 0, 0, 0.1)'
+              boxShadow: '2px 0 10px rgba(0, 0, 0, 0.1)',
+              borderRadius: '10px'
             }}
             onMouseEnter={(e) => {
               e.target.style.boxShadow = '2px 0 15px rgba(0, 0, 0, 0.2)';
