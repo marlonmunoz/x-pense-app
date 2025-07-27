@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler, ArcElement } from 'chart.js';
 // import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import { CircularProgressbar, buildStyles} from 'react-circular-progressbar'
+import AIInsightsPanel from './AIInsightsPanel';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler, ArcElement);
 
 function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,formatCurrency, goals, setGoals, formatDate, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setAmounts, addedInvestments, setAddedInvestments }) {
@@ -833,6 +834,17 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
             <div className="dashboard-header">
                 <h1>Main Dashboard</h1>
             </div>
+            
+            {/* AI Insights Panel */}
+            <AIInsightsPanel
+              transactions={transactions}
+              balance={balance}
+              budget={totalBudgetAmount}
+              goals={goalsProgress}
+              investments={addedInvestments}
+              darkMode={darkMode}
+            />
+            
             <div className="summary">
                 <h5 style={{ 
                     fontSize: '1.8rem', 
