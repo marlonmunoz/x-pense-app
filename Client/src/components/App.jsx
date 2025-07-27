@@ -335,12 +335,15 @@ function AppContent(props) {
             }}
           >
             <div className="text-center mb-4">
-              <h3>
+              <h1>
                 <span 
                   className='app-title metallic-shadow'
                   style={{
                     cursor: 'pointer',
-                    transition: 'all 0.3s ease'
+                    transition: 'all 0.3s ease',
+                    fontSize: '2.5rem',
+                    fontWeight: 'bold',
+                    letterSpacing: '2px'
                   }}
                   onMouseEnter={(e) => {
                     e.target.style.transform = 'scale(1.1)';
@@ -354,7 +357,7 @@ function AppContent(props) {
                 >
                   X-PENSE
                 </span>
-              </h3>
+              </h1>
               <p>
                 <span 
                   className='badge badge-info border p-2'
