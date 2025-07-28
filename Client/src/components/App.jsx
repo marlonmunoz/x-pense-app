@@ -337,35 +337,37 @@ function AppContent(props) {
             }}
           >
             <div className="text-center mb-4">
-              <h1>
+              <div className="d-flex align-items-center justify-content-center mb-2" style={{ flexWrap: 'nowrap' }}>
+                <h1 className="me-3 mb-0" style={{ whiteSpace: 'nowrap' }}>
+                  <span 
+                    className='app-title metallic-shadow'
+                    style={{
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      fontSize: '2.2rem',
+                      fontWeight: 'bold',
+                      letterSpacing: '1px'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = 'scale(1.1)';
+                      e.target.style.textShadow = '0 0 10px rgba(0, 123, 255, 0.5)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = 'scale(1)';
+                      e.target.style.textShadow = '';
+                    }}
+                    onClick={() => window.location.href = '/dashboard'}
+                  >
+                    X-PENSE
+                  </span>
+                </h1>
                 <span 
-                  className='app-title metallic-shadow'
-                  style={{
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    fontSize: '2.5rem',
-                    fontWeight: 'bold',
-                    letterSpacing: '2px'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'scale(1.1)';
-                    e.target.style.textShadow = '0 0 10px rgba(0, 123, 255, 0.5)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'scale(1)';
-                    e.target.style.textShadow = '';
-                  }}
-                  onClick={() => window.location.href = '/dashboard'}
-                >
-                  X-PENSE
-                </span>
-              </h1>
-              <p>
-                <span 
-                  className='badge badge-info border p-2'
+                  className='badge badge-danger border p-1'
                   style={{
                     transition: 'all 0.3s ease',
-                    cursor: 'default'
+                    cursor: 'default',
+                    fontSize: '0.65rem',
+                    whiteSpace: 'nowrap'
                   }}
                   onMouseEnter={(e) => {
                     e.target.style.transform = 'scale(1.05)';
@@ -376,9 +378,9 @@ function AppContent(props) {
                     e.target.style.boxShadow = '';
                   }}
                 >
-                  Your AI-Powered Budget Tracker
+                  AI-Powered
                 </span>
-              </p>
+              </div>
               <button 
                 onClick={toggleDarkMode} 
                 className={`btn btn-sm ${darkMode ? 'btn-light' : 'btn-dark'}`}
