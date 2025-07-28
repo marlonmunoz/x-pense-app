@@ -3,7 +3,7 @@
 </div>
 
 <!-- # X-pense App -->
-![Alt text](./Client/public/ai-xpense.png)
+![Alt text](./Client/public/ai-xpense-v2.png)
 
 A full-stack expense tracking application built with React and Flask, now powered by advanced AI features.
 
