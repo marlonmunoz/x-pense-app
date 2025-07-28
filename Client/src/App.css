@@ -6,7 +6,7 @@
 }
 
 body.dark-mode #root {
-  background-color: #121212;
+  background-color: #000000;
   color: #ffffff;
   /* border: 1px solid #ffffff; */
 }

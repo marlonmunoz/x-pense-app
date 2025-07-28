@@ -322,7 +322,7 @@ function AppContent(props) {
           <nav 
             className={`d-flex flex-column p-3 ${darkMode ? 'navbar-dark-mode' : 'navbar-light-mode'}`} 
             style={{
-              width: '2500px', 
+              width: '250px', 
               minHeight: '100vh',
               transition: 'all 0.3s ease',
               borderRight: `2px solid ${darkMode ? '#495057' : '#dee2e6'}`,
