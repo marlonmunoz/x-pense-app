@@ -131,14 +131,18 @@ body.light-mode #root {
 }
 
 
+/* Professional Navbar Styling */
 .navbar-light-mode {
-  background-color: transparent; /* Make the navbar background transparent */
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .navbar-dark-mode {
-  background-color: transparent; /* Make the navbar background transparent */
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  border: 1px solid #495057;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
-
 
 .navbar-toggler-icon.light-mode-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 0, 0, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
@@ -148,25 +152,50 @@ body.light-mode #root {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
-/* TABS BG darkMode-lightMode */
+/* Professional Navigation Tabs */
 .nav-tabs-bg-light-mode {
-  background-color: #17a2b8; 
-  border-radius: 6px; 
-  padding: 1px; 
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1px solid #e9ecef;
+  border-radius: 8px; 
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .nav-tabs-bg-dark-mode {
-  background-color: #000000; /* Light mode background color */
-  border-radius: 6px; 
-  padding: 1px; 
+  background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+  border: 1px solid #6c757d;
+  border-radius: 8px; 
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
+/* Professional Navigation Links */
 .nav-link-light-mode {
-  color: rgb(255, 255, 255);
+  color: #495057;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 6px;
+  margin: 2px 0;
+  transition: all 0.3s ease;
+}
+
+.nav-link-light-mode:hover {
+  color: #212529;
+  background-color: #e9ecef;
+  transform: translateX(4px);
 }
 
 .nav-link-dark-mode {
-  color: rgb(255, 255, 255);
+  color: #f8f9fa;
+  background-color: rgba(52, 58, 64, 0.8);
+  border-radius: 6px;
+  margin: 2px 0;
+  transition: all 0.3s ease;
+}
+
+.nav-link-dark-mode:hover {
+  color: #ffffff;
+  background-color: #495057;
+  transform: translateX(4px);
 }
 
 /*  */

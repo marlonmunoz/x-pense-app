@@ -338,7 +338,7 @@ function AppContent(props) {
           >
             <div className="text-center mb-4">
               <div className="d-flex align-items-center justify-content-center mb-2" style={{ flexWrap: 'nowrap' }}>
-                <h1 className="me-3 mb-0" style={{ whiteSpace: 'nowrap' }}>
+                <h1 className="mb-0" style={{ whiteSpace: 'nowrap', marginRight: '.5rem' }}>
                   <span 
                     className='app-title metallic-shadow'
                     style={{
