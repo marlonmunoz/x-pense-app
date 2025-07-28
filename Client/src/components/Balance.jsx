@@ -43,6 +43,19 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
     }
   }, []);
 
+  // Reset fields when component mounts (fixes persistence issue)
+  useEffect(() => {
+    // Always reset fields when Balance component mounts to ensure clean state
+    setCashOnHand(0);
+    setBankAccountBalance(0);
+    setSavings(0);
+    setTotal(0);
+    setValidationErrors({});
+    setSmartValidation(null);
+    setAllocationSuggestion(null);
+    console.log('Balance component mounted - fields reset');
+  }, []); // Empty dependency array means this runs only on mount
+
   // Helper functions for better UX
   const showSuccess = (message) => {
     setSuccess(message);
@@ -328,11 +341,13 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
   };
 
   const resetFields = () => {
-    setCashOnHand('');
-    setBankAccountBalance('');
-    setSavings('');
+    setCashOnHand(0);
+    setBankAccountBalance(0);
+    setSavings(0);
     setTotal(0);
     setValidationErrors({});
+    setSmartValidation(null);
+    setAllocationSuggestion(null);
     showSuccess('Fields have been reset!');
   };
 
@@ -358,7 +373,16 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       console.log('Balance saved:', response.data);
       
       setBalances([...balances, { ...response.data, total: newTotal }]);
-      resetFields();
+      
+      // Reset fields after successful save
+      setCashOnHand(0);
+      setBankAccountBalance(0);
+      setSavings(0);
+      setTotal(0);
+      setValidationErrors({});
+      setSmartValidation(null);
+      setAllocationSuggestion(null);
+      
       showSuccess(`Successfully added new balance account! Total: ${formatCurrency(newTotal)}`);
     } catch (error) {
       console.error('There was an error saving your balance!', error);
@@ -1063,9 +1087,9 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
             type="number" 
             id="cashOnHand"
             name="cashOnHand"
-            value={cashOnHand}
+            value={cashOnHand || ''}
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value === '' ? 0 : Number(e.target.value);
               setCashOnHand(value >= 0 ? value : 0);
               setValidationErrors({...validationErrors, cashOnHand: ''});
             }}
@@ -1084,9 +1108,9 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
             type="number" 
             id="bankAccountBalance"
             name="bankAccountBalance"
-            value={bankAccountBalance}
+            value={bankAccountBalance || ''}
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value === '' ? 0 : Number(e.target.value);
               setBankAccountBalance(value >= 0 ? value : 0);
               setValidationErrors({...validationErrors, bankAccountBalance: ''});
             }}
@@ -1105,9 +1129,9 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
             type="number" 
             id="savings"
             name="savings"
-            value={savings}
+            value={savings || ''}
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value === '' ? 0 : Number(e.target.value);
               setSavings(value >= 0 ? value : 0);
               setValidationErrors({...validationErrors, savings: ''});
             }}

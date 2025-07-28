@@ -55,9 +55,9 @@ function App() {
   const totalBudgetAmount = items.reduce((total, item) => total + item.amount, 0);
 
   // BALANCE
-  const [cashOnHand, setCashOnHand] = useState('');
-  const [bankAccountBalance , setBankAccountBalance] = useState('');
-  const [savings, setSavings] = useState('');
+  const [cashOnHand, setCashOnHand] = useState(0);
+  const [bankAccountBalance , setBankAccountBalance] = useState(0);
+  const [savings, setSavings] = useState(0);
   const [total , setTotal] = useState(0);
   const totalBalance = cashOnHand + bankAccountBalance + savings;
   const [balanceId, setBalanceId] = useState(null)
