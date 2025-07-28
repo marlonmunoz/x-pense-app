@@ -322,12 +322,12 @@ function AppContent(props) {
           <nav 
             className={`d-flex flex-column p-3 ${darkMode ? 'navbar-dark-mode' : 'navbar-light-mode'}`} 
             style={{
-              width: '250px', 
+              width: '2500px', 
               minHeight: '100vh',
               transition: 'all 0.3s ease',
               borderRight: `2px solid ${darkMode ? '#495057' : '#dee2e6'}`,
               boxShadow: '2px 0 10px rgba(0, 0, 0, 0.1)',
-              borderRadius: '10px'
+              borderRadius: '10px',
             }}
             onMouseEnter={(e) => {
               e.target.style.boxShadow = '2px 0 15px rgba(0, 0, 0, 0.2)';
