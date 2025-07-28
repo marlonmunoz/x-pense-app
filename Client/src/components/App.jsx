@@ -38,6 +38,7 @@ function App() {
   
 
   const [darkMode, setDarkMode] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   // const [loggedIn, setLoggedIn] = useState(false);
   const [addedInvestments, setAddedInvestments] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0); 
@@ -191,6 +192,8 @@ function App() {
       <AppContent 
         darkMode={darkMode}
         toggleDarkMode={toggleDarkMode}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
         transactions={transactions}
         setTransactions={setTransactions}
         balance={balance}
@@ -291,7 +294,7 @@ function App() {
 function AppContent(props) {
   const location = useLocation();
   const {
-    darkMode, toggleDarkMode, transactions, setTransactions, balance, setBalance,
+    darkMode, toggleDarkMode, sidebarOpen, setSidebarOpen, transactions, setTransactions, balance, setBalance,
     budget, setBudget, addedInvestments, setAddedInvestments, totalAmount, setTotalAmount,
     items, setItems, name, setName, amount, setAmount, newBudget, setNewBudget,
     error, setError, editingIndex, setEditingIndex, editAmount, setEditAmount,
@@ -318,9 +321,40 @@ function AppContent(props) {
         </div>
       ) : (
         <div className="d-flex" style={{minHeight: '100vh'}}>
+          {/* Mobile Hamburger Menu */}
+          <div className="d-md-none position-fixed" style={{top: '10px', left: '10px', zIndex: 1050}}>
+            <button 
+              className={`btn ${darkMode ? 'btn-light' : 'btn-dark'}`}
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              style={{
+                padding: '8px 12px',
+                borderRadius: '6px',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              <span style={{fontSize: '1.2rem'}}>☰</span>
+            </button>
+          </div>
+
+          {/* Overlay for mobile when sidebar is open */}
+          {sidebarOpen && (
+            <div 
+              className="d-md-none position-fixed w-100 h-100"
+              style={{
+                top: 0,
+                left: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                zIndex: 1040
+              }}
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+
           {/* Left Sidebar Navigation */}
           <nav 
-            className={`d-flex flex-column p-3 ${darkMode ? 'navbar-dark-mode' : 'navbar-light-mode'}`} 
+            className={`d-flex flex-column p-3 ${darkMode ? 'navbar-dark-mode' : 'navbar-light-mode'} mobile-sidebar ${
+              sidebarOpen ? 'show d-block' : 'd-none d-md-flex'
+            }`} 
             style={{
               width: '250px', 
               minHeight: '100vh',
@@ -328,6 +362,12 @@ function AppContent(props) {
               borderRight: `2px solid ${darkMode ? '#495057' : '#dee2e6'}`,
               boxShadow: '2px 0 10px rgba(0, 0, 0, 0.1)',
               borderRadius: '10px',
+              ...(window.innerWidth < 768 ? {
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                zIndex: 1045
+              } : {})
             }}
             onMouseEnter={(e) => {
               e.target.style.boxShadow = '2px 0 15px rgba(0, 0, 0, 0.2)';
@@ -336,6 +376,20 @@ function AppContent(props) {
               e.target.style.boxShadow = '2px 0 10px rgba(0, 0, 0, 0.1)';
             }}
           >
+            {/* Mobile Close Button */}
+            <div className="d-md-none d-flex justify-content-end mb-2">
+              <button 
+                className={`btn btn-sm ${darkMode ? 'btn-light' : 'btn-dark'}`}
+                onClick={() => setSidebarOpen(false)}
+                style={{
+                  padding: '4px 8px',
+                  borderRadius: '4px'
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
             <div className="text-center mb-4">
               <div className="d-flex align-items-center justify-content-center mb-2" style={{ flexWrap: 'nowrap' }}>
                 <h1 className="mb-0" style={{ whiteSpace: 'nowrap', marginRight: '.5rem' }}>
@@ -676,7 +730,7 @@ function AppContent(props) {
           </nav>
           
           {/* Main Content Area */}
-          <div className="flex-grow-1 p-4">
+          <div className="flex-grow-1 p-4" style={{paddingTop: window.innerWidth < 768 ? '60px' : '1rem'}}>
             <Routes>
               <Route path='/' element={<Navigate to='/dashboard' replace />} />
               <Route path='/dashboard' element={<Dashboard 
