@@ -340,7 +340,7 @@ function AppContent(props) {
               <div className="d-flex align-items-center justify-content-center mb-2" style={{ flexWrap: 'nowrap' }}>
                 <h1 className="mb-0" style={{ whiteSpace: 'nowrap', marginRight: '.5rem' }}>
                   <span 
-                    className='app-title metallic-shadow'
+                    className={`app-title ${darkMode ? 'metallic-shadow-dark' : 'metallic-shadow-light'}`}
                     style={{
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
@@ -378,7 +378,7 @@ function AppContent(props) {
                     e.target.style.boxShadow = '';
                   }}
                 >
-                  AI-Powered
+                  Ai-Powered
                 </span>
               </div>
               <button 
