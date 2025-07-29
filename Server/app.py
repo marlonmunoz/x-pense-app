@@ -18,7 +18,12 @@ app = Flask(__name__)
 # CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+# Handle Railway PostgreSQL URL format
+database_url = os.environ.get('DATABASE_URL')
+if database_url and database_url.startswith('postgres://'):
+    database_url = database_url.replace('postgres://', 'postgresql://', 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url or 'sqlite:///xpense.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Key
 db.init_app(app)
@@ -347,7 +352,8 @@ def update_investment(investment_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    port = int(os.environ.get('PORT', 5001))
+    app.run(debug=False, host='0.0.0.0', port=port)
     
 
     
