@@ -53,6 +53,15 @@ body.light-mode #root {
     0 0 5px #fff;
 }
 
+.intro-margin {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .start-page-container {
   display: flex;
   justify-content: center;
@@ -119,6 +128,7 @@ body.light-mode #root {
 
 .intro .char {
   display: inline-block;
+  opacity: 0;
   animation-duration: 3s;
   animation-fill-mode: forwards;
 }

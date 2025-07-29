@@ -188,7 +188,7 @@ function App() {
   }
 
   return (
-    <Router>
+    <Router basename="/x-pense-app">
       <AppContent 
         darkMode={darkMode}
         toggleDarkMode={toggleDarkMode}
@@ -314,7 +314,7 @@ function AppContent(props) {
   return (
     <div id="root" className={`${darkMode ? 'dark-mode' : 'light-mode'}`}>
       {location.pathname === '/' ? (
-        <div className="container d-flex flex-column align-items-center">
+        <div style={{height: '100vh', width: '100%'}}>
           <Routes>
             <Route path='/' element={<StartPage />} />
           </Routes>
