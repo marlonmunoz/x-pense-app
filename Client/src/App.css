@@ -596,6 +596,169 @@ body.light-mode #root {
   display: none;
 }
 
+/* TABLE BUTTONS */
+.btn-table {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  outline: none;
+}
+
+.btn-edit {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.confirm-delete {
+  background-color: #fd7e14;
+  color: white;
+  animation: pulse 1s infinite;
+}
+
+.confirm-delete:hover {
+  background-color: #e06b00;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.btn-save {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-save:hover {
+  background-color: #1e7e34;
+  transform: translateY(-1px);
+}
+
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background-color: #545b62;
+  transform: translateY(-1px);
+}
+
+.btn-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.loading-spinner-balance {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Dark mode button styles */
+.dark-mode .btn-edit {
+  background-color: #4dabf7;
+}
+
+.dark-mode .btn-edit:hover {
+  background-color: #339af0;
+}
+
+.dark-mode .btn-delete {
+  background-color: #f03e3e;
+}
+
+.dark-mode .btn-delete:hover {
+  background-color: #e03131;
+}
+
+.dark-mode .btn-save {
+  background-color: #51cf66;
+}
+
+.dark-mode .btn-save:hover {
+  background-color: #40c057;
+}
+
+.dark-mode .btn-cancel {
+  background-color: #868e96;
+}
+
+.dark-mode .btn-cancel:hover {
+  background-color: #6c757d;
+}
+
+/* TABLE INPUT FIELDS */
+.edit-input-table {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  background-color: #fff;
+  color: #333;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.edit-input-table:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.dark-mode .edit-input-table {
+  background-color: #2d3748;
+  color: #fff;
+  border-color: #4a5568;
+}
+
+.dark-mode .edit-input-table:focus {
+  border-color: #4dabf7;
+  box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.25);
+}
+
+.total-amount {
+  font-weight: bold;
+  color: #28a745;
+}
+
+.dark-mode .total-amount {
+  color: #51cf66;
+}
+
 
 /* FOOTER */
 .footer p {
