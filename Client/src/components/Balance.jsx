@@ -24,6 +24,12 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
   const [smartValidation, setSmartValidation] = useState(null);
   const [updateSuggestions, setUpdateSuggestions] = useState([]);
 
+  // Local form states (separate from parent Dashboard states)
+  const [formCashOnHand, setFormCashOnHand] = useState(0);
+  const [formBankAccountBalance, setFormBankAccountBalance] = useState(0);
+  const [formSavings, setFormSavings] = useState(0);
+  const [formTotal, setFormTotal] = useState(0);
+
   // Initialize services with error handling
   const financialCalculator = new FinancialCalculator();
   const [smartUpdateService, setSmartUpdateService] = useState(null);
@@ -44,18 +50,23 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
     }
   }, []);
 
-  // Reset fields when component mounts (fixes persistence issue)
+  // Reset form fields when component mounts (fixes persistence issue)
   useEffect(() => {
-    // Always reset fields when Balance component mounts to ensure clean state
-    setCashOnHand(0);
-    setBankAccountBalance(0);
-    setSavings(0);
-    setTotal(0);
+    // Always reset form fields when Balance component mounts to ensure clean state
+    setFormCashOnHand(0);
+    setFormBankAccountBalance(0);
+    setFormSavings(0);
+    setFormTotal(0);
     setValidationErrors({});
     setSmartValidation(null);
     setAllocationSuggestion(null);
     console.log('Balance component mounted - fields reset');
   }, []); // Empty dependency array means this runs only on mount
+
+  // Calculate form total when form values change
+  useEffect(() => {
+    setFormTotal(formCashOnHand + formBankAccountBalance + formSavings);
+  }, [formCashOnHand, formBankAccountBalance, formSavings]);
 
   // Helper functions for better UX
   const showSuccess = (message) => {
@@ -69,7 +80,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
   };
 
   const validateInputs = () => {
-    const errors = financialCalculator.validateBalanceInputs(cashOnHand, bankAccountBalance, savings);
+    const errors = financialCalculator.validateBalanceInputs(formCashOnHand, formBankAccountBalance, formSavings);
     setValidationErrors(errors);
     return Object.keys(errors).filter(key => key !== 'warning').length === 0;
   };
@@ -126,6 +137,17 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           }));
           console.log('Fetched balances:', fetchedBalances);
           setBalances(fetchedBalances);
+          
+          // Update parent App state with the sum of all balances for Dashboard
+          if (fetchedBalances.length > 0) {
+            const totalCash = fetchedBalances.reduce((sum, balance) => sum + balance.cash_on_hand, 0);
+            const totalBank = fetchedBalances.reduce((sum, balance) => sum + balance.bank_account_balance, 0);
+            const totalSavings = fetchedBalances.reduce((sum, balance) => sum + balance.savings, 0);
+            
+            setCashOnHand(totalCash);
+            setBankAccountBalance(totalBank);
+            setSavings(totalSavings);
+          }
         } else if (response.data && typeof response.data === 'object') {
           const balance = {
             ...response.data,
@@ -133,14 +155,27 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           };
           console.log('Fetched single balance:', balance);
           setBalances([balance]);
+          
+          // Update parent App state with the single balance values for Dashboard
+          setCashOnHand(balance.cash_on_hand);
+          setBankAccountBalance(balance.bank_account_balance);
+          setSavings(balance.savings);
         } else {
           console.error('Fetched data is not an array or object:', response.data);
+          // Reset parent state if no data
+          setCashOnHand(0);
+          setBankAccountBalance(0);
+          setSavings(0);
         }
         setBalanceError(null);
       })
       .catch(error => {
         console.error('There was an error fetching the balances!', error);
         showError('Failed to load balance data. Please try again.');
+        // Reset parent state on error
+        setCashOnHand(0);
+        setBankAccountBalance(0);
+        setSavings(0);
       })
       .finally(() => {
         setLoading(false);
@@ -235,6 +270,15 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       setBalances(updatedBalances);
       setEditIndex(null);
       
+      // Update parent App state with the sum of all balances for Dashboard
+      const totalCash = updatedBalances.reduce((sum, balance) => sum + balance.cash_on_hand, 0);
+      const totalBank = updatedBalances.reduce((sum, balance) => sum + balance.bank_account_balance, 0);
+      const totalSavings = updatedBalances.reduce((sum, balance) => sum + balance.savings, 0);
+      
+      setCashOnHand(totalCash);
+      setBankAccountBalance(totalBank);
+      setSavings(totalSavings);
+      
       // Track the update (only if service is available)
       if (smartUpdateService) {
         try {
@@ -278,6 +322,23 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
         await axios.delete(buildApiUrl(`/balance/${balance.id}`));
         const newBalances = balances.filter((_, i) => i !== index);
         setBalances(newBalances);
+        
+        // Update parent App state with the sum of remaining balances for Dashboard
+        if (newBalances.length > 0) {
+          const totalCash = newBalances.reduce((sum, balance) => sum + balance.cash_on_hand, 0);
+          const totalBank = newBalances.reduce((sum, balance) => sum + balance.bank_account_balance, 0);
+          const totalSavings = newBalances.reduce((sum, balance) => sum + balance.savings, 0);
+          
+          setCashOnHand(totalCash);
+          setBankAccountBalance(totalBank);
+          setSavings(totalSavings);
+        } else {
+          // No balances left, reset to 0
+          setCashOnHand(0);
+          setBankAccountBalance(0);
+          setSavings(0);
+        }
+        
         showSuccess(`Successfully deleted account #${index + 1}!`);
         setDeleteConfirm(null);
       } catch (error) {
@@ -342,10 +403,10 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
   };
 
   const resetFields = () => {
-    setCashOnHand(0);
-    setBankAccountBalance(0);
-    setSavings(0);
-    setTotal(0);
+    setFormCashOnHand(0);
+    setFormBankAccountBalance(0);
+    setFormSavings(0);
+    setFormTotal(0);
     setValidationErrors({});
     setSmartValidation(null);
     setAllocationSuggestion(null);
@@ -357,13 +418,13 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       return;
     }
 
-    const newTotal = cashOnHand + bankAccountBalance + savings;
-    setTotal(newTotal);
+    const newTotal = formCashOnHand + formBankAccountBalance + formSavings;
+    setFormTotal(newTotal);
 
     const newBalance = {
-      cash_on_hand: cashOnHand,
-      bank_account_balance: bankAccountBalance,
-      savings: savings,
+      cash_on_hand: formCashOnHand,
+      bank_account_balance: formBankAccountBalance,
+      savings: formSavings,
       total: newTotal,
       created_at: new Date().toISOString()
     };
@@ -373,13 +434,24 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       const response = await axios.post(API_ENDPOINTS.balance, newBalance);
       console.log('Balance saved:', response.data);
       
-      setBalances([...balances, { ...response.data, total: newTotal }]);
+      const updatedBalances = [...balances, { ...response.data, total: newTotal }];
+      setBalances(updatedBalances);
       
-      // Reset fields after successful save
-      setCashOnHand(0);
-      setBankAccountBalance(0);
-      setSavings(0);
-      setTotal(0);
+      // Update parent App state with the sum of all balances for Dashboard
+      const totalCash = updatedBalances.reduce((sum, balance) => sum + balance.cash_on_hand, 0);
+      const totalBank = updatedBalances.reduce((sum, balance) => sum + balance.bank_account_balance, 0);
+      const totalSavings = updatedBalances.reduce((sum, balance) => sum + balance.savings, 0);
+      
+      setCashOnHand(totalCash);
+      setBankAccountBalance(totalBank);
+      setSavings(totalSavings);
+      
+      // Reset form fields after successful save
+      setFormCashOnHand(0);
+      setFormBankAccountBalance(0);
+      setFormSavings(0);
+      setFormTotal(0);
+      
       setValidationErrors({});
       setSmartValidation(null);
       setAllocationSuggestion(null);
@@ -397,9 +469,9 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
   const applyOptimalAllocation = () => {
     if (!allocationSuggestion) return;
     
-    setCashOnHand(Math.round(allocationSuggestion.cash));
-    setBankAccountBalance(Math.round(allocationSuggestion.bank));
-    setSavings(Math.round(allocationSuggestion.savings));
+    setFormCashOnHand(Math.round(allocationSuggestion.cash));
+    setFormBankAccountBalance(Math.round(allocationSuggestion.bank));
+    setFormSavings(Math.round(allocationSuggestion.savings));
     showSuccess('Applied optimal allocation suggestion!');
   };
 
@@ -407,21 +479,21 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
   const applyQuickPreset = (presetType) => {
     switch(presetType) {
       case 'emergency':
-        setCashOnHand(500);
-        setBankAccountBalance(1500);
-        setSavings(3000);
+        setFormCashOnHand(500);
+        setFormBankAccountBalance(1500);
+        setFormSavings(3000);
         showSuccess('Applied emergency fund preset!');
         break;
       case 'student':
-        setCashOnHand(200);
-        setBankAccountBalance(800);
-        setSavings(500);
+        setFormCashOnHand(200);
+        setFormBankAccountBalance(800);
+        setFormSavings(500);
         showSuccess('Applied student budget preset!');
         break;
       case 'family':
-        setCashOnHand(1000);
-        setBankAccountBalance(5000);
-        setSavings(10000);
+        setFormCashOnHand(1000);
+        setFormBankAccountBalance(5000);
+        setFormSavings(10000);
         showSuccess('Applied family budget preset!');
         break;
       default:
@@ -1088,10 +1160,10 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
             type="number" 
             id="cashOnHand"
             name="cashOnHand"
-            value={cashOnHand || ''}
+            value={formCashOnHand || ''}
             onChange={(e) => {
               const value = e.target.value === '' ? 0 : Number(e.target.value);
-              setCashOnHand(value >= 0 ? value : 0);
+              setFormCashOnHand(value >= 0 ? value : 0);
               setValidationErrors({...validationErrors, cashOnHand: ''});
             }}
             placeholder="Enter cash amount"
@@ -1109,10 +1181,10 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
             type="number" 
             id="bankAccountBalance"
             name="bankAccountBalance"
-            value={bankAccountBalance || ''}
+            value={formBankAccountBalance || ''}
             onChange={(e) => {
               const value = e.target.value === '' ? 0 : Number(e.target.value);
-              setBankAccountBalance(value >= 0 ? value : 0);
+              setFormBankAccountBalance(value >= 0 ? value : 0);
               setValidationErrors({...validationErrors, bankAccountBalance: ''});
             }}
             placeholder="Enter bank account balance"
@@ -1130,10 +1202,10 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
             type="number" 
             id="savings"
             name="savings"
-            value={savings || ''}
+            value={formSavings || ''}
             onChange={(e) => {
               const value = e.target.value === '' ? 0 : Number(e.target.value);
-              setSavings(value >= 0 ? value : 0);
+              setFormSavings(value >= 0 ? value : 0);
               setValidationErrors({...validationErrors, savings: ''});
             }}
             placeholder="Enter savings amount"
