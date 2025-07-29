@@ -1,7 +1,0 @@
-[build]
-builder = "NIXPACKS"
-
-[deploy]
-startCommand = "cd Server && gunicorn --bind 0.0.0.0:$PORT app:app"
-restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 10
