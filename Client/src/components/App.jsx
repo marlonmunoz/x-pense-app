@@ -322,15 +322,10 @@ function AppContent(props) {
       ) : (
         <div className="d-flex" style={{minHeight: '100vh'}}>
           {/* Mobile Hamburger Menu */}
-          <div className="d-md-none position-fixed" style={{top: '10px', left: '10px', zIndex: 1050}}>
+          <div className="d-md-none hamburger-container">
             <button 
-              className={`btn ${darkMode ? 'btn-light' : 'btn-dark'}`}
+              className="btn hamburger-btn"
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              style={{
-                padding: '8px 12px',
-                borderRadius: '6px',
-                transition: 'all 0.3s ease'
-              }}
             >
               <span style={{fontSize: '1.2rem'}}>☰</span>
             </button>
