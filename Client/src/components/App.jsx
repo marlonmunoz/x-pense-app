@@ -324,10 +324,11 @@ function AppContent(props) {
           {/* Mobile Hamburger Menu */}
           <div className="d-md-none hamburger-container">
             <button 
-              className="btn hamburger-btn"
+              className={`btn hamburger-btn ${darkMode ? 'dark-mode' : ''}`}
               onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label="Toggle navigation menu"
             >
-              <span style={{fontSize: '1.2rem'}}>☰</span>
+              <span style={{fontSize: '1.3rem', fontWeight: 'bold'}}>☰</span>
             </button>
           </div>
 
