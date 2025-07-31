@@ -255,6 +255,16 @@ body.light-mode #root {
     backdrop-filter: blur(2px);
   }
   
+  /* Force single column layout for mobile sidebar */
+  .mobile-sidebar * {
+    box-sizing: border-box !important;
+  }
+  
+  .mobile-sidebar > * {
+    width: 100% !important;
+    flex-shrink: 0 !important;
+  }
+  
   /* Mobile navigation structure */
   .mobile-sidebar .text-center {
     width: 100% !important;
@@ -263,6 +273,7 @@ body.light-mode #root {
     flex-direction: column !important;
     align-items: center !important;
     padding: 0 1rem !important;
+    flex-shrink: 0 !important;
   }
   
   .mobile-sidebar .nav-pills {
@@ -273,6 +284,8 @@ body.light-mode #root {
     padding: 0 !important;
     margin: 0 !important;
     list-style: none !important;
+    flex-wrap: nowrap !important;
+    max-width: 100% !important;
   }
   
   .mobile-sidebar .nav-item {
@@ -280,9 +293,11 @@ body.light-mode #root {
     margin-bottom: 0.5rem !important;
     display: block !important;
     flex: none !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
   }
   
-  /* Mobile navigation links */
+  /* Mobile navigation links - force single column */
   .mobile-sidebar .nav-link {
     padding: 14px 16px !important;
     font-size: 1.1rem;
@@ -292,6 +307,45 @@ body.light-mode #root {
     width: 100% !important;
     text-align: left !important;
     justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Override any Bootstrap flex utilities that might cause columns */
+  .mobile-sidebar .d-flex {
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+  
+  .mobile-sidebar .align-items-center {
+    align-items: center !important;
+  }
+  
+  .mobile-sidebar .justify-content-center {
+    justify-content: center !important;
+  }
+  
+  /* Fix the title section specifically */
+  .mobile-sidebar .text-center .d-flex {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .mobile-sidebar .text-center .d-flex h1 {
+    margin-right: 0 !important;
+    margin-bottom: 0.5rem !important;
+    width: 100% !important;
+    text-align: center !important;
+  }
+  
+  .mobile-sidebar .text-center .d-flex .badge {
+    margin-top: 0.25rem !important;
+    align-self: center !important;
   }
   
   /* Mobile sidebar title styling */
@@ -299,6 +353,7 @@ body.light-mode #root {
     font-size: 1.8rem !important;
     text-align: center !important;
     margin-bottom: 0.5rem !important;
+    width: 100% !important;
   }
   
   /* Mobile dark/light mode button */
