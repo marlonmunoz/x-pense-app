@@ -54,7 +54,30 @@ body.light-mode #root {
     0 0 8px rgba(255, 255, 255, 0.6);
 }
 
-/* Dark Mode - Full Shadow */
+  /* Mobile sidebar layout - Force single column with new structure */
+  .mobile-sidebar .mobile-title-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .mobile-sidebar .mobile-title {
+    width: 100% !important;
+    text-align: center !important;
+    margin: 0 0 0.5rem 0 !important;
+    white-space: normal !important;
+  }
+  
+  .mobile-sidebar .mobile-badge {
+    margin: 0.25rem 0 0 0 !important;
+    align-self: center !important;
+    width: auto !important;
+  }
+
+  /* Dark/Light mode button */
 .metallic-shadow-dark {
   text-shadow: 
     3px 3px 3px #000, 
@@ -207,23 +230,19 @@ body.light-mode #root {
 }
 
 
-/* Responsive Navigation */
+/* Mobile Navigation - Minimal intervention approach */
 @media (max-width: 767.98px) {
   .mobile-sidebar {
     position: fixed !important;
     top: 0;
     left: 0;
-    width: 300px !important;
+    width: 280px !important;
     height: 100vh;
     z-index: 1045;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    align-items: stretch !important;
   }
   
   .mobile-sidebar.show {
@@ -254,115 +273,6 @@ body.light-mode #root {
     z-index: 1040;
     backdrop-filter: blur(2px);
   }
-  
-  /* Force single column layout for mobile sidebar */
-  .mobile-sidebar * {
-    box-sizing: border-box !important;
-  }
-  
-  .mobile-sidebar > * {
-    width: 100% !important;
-    flex-shrink: 0 !important;
-  }
-  
-  /* Mobile navigation structure */
-  .mobile-sidebar .text-center {
-    width: 100% !important;
-    margin-bottom: 1.5rem !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    padding: 0 1rem !important;
-    flex-shrink: 0 !important;
-  }
-  
-  .mobile-sidebar .nav-pills {
-    width: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    list-style: none !important;
-    flex-wrap: nowrap !important;
-    max-width: 100% !important;
-  }
-  
-  .mobile-sidebar .nav-item {
-    width: 100% !important;
-    margin-bottom: 0.5rem !important;
-    display: block !important;
-    flex: none !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
-  }
-  
-  /* Mobile navigation links - force single column */
-  .mobile-sidebar .nav-link {
-    padding: 14px 16px !important;
-    font-size: 1.1rem;
-    min-height: 48px;
-    display: flex !important;
-    align-items: center !important;
-    width: 100% !important;
-    text-align: left !important;
-    justify-content: flex-start !important;
-    flex-wrap: nowrap !important;
-    white-space: nowrap !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-  
-  /* Override any Bootstrap flex utilities that might cause columns */
-  .mobile-sidebar .d-flex {
-    flex-direction: column !important;
-    width: 100% !important;
-  }
-  
-  .mobile-sidebar .align-items-center {
-    align-items: center !important;
-  }
-  
-  .mobile-sidebar .justify-content-center {
-    justify-content: center !important;
-  }
-  
-  /* Fix the title section specifically */
-  .mobile-sidebar .text-center .d-flex {
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 100% !important;
-    margin-bottom: 1rem !important;
-  }
-  
-  .mobile-sidebar .text-center .d-flex h1 {
-    margin-right: 0 !important;
-    margin-bottom: 0.5rem !important;
-    width: 100% !important;
-    text-align: center !important;
-  }
-  
-  .mobile-sidebar .text-center .d-flex .badge {
-    margin-top: 0.25rem !important;
-    align-self: center !important;
-  }
-  
-  /* Mobile sidebar title styling */
-  .mobile-sidebar .app-title {
-    font-size: 1.8rem !important;
-    text-align: center !important;
-    margin-bottom: 0.5rem !important;
-    width: 100% !important;
-  }
-  
-  /* Mobile dark/light mode button */
-  .mobile-sidebar .btn {
-    margin-top: 0.5rem !important;
-    margin-bottom: 1rem !important;
-    width: auto !important;
-    align-self: center !important;
-  }
 }
 
 @media (min-width: 768px) {
@@ -373,6 +283,7 @@ body.light-mode #root {
   .mobile-sidebar {
     position: relative !important;
     transform: translateX(0) !important;
+    width: 250px !important;
   }
 }
 
