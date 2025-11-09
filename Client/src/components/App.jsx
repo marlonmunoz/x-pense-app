@@ -1018,6 +1018,7 @@ const MobileBottomNav = ({ darkMode }) => {
     { path: '/dashboard', icon: BarChart3, label: 'Dashboard' },
     { path: '/budget', icon: DollarSign, label: 'Budget' },
     { path: '/balance', icon: CreditCard, label: 'Balance' },
+    { path: '/add', icon: Plus, label: 'X-PENSE' },
     { path: '/transactions', icon: Receipt, label: 'Transactions' },
     { path: '/goals', icon: Target, label: 'Goals' },
     { path: '/investments', icon: TrendingUp, label: 'Investments' },
