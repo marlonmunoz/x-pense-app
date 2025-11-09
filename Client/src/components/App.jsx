@@ -1004,8 +1004,8 @@ function AppContent(props) {
         </div>
       )}
       
-      {/* Mobile Bottom Navigation - Only visible on mobile */}
-      <MobileBottomNav darkMode={darkMode} />
+      {/* Mobile Bottom Navigation - Only visible on mobile and after Get Started is clicked */}
+      {location.pathname !== '/' && <MobileBottomNav darkMode={darkMode} />}
     </div>
   )
 }
