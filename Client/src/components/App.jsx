@@ -543,7 +543,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <BarChart3 size={18} className="me-2" />
+                  <BarChart3 size={18} className="me-2" style={{marginRight: '12px'}} />
                   Dashboard
                 </NavLink>
               </li>
@@ -587,7 +587,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <DollarSign size={18} className="me-2" />
+                  <DollarSign size={18} className="me-2" style={{marginRight: '12px'}} />
                   Budget
                 </NavLink>
               </li>
@@ -617,7 +617,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <CreditCard size={18} className="me-2" />
+                  <CreditCard size={18} className="me-2" style={{marginRight: '12px'}} />
                   Balance
                 </NavLink>
               </li>
@@ -650,7 +650,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <Plus size={18} className="me-2" />
+                  <Plus size={18} className="me-2" style={{marginRight: '12px'}} />
                   <strong>X-PENSE</strong>
                 </NavLink>
               </li>
@@ -680,7 +680,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <Receipt size={18} className="me-2" />
+                  <Receipt size={18} className="me-2" style={{marginRight: '12px'}}/>
                   Transactions
                 </NavLink>
               </li>
@@ -710,7 +710,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <Target size={18} className="me-2" />
+                  <Target size={18} className="me-2" style={{marginRight: '12px'}}/>
                   Goals
                 </NavLink>
               </li>
@@ -740,7 +740,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <TrendingUp size={18} className="me-2" />
+                  <TrendingUp size={18} className="me-2" style={{marginRight: '12px'}}/>
                   Investments
                 </NavLink>
               </li>
@@ -772,7 +772,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <Lightbulb size={18} className="me-2" />
+                  <Lightbulb size={18} className="me-2" style={{marginRight: '12px'}}/>
                   <strong>AI Demo</strong>
                 </NavLink>
               </li>
