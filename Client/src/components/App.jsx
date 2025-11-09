@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import { BrowserRouter as Router, Routes, Route, NavLink, Outlet, useLocation, Navigate }  from 'react-router-dom';
-import { BarChart3, DollarSign, CreditCard, Receipt, Target, TrendingUp, Lightbulb } from 'lucide-react';
+import { BarChart3, DollarSign, CreditCard, Receipt, Target, TrendingUp, Lightbulb, Plus, Bot } from 'lucide-react';
 import AddTransactions from '../components/AddTransactions';
 import Balance from '../components/Balance'
 import Budget from '../components/Budget'
@@ -438,21 +438,57 @@ function AppContent(props) {
               </div>
               <button 
                 onClick={toggleDarkMode} 
-                className={`btn btn-sm ${darkMode ? 'btn-light' : 'btn-dark'}`}
+                className="btn btn-sm w-100"
                 style={{
-                  transition: 'all 0.3s ease',
-                  transform: 'scale(1)'
+                  background: darkMode 
+                    ? 'linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #fff59d 100%)' 
+                    : 'linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%)',
+                  color: darkMode ? '#1a1a1a' : '#ffffff',
+                  border: `2px solid ${darkMode ? '#ffd700' : '#64748b'}`,
+                  fontSize: '12px',
+                  padding: '10px 16px',
+                  borderRadius: '12px',
+                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: darkMode 
+                    ? '0 4px 15px rgba(255, 215, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.1)' 
+                    : '0 4px 15px rgba(30, 41, 59, 0.3), 0 0 20px rgba(30, 41, 59, 0.1)',
+                  transform: 'scale(1)',
+                  fontWeight: '600',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  backdropFilter: 'blur(10px)',
+                  maxWidth: '100%'
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.transform = 'scale(1.1)';
-                  e.target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
+                  e.target.style.transform = 'scale(1.05)';
+                  e.target.style.boxShadow = darkMode 
+                    ? '0 6px 20px rgba(255, 215, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.2)' 
+                    : '0 6px 20px rgba(30, 41, 59, 0.4), 0 0 30px rgba(30, 41, 59, 0.2)';
                 }}
                 onMouseLeave={(e) => {
                   e.target.style.transform = 'scale(1)';
-                  e.target.style.boxShadow = '';
+                  e.target.style.boxShadow = darkMode 
+                    ? '0 4px 15px rgba(255, 215, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.1)' 
+                    : '0 4px 15px rgba(30, 41, 59, 0.3), 0 0 20px rgba(30, 41, 59, 0.1)';
+                }}
+                onMouseDown={(e) => {
+                  e.target.style.transform = 'scale(0.98)';
+                }}
+                onMouseUp={(e) => {
+                  e.target.style.transform = 'scale(1.05)';
+                  setTimeout(() => {
+                    e.target.style.transform = 'scale(1)';
+                  }, 150);
                 }}
               >
-                {darkMode ? '☀️ Light' : '🌙 Dark'} Mode
+                <span style={{ fontSize: '16px' }}>
+                  {darkMode ? '☀️' : '🌙'}
+                </span>
+                <span style={{ fontSize: '12px', letterSpacing: '0.5px' }}>
+                  {darkMode ? 'LIGHT MODE' : 'DARK MODE'}
+                </span>
               </button>
             </div>
             
@@ -507,7 +543,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <span className="me-2">📊</span>
+                  <BarChart3 size={18} className="me-2" />
                   Dashboard
                 </NavLink>
               </li>
@@ -551,7 +587,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <span className="me-2">💰</span>
+                  <DollarSign size={18} className="me-2" />
                   Budget
                 </NavLink>
               </li>
@@ -581,7 +617,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <span className="me-2">⚖️</span>
+                  <CreditCard size={18} className="me-2" />
                   Balance
                 </NavLink>
               </li>
@@ -614,7 +650,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <span className="me-2">➕</span>
+                  <Plus size={18} className="me-2" />
                   <strong>X-PENSE</strong>
                 </NavLink>
               </li>
@@ -644,7 +680,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <span className="me-2">📝</span>
+                  <Receipt size={18} className="me-2" />
                   Transactions
                 </NavLink>
               </li>
@@ -674,7 +710,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <span className="me-2">🎯</span>
+                  <Target size={18} className="me-2" />
                   Goals
                 </NavLink>
               </li>
@@ -704,7 +740,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <span className="me-2">📈</span>
+                  <TrendingUp size={18} className="me-2" />
                   Investments
                 </NavLink>
               </li>
@@ -736,7 +772,7 @@ function AppContent(props) {
                     }
                   }}
                 >
-                  <span className="me-2">🤖</span>
+                  <Lightbulb size={18} className="me-2" />
                   <strong>AI Demo</strong>
                 </NavLink>
               </li>
@@ -772,18 +808,63 @@ function AppContent(props) {
           <div className="flex-grow-1 p-4" style={{paddingTop: window.innerWidth < 768 ? '60px' : '1rem'}}>
             
             {/* Mobile Dark Mode Toggle - Only visible on mobile */}
-            <div className="d-md-none mb-3" style={{ textAlign: 'right' }}>
+            <div className="d-md-none mb-3">
               <button 
                 onClick={toggleDarkMode} 
-                className={`btn btn-sm ${darkMode ? 'btn-light' : 'btn-dark'}`}
+                className="btn btn-sm w-100"
                 style={{
-                  transition: 'all 0.3s ease',
-                  fontSize: '12px',
-                  padding: '4px 8px',
-                  borderRadius: '20px'
+                  background: darkMode 
+                    ? 'linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #fff59d 100%)' 
+                    : 'linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%)',
+                  color: darkMode ? '#1a1a1a' : '#ffffff',
+                  border: `2px solid ${darkMode ? '#ffd700' : '#64748b'}`,
+                  fontSize: '11px',
+                  padding: '8px 16px',
+                  borderRadius: '12px',
+                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: darkMode 
+                    ? '0 4px 15px rgba(255, 215, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.1)' 
+                    : '0 4px 15px rgba(30, 41, 59, 0.3), 0 0 20px rgba(30, 41, 59, 0.1)',
+                  transform: 'scale(1)',
+                  fontWeight: '600',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  backdropFilter: 'blur(10px)',
+                  maxWidth: '100%'
+                }}
+                onMouseDown={(e) => {
+                  e.target.style.transform = 'scale(0.95)';
+                }}
+                onMouseUp={(e) => {
+                  e.target.style.transform = 'scale(1.05)';
+                  setTimeout(() => {
+                    e.target.style.transform = 'scale(1)';
+                  }, 150);
+                }}
+                onTouchStart={(e) => {
+                  e.target.style.transform = 'scale(0.95)';
+                  e.target.style.boxShadow = darkMode 
+                    ? '0 2px 8px rgba(255, 215, 0, 0.5)' 
+                    : '0 2px 8px rgba(30, 41, 59, 0.5)';
+                }}
+                onTouchEnd={(e) => {
+                  e.target.style.transform = 'scale(1.05)';
+                  setTimeout(() => {
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.boxShadow = darkMode 
+                      ? '0 4px 15px rgba(255, 215, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.1)' 
+                      : '0 4px 15px rgba(30, 41, 59, 0.3), 0 0 20px rgba(30, 41, 59, 0.1)';
+                  }, 150);
                 }}
               >
-                {darkMode ? '☀️' : '🌙'}
+                <span style={{ fontSize: '14px' }}>
+                  {darkMode ? '☀️' : '🌙'}
+                </span>
+                <span style={{ fontSize: '10px', letterSpacing: '0.5px' }}>
+                  {darkMode ? 'LIGHT' : 'DARK'}
+                </span>
               </button>
             </div>
             
