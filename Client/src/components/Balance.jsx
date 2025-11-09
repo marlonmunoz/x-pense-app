@@ -60,6 +60,18 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
     setValidationErrors({});
     setSmartValidation(null);
     setAllocationSuggestion(null);
+    
+    // Ensure page is at top on mobile and prevent jumping
+    if (window.innerWidth <= 768) {
+      // Force immediate scroll to top without smooth behavior
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      
+      // Prevent any focus-related scrolling
+      document.activeElement?.blur();
+    }
+    
     console.log('Balance component mounted - fields reset');
   }, []); // Empty dependency array means this runs only on mount
 
@@ -123,8 +135,11 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
 
   useEffect(() => {
     console.log('BALANCE COMPONENT');
-    console.log('Fetching balances...');
-    setLoading(true);
+    
+    // Delay API call slightly to prevent jumping on mobile
+    const fetchBalances = () => {
+      console.log('Fetching balances...');
+      setLoading(true);
     
     axios.get(API_ENDPOINTS.balance)
       .then(response => {
@@ -180,6 +195,14 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       .finally(() => {
         setLoading(false);
       });
+    };
+    
+    // Add delay on mobile to prevent jumping effect
+    if (window.innerWidth <= 768) {
+      setTimeout(fetchBalances, 100);
+    } else {
+      fetchBalances();
+    }
   }, [setBalances, setCashOnHand, setBankAccountBalance, setSavings, setBalanceError]);
 
   // Auto-clear messages after 3-5 seconds

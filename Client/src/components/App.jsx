@@ -770,6 +770,23 @@ function AppContent(props) {
           
           {/* Main Content Area */}
           <div className="flex-grow-1 p-4" style={{paddingTop: window.innerWidth < 768 ? '60px' : '1rem'}}>
+            
+            {/* Mobile Dark Mode Toggle - Only visible on mobile */}
+            <div className="d-md-none mb-3" style={{ textAlign: 'right' }}>
+              <button 
+                onClick={toggleDarkMode} 
+                className={`btn btn-sm ${darkMode ? 'btn-light' : 'btn-dark'}`}
+                style={{
+                  transition: 'all 0.3s ease',
+                  fontSize: '12px',
+                  padding: '4px 8px',
+                  borderRadius: '20px'
+                }}
+              >
+                {darkMode ? '☀️' : '🌙'}
+              </button>
+            </div>
+            
             <Routes>
               <Route path='/' element={<Navigate to='/dashboard' replace />} />
               <Route path='/dashboard' element={<Dashboard 
@@ -935,9 +952,10 @@ const MobileBottomNav = ({ darkMode }) => {
         padding: '6px 4px',
         boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.1)',
         backdropFilter: 'blur(10px)',
-        zIndex: 1050,
+        zIndex: 9999,
         height: '60px',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        transform: 'translateZ(0)'
       }}
     >
       <div 
@@ -961,6 +979,22 @@ const MobileBottomNav = ({ darkMode }) => {
               key={index}
               to={item.path}
               className="text-decoration-none"
+              onClick={() => {
+                // Immediate scroll to top on mobile navigation
+                if (window.innerWidth <= 768) {
+                  // Use multiple methods to ensure scroll works
+                  window.scrollTo(0, 0);
+                  document.documentElement.scrollTop = 0;
+                  document.body.scrollTop = 0;
+                  
+                  // Also set scroll after a brief delay to handle React Router navigation
+                  setTimeout(() => {
+                    window.scrollTo(0, 0);
+                    document.documentElement.scrollTop = 0;
+                    document.body.scrollTop = 0;
+                  }, 50);
+                }
+              }}
               style={{
                 display: 'flex',
                 flexDirection: 'column',

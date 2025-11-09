@@ -24,6 +24,64 @@
   scrollbar-width: none;
 }
 
+/* Ensure mobile navigation stays in place */
+@media (max-width: 767.98px) {
+  body {
+    /* Prevent horizontal scroll that could affect fixed positioning */
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  /* Stronger navigation positioning */
+  nav[class*="d-md-none"] {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    z-index: 10000 !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+  
+  /* Prevent content from affecting navigation */
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+  
+  /* Ensure viewport stability */
+  #root {
+    min-height: 100vh;
+    position: relative;
+  }
+  
+  /* Force navigation container positioning */
+  .mobile-nav-container {
+    height: 100% !important;
+    position: relative !important;
+  }
+  
+  /* Prevent scroll restoration and focus scrolling on mobile */
+  * {
+    scroll-margin-top: 0 !important;
+    scroll-margin-bottom: 70px !important;
+  }
+  
+  /* Disable focus outline scrolling */
+  input:focus,
+  button:focus,
+  select:focus,
+  textarea:focus {
+    scroll-margin: 0 !important;
+  }
+  
+  /* Force smooth scrolling prevention when needed */
+  .prevent-scroll {
+    scroll-behavior: auto !important;
+  }
+}
+
 body.dark-mode #root {
   background-color: #000000;
   color: #ffffff;
