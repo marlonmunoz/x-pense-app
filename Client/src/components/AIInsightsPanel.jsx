@@ -4,6 +4,8 @@ import { dashboardAI, formatInsight, prioritizeAlerts } from '../services/dashbo
 import './AIInsightsPanel.css';
 
 const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, darkMode }) => {
+  console.log('🔍 AIInsightsPanel rendering...', { transactions, balance, budget, darkMode });
+  
   const navigate = useNavigate();
   const [insights, setInsights] = useState([]);
   const [alerts, setAlerts] = useState([]);
@@ -143,6 +145,9 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
           padding: 0;
           width: 100%;
           box-sizing: border-box;
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
         }
 
         /* Force mobile layout on all devices except very large screens */
@@ -161,20 +166,33 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
         }
 
         .ai-header {
-          text-align: center;
-          margin-bottom: 20px;
-          padding: 20px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          border-radius: 15px;
-          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-          position: relative;
+          text-align: center !important;
+          margin-bottom: 20px !important;
+          padding: 20px !important;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+          color: white !important;
+          border-radius: 15px !important;
+          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+          position: relative !important;
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          z-index: 10 !important;
         }
 
         .ai-header h4 {
-          margin: 0;
-          font-size: 1.2rem;
-          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+          margin: 0 !important;
+          font-size: 1.4rem !important;
+          font-weight: 700 !important;
+          opacity: 1 !important;
+          filter: none !important;
+          text-shadow: none !important;
+          color: white !important;
+          display: block !important;
+          visibility: visible !important;
+          z-index: 100 !important;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
         }
 
         .header-controls {
@@ -808,10 +826,30 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
       `}</style>
 
       <div className="ai-header">
-        <h4>AI Financial Assistant</h4>
-        <p style={{ margin: '8px 0 0 0', opacity: 0.9, fontSize: '15px' }}>
+        <div style={{
+          color: 'white',
+          fontSize: '1.4rem',
+          fontWeight: '700',
+          margin: '0 0 8px 0',
+          display: 'block',
+          width: '100%',
+          textAlign: 'center',
+          textShadow: 'none',
+          opacity: 1
+        }}>
+          AI Financial Assistant
+        </div>
+        <div style={{ 
+          margin: '0', 
+          fontSize: '15px',
+          color: 'rgba(255, 255, 255, 0.95)',
+          display: 'block',
+          width: '100%',
+          textAlign: 'center',
+          opacity: 1
+        }}>
           Powered by intelligent insights and predictive analytics
-        </p>
+        </div>
       </div>
 
       {/* Natural Language Query Section */}
