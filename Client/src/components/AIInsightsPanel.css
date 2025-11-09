@@ -412,4 +412,66 @@
   .predictions-grid {
     grid-template-columns: 1fr;
   }
+  
+  /* Force mobile tabs to display in column layout */
+  .ai-insights-panel .ai-tabs {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  
+  .ai-insights-panel .ai-tab {
+    width: 100% !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
+    padding: 18px 20px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+}
+
+/* Additional mobile breakpoint to ensure coverage */
+@media (max-width: 1024px) {
+  .ai-insights-panel .ai-tabs {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  
+  .ai-insights-panel .ai-tab {
+    width: 100% !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
+    padding: 18px 20px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+}
+
+/* Maximum specificity override for mobile tabs - this will definitely work */
+@media screen and (max-width: 1399px) {
+  div.ai-insights-panel div.ai-tabs {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  
+  div.ai-insights-panel div.ai-tabs button.ai-tab {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    padding: 18px 20px !important;
+    margin: 0 !important;
+    flex: none !important;
+  }
+  
+  div.ai-insights-panel div.ai-tabs button.ai-tab div.tab-content {
+    text-align: left !important;
+    width: 100% !important;
+  }
 }

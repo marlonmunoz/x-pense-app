@@ -14,6 +14,16 @@
   }
 }
 
+/* Hide scrollbar for mobile navigation */
+.mobile-nav-container::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-nav-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 body.dark-mode #root {
   background-color: #000000;
   color: #ffffff;
@@ -230,7 +240,7 @@ body.light-mode #root {
 }
 
 
-/* Mobile Navigation - Minimal intervention approach */
+/* Mobile Navigation - Fixed Layout */
 @media (max-width: 767.98px) {
   .mobile-sidebar {
     position: fixed !important;
@@ -247,6 +257,73 @@ body.light-mode #root {
   
   .mobile-sidebar.show {
     transform: translateX(0);
+  }
+  
+  /* FORCE SINGLE COLUMN NAVIGATION LAYOUT */
+  .mobile-sidebar .nav,
+  .mobile-sidebar ul.nav {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .mobile-sidebar .nav-item,
+  .mobile-sidebar li.nav-item {
+    width: 100% !important;
+    margin-bottom: 8px !important;
+    display: block !important;
+    flex: none !important;
+  }
+  
+  .mobile-sidebar .nav-link {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    padding: 12px 16px !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
+  
+  /* Override Bootstrap flex classes on mobile */
+  .mobile-sidebar .d-flex {
+    display: flex !important;
+  }
+  
+  .mobile-sidebar .align-items-center {
+    align-items: center !important;
+  }
+  
+  /* Ensure nav text and icons stay together */
+  .mobile-sidebar .nav-link span {
+    margin-right: 8px !important;
+    flex-shrink: 0 !important;
+  }
+  
+  /* Nuclear option - override everything */
+  .mobile-sidebar * {
+    box-sizing: border-box !important;
+  }
+  
+  .mobile-sidebar .nav-pills {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .mobile-sidebar .nav-pills .nav-item {
+    width: 100% !important;
+  }
+  
+  .mobile-sidebar .nav-pills .nav-link {
+    width: 100% !important;
+    border-radius: 8px !important;
+    margin-bottom: 4px !important;
   }
   
   .mobile-content {
@@ -284,6 +361,24 @@ body.light-mode #root {
     position: relative !important;
     transform: translateX(0) !important;
     width: 250px !important;
+  }
+}
+
+/* Mobile Bottom Navigation */
+@media (max-width: 767.98px) {
+  /* Add bottom padding to main content to prevent overlap with bottom nav */
+  .mobile-content {
+    padding-bottom: 70px !important;
+  }
+  
+  /* Hide hamburger menu when bottom nav is available */
+  .hamburger-container {
+    display: none !important;
+  }
+  
+  /* Hide the sidebar completely on mobile when using bottom nav */
+  .mobile-sidebar {
+    display: none !important;
   }
 }
 

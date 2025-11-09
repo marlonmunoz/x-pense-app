@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import { BrowserRouter as Router, Routes, Route, NavLink, Outlet, useLocation, Navigate }  from 'react-router-dom';
+import { BarChart3, DollarSign, CreditCard, Receipt, Target, TrendingUp, Lightbulb } from 'lucide-react';
 import AddTransactions from '../components/AddTransactions';
 import Balance from '../components/Balance'
 import Budget from '../components/Budget'
@@ -455,8 +456,25 @@ function AppContent(props) {
               </button>
             </div>
             
-            <ul className={`nav nav-pills flex-column ${darkMode ? 'nav-tabs-bg-dark-mode' : 'nav-tabs-bg-light-mode'}`}>
-              <li className='nav-item mb-2'>
+            <ul 
+              className={`nav nav-pills flex-column ${darkMode ? 'nav-tabs-bg-dark-mode' : 'nav-tabs-bg-light-mode'}`}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                listStyle: 'none',
+                margin: 0,
+                padding: 0
+              }}
+            >
+              <li 
+                className='nav-item mb-2'
+                style={{
+                  width: '100%',
+                  display: 'block',
+                  marginBottom: '8px'
+                }}
+              >
                 <NavLink 
                   className={({ isActive }) => 
                     `nav-link d-flex align-items-center ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border transition-all ${
@@ -467,7 +485,14 @@ function AppContent(props) {
                   style={({ isActive }) => ({
                     backgroundColor: isActive ? '#007bff' : '',
                     transform: 'scale(1)',
-                    transition: 'all 0.3s ease'
+                    transition: 'all 0.3s ease',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    textAlign: 'left',
+                    padding: '12px 16px',
+                    boxSizing: 'border-box'
                   })}
                   onMouseEnter={(e) => {
                     if (!e.target.classList.contains('active')) {
@@ -486,7 +511,14 @@ function AppContent(props) {
                   Dashboard
                 </NavLink>
               </li>
-              <li className='nav-item mb-2'>
+              <li 
+                className='nav-item mb-2'
+                style={{
+                  width: '100%',
+                  display: 'block',
+                  marginBottom: '8px'
+                }}
+              >
                 <NavLink 
                   className={({ isActive }) => 
                     `nav-link d-flex align-items-center ${darkMode ? 'nav-link-dark-mode' : 'nav-link-light-mode'} border transition-all ${
@@ -497,7 +529,14 @@ function AppContent(props) {
                   style={({ isActive }) => ({
                     backgroundColor: isActive ? '#007bff' : '',
                     transform: 'scale(1)',
-                    transition: 'all 0.3s ease'
+                    transition: 'all 0.3s ease',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    textAlign: 'left',
+                    padding: '12px 16px',
+                    boxSizing: 'border-box'
                   })}
                   onMouseEnter={(e) => {
                     if (!e.target.classList.contains('active')) {
@@ -859,8 +898,118 @@ function AppContent(props) {
           </div>
         </div>
       )}
+      
+      {/* Mobile Bottom Navigation - Only visible on mobile */}
+      <MobileBottomNav darkMode={darkMode} />
     </div>
   )
 }
+
+// Mobile Bottom Navigation Component
+const MobileBottomNav = ({ darkMode }) => {
+  const location = useLocation();
+  
+  const navItems = [
+    { path: '/dashboard', icon: BarChart3, label: 'Dashboard' },
+    { path: '/budget', icon: DollarSign, label: 'Budget' },
+    { path: '/balance', icon: CreditCard, label: 'Balance' },
+    { path: '/transactions', icon: Receipt, label: 'Transactions' },
+    { path: '/goals', icon: Target, label: 'Goals' },
+    { path: '/investments', icon: TrendingUp, label: 'Investments' },
+    { path: '/ai-demo', icon: Lightbulb, label: 'AI Demo' }
+  ];
+
+  return (
+    <nav 
+      className="d-md-none"
+      style={{
+        position: 'fixed',
+        bottom: '0',
+        left: '0',
+        right: '0',
+        width: '100%',
+        background: darkMode 
+          ? 'linear-gradient(135deg, #2d3748 0%, #4a5568 100%)'
+          : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
+        borderTop: `2px solid ${darkMode ? '#4a5568' : '#dee2e6'}`,
+        padding: '6px 4px',
+        boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.1)',
+        backdropFilter: 'blur(10px)',
+        zIndex: 1050,
+        height: '60px',
+        boxSizing: 'border-box'
+      }}
+    >
+      <div 
+        className="mobile-nav-container"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          height: '100%',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          padding: '0 2px'
+        }}
+      >
+        {navItems.map((item, index) => {
+          const Icon = item.icon;
+          const isActive = location.pathname === item.path;
+          
+          return (
+            <NavLink
+              key={index}
+              to={item.path}
+              className="text-decoration-none"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '4px 2px',
+                minWidth: '50px',
+                maxWidth: '80px',
+                flex: '1 1 auto',
+                borderRadius: '12px',
+                margin: '0 1px',
+                transition: 'all 0.2s ease',
+                color: isActive 
+                  ? '#4299e1' 
+                  : (darkMode ? '#a0aec0' : '#6c757d'),
+                background: isActive 
+                  ? (darkMode ? 'rgba(66, 153, 225, 0.15)' : 'rgba(66, 153, 225, 0.15)')
+                  : 'transparent',
+                textAlign: 'center'
+              }}
+            >
+              <Icon 
+                size={16} 
+                style={{ 
+                  marginBottom: '2px',
+                  strokeWidth: isActive ? 2.5 : 2,
+                  flexShrink: 0
+                }} 
+              />
+              <span 
+                style={{ 
+                  fontSize: '9px', 
+                  fontWeight: isActive ? '600' : '500',
+                  lineHeight: '1.1',
+                  display: 'block',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  maxWidth: '100%'
+                }}
+              >
+                {item.label}
+              </span>
+            </NavLink>
+          );
+        })}
+      </div>
+    </nav>
+  );
+};
 
 export default App
