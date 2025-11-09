@@ -7,6 +7,20 @@ export default defineConfig({
   base: '/x-pense-app/',
   build: {
     outDir: 'dist',
-    assetsDir: 'assets'
+    assetsDir: 'assets',
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Separate chart libraries
+          'charts-nivo': ['@nivo/core', '@nivo/line'],
+          'charts-others': ['chart.js', 'react-chartjs-2', 'recharts', 'victory'],
+          // Separate React ecosystem
+          'react-vendor': ['react', 'react-dom'],
+          // Separate utility libraries
+          'utils': ['lucide-react', 'react-circular-progressbar', 'react-datepicker', 'structured-clone']
+        }
+      }
+    }
   }
 })

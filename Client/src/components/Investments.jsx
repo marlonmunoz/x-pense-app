@@ -746,13 +746,13 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                         <table className="enhanced-table">
                             <thead>
                                 <tr>
-                                    <th>🪙&nbsp;Name</th>
-                                    <th>🔗&nbsp;Symbol</th>
-                                    <th>📈&nbsp;Type</th>
-                                    <th>💰&nbsp;Price</th>
-                                    <th>📊&nbsp;Market&nbsp;Cap</th>
-                                    <th>💵&nbsp;Amount</th>
-                                    <th>⚙️&nbsp;Actions</th>
+                                    <th>Name</th>
+                                    <th>Symbol</th>
+                                    <th>Type</th>
+                                    <th>Price</th>
+                                    <th>Market&nbsp;Cap</th>
+                                    <th>Amount</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
