@@ -118,9 +118,8 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
 
   return (
     <div className={`ai-insights-panel ${darkMode ? 'ai-dark' : 'ai-light'}`}>
-
-
-      <div className={`ai-header ${darkMode ? 'ai-dark' : 'ai-light'}`}>
+      <style>{`
+        .ai-insights-panel {
           text-align: center;
           margin-bottom: 25px;
           padding: 20px;
