@@ -778,27 +778,34 @@ function AppContent(props) {
               </li>
             </ul>
             
-            {/* User Status/Info Section */}
-            <div className="mt-auto pt-3">
-              <hr className={`${darkMode ? 'border-light' : 'border-dark'}`} />
+            {/* Welcome Section - Below navbar, inside sidebar */}
+            <div className="mt-3 pt-3" style={{ 
+              borderTop: `1px solid ${darkMode ? '#495057' : '#dee2e6'}`,
+              marginTop: 'auto'
+            }}>
               <div 
-                className={`text-center p-2 rounded ${darkMode ? 'bg-secondary' : 'bg-light'}`}
+                className={`text-center p-3 rounded ${darkMode ? 'bg-secondary' : 'bg-light'}`}
                 style={{
                   transition: 'all 0.3s ease',
-                  cursor: 'pointer'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = 'scale(1.02)';
-                  e.target.style.backgroundColor = darkMode ? '#6c757d' : '#f8f9fa';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = 'scale(1)';
-                  e.target.style.backgroundColor = '';
+                  background: darkMode 
+                    ? 'linear-gradient(135deg, #2d3748 0%, #4a5568 100%)' 
+                    : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
+                  border: `1px solid ${darkMode ? '#4a5568' : '#dee2e6'}`,
+                  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
                 }}
               >
-                <small className={`${darkMode ? 'text-light' : 'text-dark'}`}>
-                  <div>👤 Welcome Marlon</div>
-                  <div>🟢 Online</div>
+                <small className={`${darkMode ? 'text-light' : 'text-dark'}`} style={{ 
+                  fontSize: '13px', 
+                  fontWeight: '500',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px'
+                }}>
+                  <span>👤</span>
+                  <span>Welcome Marlon</span>
+                  <span>🟢</span>
+                  <span>Online</span>
                 </small>
               </div>
             </div>

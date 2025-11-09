@@ -808,20 +808,6 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
       `}</style>
 
       <div className="ai-header">
-        <div className="header-controls">
-          <div className="welcome-text">
-            👋 Welcome Online
-          </div>
-          <button 
-            className="theme-toggle"
-            onClick={() => {
-              // Add dark mode toggle functionality here if needed
-              console.log('Toggle theme');
-            }}
-          >
-            {darkMode ? '☀️ Light' : '🌙 Dark'}
-          </button>
-        </div>
         <h4>AI Financial Assistant</h4>
         <p style={{ margin: '8px 0 0 0', opacity: 0.9, fontSize: '15px' }}>
           Powered by intelligent insights and predictive analytics
