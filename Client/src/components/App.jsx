@@ -127,9 +127,13 @@ function App() {
     if (darkMode) {
       document.body.classList.add('dark-mode');
       document.body.classList.remove('light-mode');
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
     } else {
       document.body.classList.add('light-mode');
       document.body.classList.remove('dark-mode');
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
     }
   }, [darkMode]);
 

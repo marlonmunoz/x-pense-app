@@ -1,0 +1,479 @@
+@import "tailwindcss";
+
+/* Import Bootstrap for existing functionality */
+@import url('https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
+
+/* Tailwind utilities override Bootstrap when needed */
+.tw-btn {
+  @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer;
+}
+  
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs;
+  }
+  
+  .btn-lg {
+    @apply px-6 py-3 text-lg;
+  }
+  
+  .btn-primary {
+    @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
+  }
+  
+  .btn-success {
+    @apply bg-success-600 text-white hover:bg-success-700 focus:ring-success-500;
+  }
+  
+  .btn-danger {
+    @apply bg-danger-600 text-white hover:bg-danger-700 focus:ring-danger-500;
+  }
+  
+  .btn-warning {
+    @apply bg-warning-600 text-white hover:bg-warning-700 focus:ring-warning-500;
+  }
+  
+  .btn-info {
+    @apply bg-info-600 text-white hover:bg-info-700 focus:ring-info-500;
+  }
+  
+  .btn-light {
+    @apply bg-gray-100 text-gray-800 hover:bg-gray-200 focus:ring-gray-500 border-gray-300;
+  }
+  
+  .btn-dark {
+    @apply bg-gray-800 text-white hover:bg-gray-900 focus:ring-gray-700;
+  }
+  
+  .btn-outline-primary {
+    @apply border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white;
+  }
+  
+  .btn-outline-secondary {
+    @apply border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white;
+  }
+
+  /* Badge Components */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .badge-primary {
+    @apply bg-primary-100 text-primary-800;
+  }
+  
+  .badge-success {
+    @apply bg-success-100 text-success-800;
+  }
+  
+  .badge-danger {
+    @apply bg-danger-100 text-danger-800;
+  }
+  
+  .badge-warning {
+    @apply bg-warning-100 text-warning-800;
+  }
+  
+  .badge-info {
+    @apply bg-info-100 text-info-800;
+  }
+
+  /* Card Components */
+  .card {
+    @apply bg-white rounded-lg shadow-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700;
+  }
+  
+  .card-header {
+    @apply px-6 py-4 border-b border-gray-200 dark:border-gray-700;
+  }
+  
+  .card-body {
+    @apply p-6;
+  }
+  
+  .card-footer {
+    @apply px-6 py-4 border-t border-gray-200 dark:border-gray-700;
+  }
+
+  /* Form Components */
+  .form-control {
+    @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white;
+  }
+  
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2;
+  }
+  
+  .form-select {
+    @apply block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white;
+  }
+
+  /* Table Components */
+  .table {
+    @apply w-full text-sm text-left text-gray-500 dark:text-gray-400;
+  }
+  
+  .table thead {
+    @apply text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400;
+  }
+  
+  .table th,
+  .table td {
+    @apply px-6 py-3 border-b border-gray-200 dark:border-gray-700;
+  }
+  
+  .table-dark {
+    @apply bg-gray-800 text-white;
+  }
+  
+  .table-light {
+    @apply bg-white text-gray-900;
+  }
+
+  /* Navigation Components */
+  .navbar {
+    @apply flex items-center justify-between p-4;
+  }
+  
+  .nav {
+    @apply flex flex-wrap;
+  }
+  
+  .nav-item {
+    @apply block;
+  }
+  
+  .nav-link {
+    @apply block px-3 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors duration-200 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700;
+  }
+  
+  .nav-link.active {
+    @apply bg-primary-600 text-white hover:bg-primary-700;
+  }
+
+  /* List Group Components */
+  .list-group {
+    @apply divide-y divide-gray-200 dark:divide-gray-700;
+  }
+  
+  .list-group-item {
+    @apply px-4 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white;
+  }
+
+  /* Alert Components */
+  .alert {
+    @apply p-4 mb-4 rounded-md;
+  }
+  
+  .alert-success {
+    @apply bg-success-50 text-success-800 border border-success-200;
+  }
+  
+  .alert-danger {
+    @apply bg-danger-50 text-danger-800 border border-danger-200;
+  }
+  
+  .alert-warning {
+    @apply bg-warning-50 text-warning-800 border border-warning-200;
+  }
+  
+  .alert-info {
+    @apply bg-info-50 text-info-800 border border-info-200;
+  }
+
+  /* Modal Components */
+  .modal {
+    @apply fixed inset-0 z-50 overflow-y-auto;
+  }
+  
+  .modal-backdrop {
+    @apply fixed inset-0 bg-black bg-opacity-50;
+  }
+  
+  .modal-dialog {
+    @apply flex items-center justify-center min-h-screen p-4;
+  }
+  
+  .modal-content {
+    @apply bg-white rounded-lg shadow-lg max-w-lg w-full dark:bg-gray-800;
+  }
+  
+  .modal-header {
+    @apply flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700;
+  }
+  
+  .modal-body {
+    @apply p-6;
+  }
+  
+  .modal-footer {
+    @apply flex justify-end space-x-3 p-6 border-t border-gray-200 dark:border-gray-700;
+  }
+
+  /* Progress Components */
+  .progress {
+    @apply w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700;
+  }
+  
+  .progress-bar {
+    @apply h-2.5 rounded-full transition-all duration-300;
+  }
+  
+  .bg-success {
+    @apply bg-success-600;
+  }
+  
+  .bg-primary {
+    @apply bg-primary-600;
+  }
+  
+  .bg-danger {
+    @apply bg-danger-600;
+  }
+  
+  .bg-warning {
+    @apply bg-warning-600;
+  }
+  
+  .bg-info {
+    @apply bg-info-600;
+  }
+
+  /* Utility Classes for Bootstrap Grid System */
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .container-fluid {
+    @apply w-full px-4;
+  }
+  
+  .row {
+    @apply flex flex-wrap -mx-4;
+  }
+  
+  .col {
+    @apply flex-1 px-4;
+  }
+  
+  .col-1 { @apply w-1/12 px-4; }
+  .col-2 { @apply w-2/12 px-4; }
+  .col-3 { @apply w-3/12 px-4; }
+  .col-4 { @apply w-4/12 px-4; }
+  .col-6 { @apply w-6/12 px-4; }
+  .col-8 { @apply w-8/12 px-4; }
+  .col-9 { @apply w-9/12 px-4; }
+  .col-12 { @apply w-full px-4; }
+  
+  .col-md-4 { @apply md:w-4/12 px-4; }
+  .col-md-6 { @apply md:w-6/12 px-4; }
+  .col-md-8 { @apply md:w-8/12 px-4; }
+  .col-lg-3 { @apply lg:w-3/12 px-4; }
+  .col-lg-6 { @apply lg:w-6/12 px-4; }
+  .col-lg-9 { @apply lg:w-9/12 px-4; }
+
+  /* Bootstrap Display Utilities */
+  .d-none { @apply hidden; }
+  .d-block { @apply block; }
+  .d-flex { @apply flex; }
+  .d-inline { @apply inline; }
+  .d-inline-block { @apply inline-block; }
+  .d-grid { @apply grid; }
+  
+  .d-md-none { @apply md:hidden; }
+  .d-md-block { @apply md:block; }
+  .d-md-flex { @apply md:flex; }
+  
+  .d-lg-none { @apply lg:hidden; }
+  .d-lg-block { @apply lg:block; }
+  .d-lg-flex { @apply lg:flex; }
+
+  /* Bootstrap Flexbox Utilities */
+  .flex-row { @apply flex-row; }
+  .flex-column { @apply flex-col; }
+  .flex-wrap { @apply flex-wrap; }
+  .flex-nowrap { @apply flex-nowrap; }
+  .flex-grow-1 { @apply flex-grow; }
+  .flex-shrink-1 { @apply flex-shrink; }
+  
+  .justify-content-start { @apply justify-start; }
+  .justify-content-end { @apply justify-end; }
+  .justify-content-center { @apply justify-center; }
+  .justify-content-between { @apply justify-between; }
+  .justify-content-around { @apply justify-around; }
+  
+  .align-items-start { @apply items-start; }
+  .align-items-end { @apply items-end; }
+  .align-items-center { @apply items-center; }
+  .align-items-stretch { @apply items-stretch; }
+
+  /* Bootstrap Spacing Utilities */
+  .p-0 { @apply p-0; }
+  .p-1 { @apply p-1; }
+  .p-2 { @apply p-2; }
+  .p-3 { @apply p-3; }
+  .p-4 { @apply p-4; }
+  .p-5 { @apply p-5; }
+  
+  .m-0 { @apply m-0; }
+  .m-1 { @apply m-1; }
+  .m-2 { @apply m-2; }
+  .m-3 { @apply m-3; }
+  .m-4 { @apply m-4; }
+  .m-5 { @apply m-5; }
+  
+  .mb-0 { @apply mb-0; }
+  .mb-1 { @apply mb-1; }
+  .mb-2 { @apply mb-2; }
+  .mb-3 { @apply mb-3; }
+  .mb-4 { @apply mb-4; }
+  .mb-5 { @apply mb-5; }
+  
+  .mt-0 { @apply mt-0; }
+  .mt-1 { @apply mt-1; }
+  .mt-2 { @apply mt-2; }
+  .mt-3 { @apply mt-3; }
+  .mt-4 { @apply mt-4; }
+  .mt-5 { @apply mt-5; }
+  
+  .me-2 { @apply mr-2; }
+  .me-3 { @apply mr-3; }
+  .ms-2 { @apply ml-2; }
+  .ms-3 { @apply ml-3; }
+
+  /* Bootstrap Text Utilities */
+  .text-left { @apply text-left; }
+  .text-center { @apply text-center; }
+  .text-right { @apply text-right; }
+  .text-muted { @apply text-gray-500; }
+  .text-primary { @apply text-primary-600; }
+  .text-success { @apply text-success-600; }
+  .text-danger { @apply text-danger-600; }
+  .text-warning { @apply text-warning-600; }
+  .text-info { @apply text-info-600; }
+  .text-light { @apply text-gray-100; }
+  .text-dark { @apply text-gray-900; }
+  .text-white { @apply text-white; }
+
+  /* Bootstrap Border Utilities */
+  .border { @apply border border-gray-300; }
+  .border-0 { @apply border-0; }
+  .border-top { @apply border-t border-gray-300; }
+  .border-bottom { @apply border-b border-gray-300; }
+  .border-left { @apply border-l border-gray-300; }
+  .border-right { @apply border-r border-gray-300; }
+  
+  .rounded { @apply rounded; }
+  .rounded-0 { @apply rounded-none; }
+  .rounded-circle { @apply rounded-full; }
+  .rounded-pill { @apply rounded-full; }
+
+  /* Bootstrap Position Utilities */
+  .position-relative { @apply relative; }
+  .position-absolute { @apply absolute; }
+  .position-fixed { @apply fixed; }
+  .position-sticky { @apply sticky; }
+
+  /* Bootstrap Width/Height Utilities */
+  .w-25 { @apply w-1/4; }
+  .w-50 { @apply w-1/2; }
+  .w-75 { @apply w-3/4; }
+  .w-100 { @apply w-full; }
+  .h-25 { @apply h-1/4; }
+  .h-50 { @apply h-1/2; }
+  .h-75 { @apply h-3/4; }
+  .h-100 { @apply h-full; }
+
+  /* Custom X-Pense specific classes */
+  .metallic-shadow {
+    text-shadow: 3px 3px 3px #000, 0 0 25px #fff, 0 0 5px #fff;
+  }
+  
+  .metallic-shadow-light {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3), 0 0 8px rgba(255, 255, 255, 0.6);
+  }
+  
+  .fade-in {
+    @apply animate-fade-in;
+  }
+  
+  .navbar-light-mode {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .navbar-dark-mode {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    border: 1px solid #495057;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .nav-tabs-bg-light-mode {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  
+.nav-tabs-bg-dark-mode {
+  background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+  border: 1px solid #6c757d;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+/* Dark mode overrides */
+.dark {
+  .light-mode { @apply hidden; }
+  .dark-mode { @apply block; }
+  
+  .form-control {
+    @apply bg-gray-700 border-gray-600 text-white;
+  }
+  
+  .btn-outline-secondary {
+    @apply border-white text-white hover:bg-white hover:text-gray-900;
+  }
+  
+  .table-light {
+    @apply bg-gray-800 text-white;
+  }
+}
+
+.light {
+  .dark-mode { @apply hidden; }
+  .light-mode { @apply block; }
+}
+
+/* Preserve existing animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-left {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.intro .char {
+  display: inline-block;
+  opacity: 0;
+  animation-duration: 3s;
+  animation-fill-mode: forwards;
+}
+
+.intro .char:nth-child(odd) {
+  animation-name: slide-in-left;
+}
+
+.intro .char:nth-child(even) {
+  animation-name: slide-in-right;
+}

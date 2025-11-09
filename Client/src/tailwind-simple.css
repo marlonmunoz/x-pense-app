@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Keep Bootstrap for existing functionality during migration */
+@import url('https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
+
+/* Custom X-Pense styles */
+.metallic-shadow {
+  text-shadow: 3px 3px 3px #000, 0 0 25px #fff, 0 0 5px #fff;
+}
+
+.metallic-shadow-light {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3), 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+.fade-in {
+  animation: fadeIn 3s ease-in-out;
+}
+
+.navbar-light-mode {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-dark-mode {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  border: 1px solid #495057;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.nav-tabs-bg-light-mode {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.nav-tabs-bg-dark-mode {
+  background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+  border: 1px solid #6c757d;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+/* Existing animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-left {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.intro .char {
+  display: inline-block;
+  opacity: 0;
+  animation-duration: 3s;
+  animation-fill-mode: forwards;
+}
+
+.intro .char:nth-child(odd) {
+  animation-name: slide-in-left;
+}
+
+.intro .char:nth-child(even) {
+  animation-name: slide-in-right;
+}

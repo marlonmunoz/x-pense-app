@@ -27,7 +27,12 @@ const StartPage = () => {
                         ))}
                     </h1>
                     <p className="subtitle fade-in ">Your Friendly Budget Tracker</p>
-                    <button onClick={handleStartClick} className="btn btn-success fade-in">Get Started </button>
+                    <button 
+                        onClick={handleStartClick} 
+                        className="btn-enhanced fade-in"
+                    >
+                        Get Started
+                    </button>
                 <Footer/>
                 </div>
             </div>
