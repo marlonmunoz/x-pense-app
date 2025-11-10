@@ -666,44 +666,251 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                 }
 
                 @media (max-width: 768px) {
-                    .control-section {
-                        flex-direction: column;
-                        text-align: center;
-                    }
-                    
-                    .action-buttons {
-                        flex-wrap: nowrap;
-                        gap: 4px;
-                    }
-                    
-                    .btn-modern {
-                        font-size: 0.65rem;
-                        padding: 8px 10px;
-                        min-width: 50px;
-                    }
-                    
-                    .amount-input {
-                        width: 100%;
-                        max-width: none;
+                    .investments-container {
+                        padding: 10px;
                     }
 
-                    .enhanced-table th,
-                    .enhanced-table td {
-                        padding: 10px 6px;
-                        font-size: 0.85rem;
+                    .investments-header {
+                        padding: 20px 15px;
+                        margin-bottom: 20px;
                     }
 
-                    .crypto-name-cell {
-                        font-size: 1rem;
+                    .investments-header h5 {
+                        font-size: 1.4rem;
                     }
 
-                    .price-cell {
+                    .investments-subtitle {
                         font-size: 0.9rem;
                     }
 
-                    .type-badge {
-                        font-size: 0.65rem;
-                        padding: 3px 6px;
+                    .control-section {
+                        flex-direction: column;
+                        text-align: center;
+                        padding: 15px;
+                    }
+
+                    .refresh-button {
+                        width: 100%;
+                        justify-content: center;
+                    }
+
+                    /* Hide table and show card layout on mobile */
+                    .table-container {
+                        display: none;
+                    }
+
+                    .mobile-cards {
+                        display: block;
+                        gap: 15px;
+                    }
+
+                    .investment-card {
+                        background: ${darkMode ? '#2d3748' : '#ffffff'};
+                        border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
+                        border-radius: 15px;
+                        padding: 20px;
+                        margin-bottom: 15px;
+                        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                        transition: all 0.3s ease;
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .investment-card:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+                    }
+
+                    .investment-card.animate {
+                        animation: cardSuccess 1s ease;
+                    }
+
+                    @keyframes cardSuccess {
+                        0%, 100% { background: ${darkMode ? '#2d3748' : '#ffffff'}; }
+                        50% { background: rgba(56, 161, 105, 0.2); }
+                    }
+
+                    .card-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: flex-start;
+                        margin-bottom: 15px;
+                        flex-wrap: wrap;
+                        gap: 10px;
+                    }
+
+                    .card-crypto-info {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        flex: 1;
+                        min-width: 200px;
+                    }
+
+                    .card-crypto-name {
+                        font-size: 1.2rem;
+                        font-weight: 700;
+                        color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+                        margin: 0;
+                    }
+
+                    .card-crypto-symbol {
+                        font-size: 0.9rem;
+                        font-weight: 600;
+                        color: ${darkMode ? '#a0aec0' : '#4a5568'};
+                        text-transform: uppercase;
+                    }
+
+                    .card-price {
+                        font-size: 1.3rem;
+                        font-weight: 700;
+                        color: ${darkMode ? '#68d391' : '#38a169'};
+                        white-space: nowrap;
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                    }
+
+                    .card-details {
+                        display: grid;
+                        grid-template-columns: auto 1fr;
+                        gap: 10px 15px;
+                        margin-bottom: 20px;
+                        align-items: center;
+                    }
+
+                    .card-label {
+                        font-weight: 600;
+                        color: ${darkMode ? '#a0aec0' : '#4a5568'};
+                        font-size: 0.9rem;
+                    }
+
+                    .card-value {
+                        color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+                        font-size: 0.95rem;
+                        font-weight: 500;
+                    }
+
+                    .card-market-cap {
+                        color: ${darkMode ? '#68d391' : '#38a169'};
+                        font-weight: 600;
+                    }
+
+                    .card-input-section {
+                        background: ${darkMode ? '#4a5568' : '#f7fafc'};
+                        border-radius: 12px;
+                        padding: 20px;
+                        margin-bottom: 20px;
+                    }
+
+                    .input-label {
+                        font-weight: 600;
+                        color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+                        margin-bottom: 10px;
+                        display: block;
+                        font-size: 1rem;
+                    }
+
+                    .amount-input-mobile {
+                        width: 100%;
+                        padding: 15px;
+                        border: 2px solid ${darkMode ? '#4a5568' : '#e2e8f0'};
+                        border-radius: 10px;
+                        background: ${darkMode ? '#2d3748' : '#ffffff'};
+                        color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+                        font-size: 1.1rem;
+                        text-align: center;
+                        transition: all 0.3s ease;
+                        margin-bottom: 15px;
+                    }
+
+                    .amount-input-mobile:focus {
+                        outline: none;
+                        border-color: #667eea;
+                        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+                        transform: scale(1.02);
+                    }
+
+                    .card-actions {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 12px;
+                    }
+
+                    .btn-modern-mobile {
+                        padding: 15px 20px;
+                        border: none;
+                        border-radius: 10px;
+                        font-weight: 700;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 8px;
+                        text-decoration: none;
+                    }
+
+                    .btn-add-mobile {
+                        background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+                        color: white;
+                        box-shadow: 0 4px 15px rgba(56, 161, 105, 0.4);
+                    }
+
+                    .btn-add-mobile:hover:not(:disabled) {
+                        transform: translateY(-2px);
+                        box-shadow: 0 6px 20px rgba(56, 161, 105, 0.6);
+                    }
+
+                    .btn-reset-mobile {
+                        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+                        color: white;
+                        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+                    }
+
+                    .btn-reset-mobile:hover:not(:disabled) {
+                        transform: translateY(-2px);
+                        box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6);
+                    }
+
+                    .btn-modern-mobile:disabled {
+                        opacity: 0.7;
+                        cursor: not-allowed;
+                        transform: none !important;
+                    }
+
+                    .mobile-loading-card {
+                        text-align: center;
+                        padding: 40px;
+                        background: ${darkMode ? '#2d3748' : '#ffffff'};
+                        border-radius: 15px;
+                        border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
+                    }
+
+                    .price-up-mobile {
+                        color: #38a169;
+                        animation: priceFlashMobile 0.5s ease;
+                    }
+
+                    .price-down-mobile {
+                        color: #e53e3e;
+                        animation: priceFlashMobile 0.5s ease;
+                    }
+
+                    @keyframes priceFlashMobile {
+                        0%, 100% { opacity: 1; }
+                        50% { opacity: 0.6; transform: scale(1.05); }
+                    }
+                }
+
+                @media (min-width: 769px) {
+                    .mobile-cards {
+                        display: none;
+                    }
+                    
+                    .table-container {
+                        display: block;
                     }
                 }
             `}</style>
@@ -820,6 +1027,89 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                                 ))}
                             </tbody>
                         </table>
+                    </>
+                )}
+            </div>
+
+            {/* Mobile Card Layout */}
+            <div className="mobile-cards">
+                {isLoading && investments.length === 0 ? (
+                    <div className="mobile-loading-card">
+                        <div className="large-spinner"></div>
+                        <p>Loading investment data...</p>
+                    </div>
+                ) : (
+                    <>
+                        {investments.map((investment, index) => (
+                            <div key={investment.id} className={`investment-card ${animateRows[index] ? 'animate' : ''}`}>
+                                <div className="card-header">
+                                    <div className="card-crypto-info">
+                                        {getCryptoIcon(investment.name)}
+                                        <div>
+                                            <div className="card-crypto-name">{investment.name}</div>
+                                            <div className="card-crypto-symbol">
+                                                {investment.id === 'bitcoin' ? 'BTC' : 
+                                                 investment.id === 'ethereum' ? 'ETH' : 
+                                                 investment.id === 'usd-coin' ? 'USDC' : 
+                                                 investment.name.substring(0, 3).toUpperCase()}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className={`card-price ${getPriceChangeClass(investment.id) === 'price-up' ? 'price-up-mobile' : 
+                                                                 getPriceChangeClass(investment.id) === 'price-down' ? 'price-down-mobile' : ''}`}>
+                                        <span>{formatCurrency(investment.pricePerUnit)}</span>
+                                        <span>{getPriceChangeIndicator(investment.id)}</span>
+                                    </div>
+                                </div>
+                                
+                                <div className="card-details">
+                                    <span className="card-label">🏷️ Type:</span>
+                                    <span className={`card-value type-badge ${investment.type === 'Cryptocurrency' ? 'type-crypto' : 'type-stablecoin'}`}>
+                                        {investment.type === 'Cryptocurrency' ? 'Crypto' : 'Stable'}
+                                    </span>
+                                    
+                                    <span className="card-label">📊 Market Cap:</span>
+                                    <span className="card-value card-market-cap">
+                                        {marketCaps[investment.id] ? 
+                                            `$${formatMarketCap(marketCaps[investment.id])}` : 
+                                            <span style={{ opacity: 0.7 }}>Loading...</span>
+                                        }
+                                    </span>
+                                </div>
+
+                                <div className="card-input-section">
+                                    <label className="input-label">💰 Investment Amount</label>
+                                    <input 
+                                        type="number" 
+                                        className="amount-input-mobile"
+                                        value={amounts[index] || ''}
+                                        placeholder="0.00"
+                                        name={`investment-amount-${index}`}
+                                        onChange={(e) => handleAmountChange(index, e.target.value)}
+                                        step="0.01"
+                                        min="0"
+                                    />
+                                    
+                                    <div className="card-actions">
+                                        <button 
+                                            className="btn-modern-mobile btn-add-mobile" 
+                                            onClick={() => handleAddClick(index)}
+                                            disabled={isLoading || !amounts[index] || amounts[index] <= 0}
+                                        >
+                                            {isLoading ? <span className="loading-spinner"></span> : '💰'}
+                                            Add Investment
+                                        </button>
+                                        <button 
+                                            className="btn-modern-mobile btn-reset-mobile" 
+                                            onClick={() => handleResetClick(index)}
+                                            disabled={isLoading}
+                                        >
+                                            🔄 Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </>
                 )}
             </div>

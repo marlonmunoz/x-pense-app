@@ -473,20 +473,195 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                 }
 
                 @media (max-width: 768px) {
+                    .transactions-container {
+                        padding: 10px;
+                    }
+
+                    .transactions-header {
+                        padding: 20px 15px;
+                        margin-bottom: 20px;
+                    }
+
+                    .transactions-header h5 {
+                        font-size: 1.4rem;
+                    }
+
+                    .transactions-subtitle {
+                        font-size: 0.9rem;
+                    }
+
                     .controls-section {
                         grid-template-columns: 1fr;
                         gap: 15px;
+                        padding: 15px;
                     }
-                    
+
+                    .control-input {
+                        padding: 10px;
+                        font-size: 0.9rem;
+                    }
+
+                    /* Hide table and show card layout on mobile */
+                    .table-container {
+                        display: none;
+                    }
+
+                    .mobile-cards {
+                        display: block;
+                        gap: 15px;
+                    }
+
+                    .transaction-card {
+                        background: ${darkMode ? '#2d3748' : '#ffffff'};
+                        border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
+                        border-radius: 15px;
+                        padding: 20px;
+                        margin-bottom: 15px;
+                        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                        transition: all 0.3s ease;
+                    }
+
+                    .transaction-card:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+                    }
+
+                    .card-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: flex-start;
+                        margin-bottom: 15px;
+                        flex-wrap: wrap;
+                        gap: 10px;
+                    }
+
+                    .card-title {
+                        font-size: 1.1rem;
+                        font-weight: 600;
+                        color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+                        margin: 0;
+                        flex: 1;
+                        min-width: 200px;
+                    }
+
+                    .card-amount {
+                        font-size: 1.2rem;
+                        font-weight: 700;
+                        color: ${darkMode ? '#68d391' : '#38a169'};
+                        white-space: nowrap;
+                    }
+
+                    .card-details {
+                        display: grid;
+                        grid-template-columns: auto 1fr;
+                        gap: 10px 15px;
+                        margin-bottom: 20px;
+                        align-items: center;
+                    }
+
+                    .card-label {
+                        font-weight: 600;
+                        color: ${darkMode ? '#a0aec0' : '#4a5568'};
+                        font-size: 0.9rem;
+                    }
+
+                    .card-value {
+                        color: ${darkMode ? '#e2e8f0' : '#2d3748'};
+                        font-size: 0.95rem;
+                    }
+
+                    .card-category {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    }
+
+                    .card-actions {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 8px;
+                        justify-content: flex-start;
+                    }
+
                     .action-buttons {
-                        flex-wrap: nowrap;
-                        gap: 4px;
+                        flex-wrap: wrap;
+                        gap: 8px;
+                        width: 100%;
                     }
                     
                     .btn-modern {
-                        padding: 4px 8px;
-                        font-size: 0.7rem;
-                        gap: 2px;
+                        padding: 8px 12px;
+                        font-size: 0.8rem;
+                        gap: 4px;
+                        flex: 1;
+                        min-width: calc(50% - 4px);
+                        justify-content: center;
+                    }
+
+                    .edit-form {
+                        display: grid;
+                        gap: 15px;
+                        margin: 15px 0;
+                    }
+
+                    .edit-input {
+                        padding: 12px;
+                        font-size: 1rem;
+                        border-radius: 8px;
+                    }
+
+                    .edit-actions {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 10px;
+                        margin-top: 15px;
+                    }
+
+                    .total-card {
+                        background: ${darkMode ? '#4a5568' : '#667eea'};
+                        color: white;
+                        border-radius: 15px;
+                        padding: 25px;
+                        text-align: center;
+                        margin-top: 20px;
+                        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+                    }
+
+                    .total-label {
+                        font-size: 1.1rem;
+                        font-weight: 600;
+                        margin-bottom: 10px;
+                    }
+
+                    .total-amount {
+                        font-size: 1.8rem;
+                        font-weight: 700;
+                    }
+
+                    .delete-confirm-card {
+                        background: rgba(245, 101, 101, 0.1);
+                        border: 2px solid #f56565;
+                        border-radius: 12px;
+                        padding: 20px;
+                        margin: 15px 0;
+                        text-align: center;
+                    }
+
+                    .confirm-text {
+                        color: #e53e3e;
+                        font-weight: 600;
+                        margin-bottom: 15px;
+                        font-size: 1rem;
+                    }
+                }
+
+                @media (min-width: 769px) {
+                    .mobile-cards {
+                        display: none;
+                    }
+                    
+                    .table-container {
+                        display: block;
                     }
                 }
             `}</style>
@@ -722,6 +897,163 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                             </tbody>
                         </table>
                     </div>
+                )}
+            </div>
+
+            {/* Mobile Card Layout */}
+            <div className="mobile-cards">
+                {isLoading ? (
+                    <div className="loading-container">
+                        <div className="loading-spinner"></div>
+                        <p>Loading transactions...</p>
+                    </div>
+                ) : transactions.length === 0 ? (
+                    <div className="no-transactions">
+                        📊 No Transactions Have Been Added Yet!
+                        <br />
+                        <small>Start tracking your expenses by adding your first transaction.</small>
+                    </div>
+                ) : (
+                    <>
+                        {getFilteredAndSortedTransactions().map((transaction, index) => {
+                            const originalIndex = transactions.findIndex(t => t.id === transaction.id);
+                            return (
+                                <div key={transaction.id || index} className={`transaction-card ${animateRow === originalIndex ? 'animate-delete' : ''}`}>
+                                    {editIndex === originalIndex ? (
+                                        <div className="edit-form">
+                                            <input 
+                                                type="text" 
+                                                name='description' 
+                                                value={editTransaction.description} 
+                                                onChange={handleEditChange} 
+                                                className="edit-input" 
+                                                placeholder="Enter description..."
+                                            />
+                                            <input 
+                                                type="text" 
+                                                name='category' 
+                                                value={editTransaction.category} 
+                                                onChange={handleEditChange} 
+                                                className="edit-input"
+                                                placeholder="Enter category..."
+                                            />
+                                            <input 
+                                                type="date" 
+                                                name='date' 
+                                                value={editTransaction.date} 
+                                                onChange={handleEditChange} 
+                                                className="edit-input"
+                                            />
+                                            <input 
+                                                type="number" 
+                                                name='amount' 
+                                                value={editTransaction.amount} 
+                                                onChange={handleEditChange} 
+                                                className="edit-input"
+                                                step="0.01"
+                                                min="0"
+                                                placeholder="0.00"
+                                            />
+                                            <div className="edit-actions">
+                                                <button 
+                                                    onClick={() => handleEditSave(originalIndex)} 
+                                                    className="btn-modern btn-save"
+                                                    disabled={isLoading}
+                                                >
+                                                    ✅ Save
+                                                </button>
+                                                <button 
+                                                    onClick={() => setEditIndex(null)} 
+                                                    className="btn-modern btn-cancel"
+                                                >
+                                                    ❌ Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div className="card-header">
+                                                <h6 className="card-title">
+                                                    {transaction.description || 'No Description'}
+                                                </h6>
+                                                <div className="card-amount">
+                                                    {formatCurrency(transaction.amount)}
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="card-details">
+                                                <span className="card-label">📂 Category:</span>
+                                                <div className="card-value card-category">
+                                                    <span>{getCategoryIcon(transaction.category)}</span>
+                                                    <span>{transaction.category}</span>
+                                                </div>
+                                                
+                                                <span className="card-label">📅 Date:</span>
+                                                <span className="card-value">
+                                                    {formatDate(parseDate(transaction.date))}
+                                                </span>
+                                            </div>
+
+                                            <div className="card-actions">
+                                                {deleteConfirm === originalIndex ? (
+                                                    <div className="delete-confirm-card">
+                                                        <div className="confirm-text">⚠️ Confirm deletion?</div>
+                                                        <div className="action-buttons">
+                                                            <button 
+                                                                onClick={() => handleDelete(originalIndex)} 
+                                                                className="btn-modern btn-delete"
+                                                                disabled={isLoading}
+                                                            >
+                                                                🗑️ Yes, Delete
+                                                            </button>
+                                                            <button 
+                                                                onClick={() => setDeleteConfirm(null)} 
+                                                                className="btn-modern btn-cancel"
+                                                            >
+                                                                ↩️ Cancel
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="action-buttons">
+                                                        <button 
+                                                            onClick={() => { 
+                                                                setEditIndex(originalIndex); 
+                                                                setEditTransaction({ 
+                                                                    ...transaction, 
+                                                                    date: formatDateTime(transaction.date) 
+                                                                }); 
+                                                            }} 
+                                                            className="btn-modern btn-edit"
+                                                        >
+                                                            ✏️ Edit
+                                                        </button>
+                                                        <button 
+                                                            onClick={() => handleDeleteClick(originalIndex)} 
+                                                            className="btn-modern btn-delete"
+                                                        >
+                                                            🗑️ Delete
+                                                        </button>
+                                                        <button 
+                                                            onClick={() => handleSetReminderClick(transaction)} 
+                                                            className="btn-modern btn-reminder"
+                                                        >
+                                                            ⏰ Remind
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            );
+                        })}
+                        
+                        <div className="total-card">
+                            <div className="total-label">💰 Total Expenses:</div>
+                            <div className="total-amount">{formatCurrency(totalAmount)}</div>
+                        </div>
+                    </>
                 )}
             </div>
         </div>

@@ -630,7 +630,8 @@ function AppContent(props) {
                   } 
                   to='/add'
                   style={({ isActive }) => ({
-                    backgroundColor: isActive ? '#28a745' : '',
+                    backgroundColor: isActive ? '#28a745' : (darkMode ? '#2d3748' : '#ffffff'),
+                    color: isActive ? 'white' : (darkMode ? '#e2e8f0' : '#2d3748'),
                     transform: 'scale(1)',
                     transition: 'all 0.3s ease',
                     fontWeight: 'bold'
@@ -645,8 +646,8 @@ function AppContent(props) {
                   onMouseLeave={(e) => {
                     if (!e.target.classList.contains('active')) {
                       e.target.style.transform = 'scale(1)';
-                      e.target.style.backgroundColor = '';
-                      e.target.style.color = '';
+                      e.target.style.backgroundColor = darkMode ? '#2d3748' : '#ffffff';
+                      e.target.style.color = darkMode ? '#e2e8f0' : '#2d3748';
                     }
                   }}
                 >
