@@ -25,7 +25,13 @@ if database_url and database_url.startswith('postgres://'):
 
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url or 'sqlite:///xpense.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# Key
+
+# Hosted Postgres (Supabase) drops idle connections and requires SSL.
+engine_options = {'pool_pre_ping': True, 'pool_recycle': 300}
+if database_url and 'supabase.' in database_url:
+    engine_options['connect_args'] = {'sslmode': 'require'}
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = engine_options
+
 db.init_app(app)
 migrate = Migrate(app, db)
 
