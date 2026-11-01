@@ -1,3 +1,4 @@
 # Ignore .env file
 .env
 g_s_k.py
+.cursorignore
