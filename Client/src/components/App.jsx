@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../config/api'
-import { BrowserRouter as Router, Routes, Route, NavLink, Outlet, useLocation, Navigate }  from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, NavLink, Outlet, useLocation, useNavigate, Navigate }  from 'react-router-dom';
 import { BarChart3, DollarSign, CreditCard, Receipt, Target, TrendingUp, Lightbulb, Plus, Bot } from 'lucide-react';
 import AddTransactions from '../components/AddTransactions';
 import Balance from '../components/Balance'
@@ -193,7 +193,7 @@ function App() {
   }
 
   return (
-    <Router basename="/x-pense-app">
+    <Router>
       <AppContent 
         darkMode={darkMode}
         toggleDarkMode={toggleDarkMode}
@@ -298,6 +298,7 @@ function App() {
 
 function AppContent(props) {
   const location = useLocation();
+  const navigate = useNavigate();
   const {
     darkMode, toggleDarkMode, sidebarOpen, setSidebarOpen, transactions, setTransactions, balance, setBalance,
     budget, setBudget, addedInvestments, setAddedInvestments, totalAmount, setTotalAmount,
@@ -411,7 +412,7 @@ function AppContent(props) {
                       e.target.style.transform = 'scale(1)';
                       e.target.style.textShadow = '';
                     }}
-                    onClick={() => window.location.href = '/dashboard'}
+                    onClick={() => navigate('/dashboard')}
                   >
                     X-PENSE
                   </span>
