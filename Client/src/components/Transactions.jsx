@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'
+import { api } from '../config/api'
 import '/src/App.css'
 import { parseISO, format } from 'date-fns';
 
@@ -19,7 +19,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
         
         console.log('Fetching transactions...'); // logs 01
         setIsLoading(true);
-        axios.get('http://127.0.0.1:5001/transactions')
+        api.get('/transactions')
         .then(response => {
             console.log('Fetched transactions:', response.data); // log 02
             setTransactions(response.data)
@@ -53,7 +53,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
     const handleDelete = (index) => {
         const transaction = transactions[index];
         setIsLoading(true);
-        axios.delete(`http://127.0.0.1:5001/transactions/${transaction.id}`)
+        api.delete(`/transactions/${transaction.id}`)
         .then (() => {
             const newTransactions = transactions.filter((_, i) => i !== index);
             setTransactions(newTransactions);
@@ -91,7 +91,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
         setIsLoading(true);
 
         try {
-            await axios.put(`http://127.0.0.1:5001/transactions/${transactions[index].id}`, updatedTransaction);
+            await api.put(`/transactions/${transactions[index].id}`, updatedTransaction);
             const newTransactions = transactions.map((t, i) =>
                 i === index ? { ...t, ...updatedTransaction } : t
             );

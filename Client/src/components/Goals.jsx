@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CircularProgressbar, buildStyles} from 'react-circular-progressbar'
+import { buildApiUrl } from '../config/api';
 
 
 const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, goals, setGoals, inputAmounts, setInputAmounts, validated, setValidated, editingGoalId, setEditingGoalId, editedGoalName, setEditedGoalName, formatCurrency, darkMode } ) => {
@@ -16,7 +17,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
         
         console.log('Fetching goals from backend'); // Debug log
         setIsLoading(true);
-        fetch('http://localhost:5001/goals')
+        fetch(buildApiUrl('/goals'))
             .then(response => response.json())
             .then(data => {
                 console.log('Retrieved goals from backend:', data); // Debug log
@@ -38,7 +39,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                 saved: 0
             };
             console.log('Adding new goal:', newGoal); // Debug log
-            fetch('http://localhost:5001/goals', {
+            fetch(buildApiUrl('/goals'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -103,7 +104,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
 
         // Update the goal in the backend
         const goalToUpdate = updatedGoals.find(goal => goal.id === goalId);
-        fetch(`http://localhost:5001/goals/${goalId}`, {
+        fetch(buildApiUrl(`/goals/${goalId}`), {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -135,7 +136,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
     
         // Update the specific goal in the backend
         const goalToUpdate = updatedGoals.find(goal => goal.id === goalId);
-        fetch(`http://localhost:5001/goals/${goalId}`, {
+        fetch(buildApiUrl(`/goals/${goalId}`), {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -160,7 +161,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
         setGoals(updateGoals);
 
         // Delete the goal from the backend
-        fetch(`http://localhost:5001/goals/${goalId}`, {
+        fetch(buildApiUrl(`/goals/${goalId}`), {
             method: 'DELETE'
         })
         .then(() => {
@@ -202,7 +203,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
         );
         setGoals(updatedGoals);
 
-        fetch(`http://localhost:5001/goals/${goalId}`, {
+        fetch(buildApiUrl(`/goals/${goalId}`), {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

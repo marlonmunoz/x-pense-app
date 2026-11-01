@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { debounce } from "lodash";
 import axios from "axios";
+import { api } from "../config/api";
 import { useNavigate } from 'react-router-dom'
 // CRYPTO Symbols
 // import xrpIcon from '../assets/xrp.png'
@@ -76,7 +77,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
         const fetchMarketCaps = async () => {
             try {
                 const ids = investments.map(investment => investment.id).join(',');
-                const response = await axios.get(`http://localhost:5001/api/coins/markets`, {
+                const response = await api.get(`/api/coins/markets`, {
                     params: { ids }
                 });
                 console.log('INVESTMENTS COMPONENTS');
@@ -139,7 +140,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                 const existingInvestment = addedInvestments[existingInvestmentIndex];
                 const updatedAmount = existingInvestment.amount + amount;
                 const updatedTotalPrice = calculatePrice(updatedAmount, investment.pricePerUnit);
-                const response = await axios.put(`http://localhost:5001/investments/${existingInvestment.id}`, {
+                const response = await api.put(`/investments/${existingInvestment.id}`, {
                     amount: updatedAmount,
                     totalPrice: updatedTotalPrice
                 }, {
@@ -158,7 +159,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                 setSuccessMessage(`💰 Updated ${investment.name} investment successfully!`);
             } else {
                 // Add the new investment using POST
-                const response = await axios.post('http://localhost:5001/investments', newInvestment, {
+                const response = await api.post('/investments', newInvestment, {
                     headers: {
                         'Content-Type': 'application/json',
                     },

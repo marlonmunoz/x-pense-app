@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'
+import { api } from '../config/api'
 import { BrowserRouter as Router, Routes, Route, NavLink, Outlet, useLocation, Navigate }  from 'react-router-dom';
 import { BarChart3, DollarSign, CreditCard, Receipt, Target, TrendingUp, Lightbulb, Plus, Bot } from 'lucide-react';
 import AddTransactions from '../components/AddTransactions';
@@ -178,7 +178,7 @@ function App() {
 
     const investmentId = addedInvestments[index].id; // Assuming each investment has an 'id' property
 
-    axios.delete(`http://localhost:5001/investments/${investmentId}`)
+    api.delete(`/investments/${investmentId}`)
         .then(response => {
             if (response.status === 204) {
                 const newInvestments = addedInvestments.filter((_, i) => i !== index);

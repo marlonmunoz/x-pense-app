@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { api } from "../config/api";
 
 function BalanceTest({ darkMode }) {
   const [balances, setBalances] = useState([]);
@@ -10,7 +10,7 @@ function BalanceTest({ darkMode }) {
   const fetchBalances = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5001/balance');
+      const response = await api.get('/balance');
       setBalances(response.data);
       console.log('Balances fetched:', response.data);
     } catch (error) {

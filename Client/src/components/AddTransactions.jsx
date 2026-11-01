@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "../config/api";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 import { aiCategorizer, TRANSACTION_CATEGORIES } from '../services/aiCategorization';
@@ -113,7 +113,7 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
         };
 
         try {
-            const response = await axios.post('http://127.0.0.1:5001/transactions', newTransaction);
+            const response = await api.post('/transactions', newTransaction);
             console.log('Transaction added:', response.data);
             
             // Learn from user's category choice if AI suggested something different

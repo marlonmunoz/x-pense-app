@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "../config/api";
 import React, { useState, useEffect } from "react";
 
 function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCurrency,items, setItems, name, setName, amount, setAmount, newBudget, setNewBudget, error, setError, editingIndex, setEditingIndex, editAmount, setEditAmount, date, setDate, totalBudgetAmount, parseDate }) {
@@ -54,7 +54,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
             setLoading(true);
             console.log('BUDGET COMPONENT');
             console.log('Fetching budgets...');
-            const response = await axios.get('http://localhost:5001/budgets');
+            const response = await api.get('/budgets');
             const adjustedBudgets = response.data.map(budget => ({
                 ...budget,
                 date: formatDate(parseDate(budget.date))
@@ -88,7 +88,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
 
         try {
             setLoading(true);
-            const response = await axios.post('http://localhost:5001/budgets', newBudgetItem);
+            const response = await api.post('/budgets', newBudgetItem);
             setItems([...items, response.data]);
             setName('');
             setAmount('');
@@ -127,7 +127,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
 
         try {
             setLoading(true);
-            await axios.put(`http://localhost:5001/budgets/${items[index].id}`, updatedBudget);
+            await api.put(`/budgets/${items[index].id}`, updatedBudget);
             const updatedItems = items.map((item, i) => 
                 i === index ? { ...item, ...updatedBudget, date: formatDate(updatedBudget.date) } : item
             );
@@ -170,7 +170,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
 
         try {
             setLoading(true);
-            const response = await axios.post('http://localhost:5001/budgets', newBudgetData);
+            const response = await api.post('/budgets', newBudgetData);
             console.log('Response data:', response.data);
             setItems([...items, response.data]);
             setBudget(newBudget);
@@ -213,7 +213,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
             console.log('Updated Item:', updatedItem);
             try {
                 setLoading(true);
-                const response = await axios.put(`http://localhost:5001/budgets/${setBudgetItem.id}`, updatedItem);
+                const response = await api.put(`/budgets/${setBudgetItem.id}`, updatedItem);
                 console.log('Response from server:', response.data);
                 setItems(items.map(item => 
                     item.item_name === 'Set Budget' ? updatedItem : item
@@ -240,7 +240,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
         if (deleteConfirm === index) {
             try {
                 setLoading(true);
-                await axios.delete(`http://localhost:5001/budgets/${items[index].id}`);
+                await api.delete(`/budgets/${items[index].id}`);
                 const updatedItems = items.filter((_, i) => i !== index);
                 setItems(updatedItems);
                 showSuccess(`Successfully deleted "${items[index].item_name}"!`);

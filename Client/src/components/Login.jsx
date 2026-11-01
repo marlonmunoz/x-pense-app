@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { api } from "../config/api";
 
 function Login( {setLoggedIn, darkMode, toggleDarkMode} ) {
     const [username, setUsername] = useState('');
@@ -19,7 +19,7 @@ function Login( {setLoggedIn, darkMode, toggleDarkMode} ) {
         }
         setLoading(true);
         try {
-            const response = await axios.post('http://127.0.0.1:5001/login', 
+            const response = await api.post('/login', 
                 { username, password },
                 { headers: { 'Content-Type': 'application/json' } }
             );

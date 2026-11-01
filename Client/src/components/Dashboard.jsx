@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { api } from "../config/api";
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
 import { useNavigate } from "react-router-dom";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler, ArcElement } from 'chart.js';
@@ -92,7 +92,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
   useEffect(() => {
       // Fetch goals from the backend
       console.log('Loaded from Goal.jsx component');
-      axios.get('http://localhost:5001/goals')
+      api.get('/goals')
         .then(response => {
           const goals = response.data.map(goal => ({
             ...goal,
@@ -107,7 +107,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
   // BUDGET.jsx =============================================>>>>
   useEffect (() => {
     console.log('Loaded from Budget.jsx component');
-    axios.get('http://localhost:5001/budgets')
+    api.get('/budgets')
       .then(response => {
         const adjustedBudgets = response.data.map(budget => ({
           ...budget,
@@ -123,7 +123,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
   useEffect(() => {
     // Fetch balances from the backend
     console.log('Loaded from Balance.jsx component');
-    axios.get('http://localhost:5001/balance')
+    api.get('/balance')
       .then(response => {
         if (Array.isArray(response.data)) {
           const fetchedBalances = response.data.map(balance => ({
@@ -159,7 +159,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
     console.log('TRANSACTIONS COMPONENT');
     
     console.log('Fetching transactions...'); // logs 01
-    axios.get('http://127.0.0.1:5001/transactions')
+    api.get('/transactions')
     .then(response => {
         console.log('Fetched transactions:', response.data); // log 02
         setTransactions(response.data)
@@ -168,7 +168,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
   }, []);
   // INVESTMENTS.jsx =============================================>>>>
   useEffect(() => {
-    axios.get('http://localhost:5001/investments')
+    api.get('/investments')
         .then(response => {
           console.log('Fetched from Investments:', response.data);
             // setInvestments(response.data);
@@ -209,7 +209,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
 
     const investmentId = addedInvestments[index].id; // Assuming each investment has an 'id' property
 
-    axios.delete(`http://localhost:5001/investments/${investmentId}`)
+    api.delete(`/investments/${investmentId}`)
         .then(response => {
             if (response.status === 204) {
                 const newInvestments = addedInvestments.filter((_, i) => i !== index);
@@ -242,7 +242,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
         }
 
         // Make PUT request to update investment in the backend
-        axios.put(`http://localhost:5001/investments/${investment.id}`, {
+        api.put(`/investments/${investment.id}`, {
             amount: investment.amount,
             totalPrice: investment.total_price
         })
