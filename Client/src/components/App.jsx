@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../config/api'
-import { HashRouter as Router, Routes, Route, NavLink, Outlet, useLocation, useNavigate, Navigate }  from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink, Outlet, useLocation, useNavigate, Navigate }  from 'react-router-dom';
 import { BarChart3, DollarSign, CreditCard, Receipt, Target, TrendingUp, Lightbulb, Plus, Bot } from 'lucide-react';
 import AddTransactions from '../components/AddTransactions';
 import Balance from '../components/Balance'
