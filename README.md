@@ -7,6 +7,10 @@
 
 A full-stack expense tracking application built with React and Flask, now powered by advanced AI features.
 
+**Live site:** [https://x-penseapp.com](https://x-penseapp.com)
+
+Create an account to get your own private profile. Your transactions, budgets, balances, goals and investments are only visible to you.
+
 ## 🤖 AI-POWERED FEATURES
 
 ### Intelligent Transaction Categorization
@@ -61,13 +65,21 @@ A full-stack expense tracking application built with React and Flask, now powere
 - **View balance and budget summaries**
 - Dark-Light mode support
 - Mobile Compatibility
-- User authentication
+- **User accounts**: sign up and log in with email and password; each user's data is private to their account, with an owner/admin role
 - Live Crypto Update APIs
 - Responsive Graphs and Progress Bars
 - CRUD ops 
 - Input validation checks
 
 ### SERVER - Backend Activation
+Before the first run, copy `Server/.env.example` to `Server/.env` and fill in:
+
+- `DATABASE_URL`: your Postgres connection string (Supabase session pooler in production)
+- `SECRET_KEY`: a long random string that signs login tokens. The server will not start without it. Generate one with `python3 -c "import secrets; print(secrets.token_hex(32))"`
+- `ADMIN_EMAIL`: the account that signs up with this email becomes the owner/admin
+
+Never commit `.env`.
+
 <!-- pipenv install -->
 <!-- pipenv shell -->
 1. Navigate to the `Server` directory:
@@ -88,7 +100,7 @@ cd Client
 ```
 nvm use 20.16
 ```
-3. Start the REact application:
+3. Start the React application:
 ```
 npm run dev
 ```
@@ -108,6 +120,8 @@ npm run dev
 `GET` | `PUT` | `POST` | `DELETE`
 
 ## Route Testing With POSTMAN
+Every route except `/register` and `/login` requires a login token. Send `POST /login` with `{"email": "...", "password": "..."}`, then add the returned token to each request as the header `Authorization: Bearer <token>`.
+
 `GET` Route
 ```
 http://localhost:5001/investments
@@ -196,7 +210,8 @@ http://localhost:5001/investments/97
 ### Backend Technologies
 - **Flask 2.x**: Lightweight Python web framework with RESTful API design
 - **SQLAlchemy**: Advanced ORM with relationship management and query optimization
-- **SQLite/PostgreSQL**: Flexible database options for development and production
+- **PostgreSQL (Supabase)**: Production database, with a local SQLite fallback for development
+- **PyJWT**: Signed login tokens for user accounts, with passwords stored as salted hashes
 - **Flask-Migrate**: Database version control and migration management
 - **Flask-CORS**: Cross-origin resource sharing for frontend-backend communication
 
@@ -223,6 +238,9 @@ http://localhost:5001/investments/97
 - **npm/pipenv**: Package management for both frontend and backend dependencies
 - **Git**: Distributed version control system for collaborative development
 - **VS Code**: Integrated development environment with AI assistance
+- **Cloudflare Pages**: Hosts the React frontend at x-penseapp.com
+- **Railway**: Hosts the Flask API
+- **Supabase**: Hosts the PostgreSQL database
 
 ### Data Management & Persistence
 - **localStorage**: Client-side storage for AI learning patterns and user preferences
