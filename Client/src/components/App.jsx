@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api } from '../config/api'
+import { api, getToken, clearToken } from '../config/api'
 import { BrowserRouter as Router, Routes, Route, NavLink, Outlet, useLocation, useNavigate, Navigate }  from 'react-router-dom';
 import { BarChart3, DollarSign, CreditCard, Receipt, Target, TrendingUp, Lightbulb, Plus, Bot } from 'lucide-react';
 import AddTransactions from '../components/AddTransactions';
@@ -40,7 +40,6 @@ function App() {
 
   const [darkMode, setDarkMode] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  // const [loggedIn, setLoggedIn] = useState(false);
   const [addedInvestments, setAddedInvestments] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0); 
 
@@ -104,7 +103,37 @@ function App() {
   
 
 
-  // LOGIN
+  // LOGIN ==========>>>>>>
+  // `user` is the signed-in account (null = signed out). `authChecked` stays false until
+  // we've asked the server whether the saved token is still valid, so the page doesn't
+  // flash the login screen at someone who is already signed in.
+  const [user, setUser] = useState(null);
+  const [authChecked, setAuthChecked] = useState(false);
+
+  useEffect(() => {
+    if (!getToken()) {
+      setAuthChecked(true);
+      return;
+    }
+    api.get('/me')
+      .then((response) => setUser(response.data))
+      .catch(() => clearToken())
+      .finally(() => setAuthChecked(true));
+  }, []);
+
+  // LOGOUT ==========>>>>>>
+  // A full page load wipes every piece of in-memory data, so the next person to sign in
+  // on this browser can never see the previous person's numbers.
+  const handleLogout = () => {
+    clearToken();
+    window.location.assign('/login');
+  };
+
+  // The API client fires this event when the server rejects our token (e.g. it expired).
+  useEffect(() => {
+    window.addEventListener('xpense:logged-out', handleLogout);
+    return () => window.removeEventListener('xpense:logged-out', handleLogout);
+  }, []);
 
   useEffect(() => {
     const total = transactions.reduce((total, transaction) => total + parseFloat(transaction.amount), 0)
@@ -145,22 +174,6 @@ function App() {
   // Validation ======>>>>>>
   const [validated, setValidated] = useState(false);
 
-  // LOGOUT ==========>>>>>>
-  // const handleLogout = async () => {
-  //   try {
-  //     const response = await axios.post('http://127.0.0.1:5001/logout');
-  //     if (response.status === 200) {
-  //       setLoggedIn(false)
-  //     }
-  //   } catch (err) {
-  //     console.log('Logout failed');
-  //   }
-  // };
-
-  // if (!loggedIn) {
-  //   return <Login setLoggedIn={setLoggedIn} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-  // }
-
   const handleAddInvestment = (investment) => {
     setAddedInvestments([...addedInvestments, investment]);
     console.log('Added investment:', investment);
@@ -197,6 +210,10 @@ function App() {
       <AppContent 
         darkMode={darkMode}
         toggleDarkMode={toggleDarkMode}
+        user={user}
+        authChecked={authChecked}
+        onAuthenticated={setUser}
+        onLogout={handleLogout}
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
         transactions={transactions}
@@ -300,7 +317,8 @@ function AppContent(props) {
   const location = useLocation();
   const navigate = useNavigate();
   const {
-    darkMode, toggleDarkMode, sidebarOpen, setSidebarOpen, transactions, setTransactions, balance, setBalance,
+    darkMode, toggleDarkMode, user, authChecked, onAuthenticated, onLogout,
+    sidebarOpen, setSidebarOpen, transactions, setTransactions, balance, setBalance,
     budget, setBudget, addedInvestments, setAddedInvestments, totalAmount, setTotalAmount,
     items, setItems, name, setName, amount, setAmount, newBudget, setNewBudget,
     error, setError, editingIndex, setEditingIndex, editAmount, setEditAmount,
@@ -317,6 +335,24 @@ function AppContent(props) {
     validated, setValidated, formatCurrency, formatDate, parseDate, formatAmount,
     handleAddInvestment, handleRemoveInvestment
   } = props;
+
+  // Wait until we know whether the saved token is valid.
+  if (!authChecked) {
+    return (
+      <div id="root" className={`${darkMode ? 'dark-mode' : 'light-mode'}`}>
+        <div style={{ minHeight: '100vh' }} className="d-flex align-items-center justify-content-center">
+          Loading...
+        </div>
+      </div>
+    );
+  }
+
+  // The start page and login page are the only public screens; everything else needs an account.
+  const isPublicPage = location.pathname === '/' || location.pathname === '/login';
+  if (!user && !isPublicPage) {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <div id="root" className={`${darkMode ? 'dark-mode' : 'light-mode'}`}>
       {location.pathname === '/' ? (
@@ -325,6 +361,19 @@ function AppContent(props) {
             <Route path='/' element={<StartPage />} />
           </Routes>
         </div>
+      ) : location.pathname === '/login' ? (
+        user ? (
+          <Navigate to="/dashboard" replace />
+        ) : (
+          <Login
+            darkMode={darkMode}
+            toggleDarkMode={toggleDarkMode}
+            onAuthenticated={(account) => {
+              onAuthenticated(account);
+              navigate('/dashboard');
+            }}
+          />
+        )
       ) : (
         <div className="d-flex" style={{minHeight: '100vh'}}>
           {/* Mobile Hamburger Menu */}
@@ -805,11 +854,23 @@ function AppContent(props) {
                   gap: '6px'
                 }}>
                   <span>👤</span>
-                  <span>Welcome Marlon</span>
+                  <span>Welcome {user.email.split('@')[0]}</span>
                   <span>🟢</span>
                   <span>Online</span>
                 </small>
+                {user.role === 'admin' && (
+                  <div className="mt-1">
+                    <span className="badge bg-warning text-dark">Owner / Admin</span>
+                  </div>
+                )}
               </div>
+              <button
+                type="button"
+                className={`btn btn-sm w-100 mt-2 ${darkMode ? 'btn-outline-light' : 'btn-outline-secondary'}`}
+                onClick={onLogout}
+              >
+                Log out
+              </button>
             </div>
           </nav>
           
@@ -1007,7 +1068,7 @@ function AppContent(props) {
       )}
       
       {/* Mobile Bottom Navigation - Only visible on mobile and after Get Started is clicked */}
-      {location.pathname !== '/' && <MobileBottomNav darkMode={darkMode} />}
+      {!isPublicPage && <MobileBottomNav darkMode={darkMode} />}
     </div>
   )
 }

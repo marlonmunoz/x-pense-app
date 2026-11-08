@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { FinancialCalculator } from "../services/financialCalculator";
 import SmartUpdateService from "../services/smartUpdateService";
 import BulkUpdatePanel from "./BulkUpdatePanel";
-import { API_ENDPOINTS, buildApiUrl } from "../config/api";
+import { api, API_ENDPOINTS, buildApiUrl } from "../config/api";
 
 function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setBankAccountBalance, savings, setSavings, setTotal, formatCurrency, balanceId, setBalanceId, balances, setBalances, editIndex, setEditIndex, editBalance, setEditBalance, balanceError, setBalanceError}) {
 
@@ -141,7 +140,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       console.log('Fetching balances...');
       setLoading(true);
     
-    axios.get(API_ENDPOINTS.balance)
+    api.get(API_ENDPOINTS.balance)
       .then(response => {
         console.log('Response received:', response.data);
         if (Array.isArray(response.data)) {
@@ -287,7 +286,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
   
     try {
       setLoading(true);
-      await axios.put(buildApiUrl(`/balance/${updatedBalance.id}`), updatedBalance);
+      await api.put(buildApiUrl(`/balance/${updatedBalance.id}`), updatedBalance);
       
       const updatedBalances = balances.map((balance, i) => (i === index ? updatedBalance : balance));
       setBalances(updatedBalances);
@@ -342,7 +341,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       
       try {
         setLoading(true);
-        await axios.delete(buildApiUrl(`/balance/${balance.id}`));
+        await api.delete(buildApiUrl(`/balance/${balance.id}`));
         const newBalances = balances.filter((_, i) => i !== index);
         setBalances(newBalances);
         
@@ -383,7 +382,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       
       // Process all updates
       const updatePromises = updates.map(update => 
-        axios.put(buildApiUrl(`/balance/${update.id}`), update.data)
+        api.put(buildApiUrl(`/balance/${update.id}`), update.data)
       );
       
       await Promise.all(updatePromises);
@@ -454,7 +453,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
 
     try {
       setLoading(true);
-      const response = await axios.post(API_ENDPOINTS.balance, newBalance);
+      const response = await api.post(API_ENDPOINTS.balance, newBalance);
       console.log('Balance saved:', response.data);
       
       const updatedBalances = [...balances, { ...response.data, total: newTotal }];
