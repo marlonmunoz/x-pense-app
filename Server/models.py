@@ -10,8 +10,25 @@ convention = {
 
 db = SQLAlchemy()
 
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    email = db.Column(db.String(255), unique=True, nullable=False, index=True)
+    password_hash = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.String(20), nullable=False, default='user', server_default='user')
+    created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'role': self.role,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
+
 class Investment(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
     name = db.Column(db.String(80), nullable=False)
     pricePerUnit = db.Column(db.Float, nullable=False)
     amount = db.Column(db.Float, nullable=False)
@@ -31,6 +48,7 @@ class Investment(db.Model):
 
 class Budget(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
     item_name = db.Column(db.String(80), nullable=False)
     amount = db.Column(db.Float, nullable=False)
     date = db.Column(db.Date, nullable=False)
@@ -50,6 +68,7 @@ class Budget(db.Model):
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
     category = db.Column(db.String(80), nullable=False)
     date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(255), nullable=False)
@@ -66,12 +85,14 @@ class Transaction(db.Model):
 
 class Goal(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
     name = db.Column(db.String(80), nullable=False)
     target = db.Column(db.Integer, nullable=False)
     saved = db.Column(db.Integer, default=0)
     
 class Balance(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
     cash_on_hand = db.Column(db.Float, nullable=False, default=0)
     bank_account_balance = db.Column(db.Float, nullable=False, default=0)
     savings = db.Column(db.Float, nullable=False, default=0)
