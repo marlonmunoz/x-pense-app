@@ -1,7 +1,10 @@
 import jwt
 import datetime
+import math
 import os
 import re
+import threading
+import time
 from flask import Flask, request, jsonify, g
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -17,8 +20,18 @@ import requests
 load_dotenv()  
 
 app = Flask(__name__)
-# CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
-CORS(app)
+# Only our own front-end sites may call this API from a browser.
+# Each pattern ends in $ so "x-penseapp.com.evil.com" cannot slip through.
+ALLOWED_ORIGINS = [
+    r'^https://(www\.)?x-penseapp\.com$',
+    r'^https://([a-z0-9-]+\.)?x-pense\.pages\.dev$',
+    r'^http://localhost:\d+$',
+    r'^http://127\.0\.0\.1:\d+$',
+]
+CORS(app, origins=ALLOWED_ORIGINS)
+
+# Requests here are tiny JSON bodies; refuse anything bigger than 100 KB.
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024
 
 # Handle Railway PostgreSQL URL format
 database_url = os.environ.get('DATABASE_URL')
@@ -89,11 +102,75 @@ def get_owned(model, object_id):
     return obj
 
 
+# RATE LIMITING ====================================================================>>>>>>>
+# A simple in-memory counter. It is accurate because the server runs a single worker
+# (see entrypoint.sh); the counts reset whenever the server restarts.
+_events = {}
+_events_lock = threading.Lock()
+
+
+def client_ip():
+    # Railway's proxy appends the visitor's real address as the LAST value, so a fake
+    # X-Forwarded-For header sent by an attacker can't change which address we see.
+    forwarded = request.headers.get('X-Forwarded-For', '')
+    if forwarded:
+        return forwarded.split(',')[-1].strip()
+    return request.remote_addr or 'unknown'
+
+
+def seconds_until_allowed(bucket, limit, window):
+    """0 if `bucket` is under its limit, otherwise how many seconds until it frees up."""
+    now = time.time()
+    with _events_lock:
+        recent = [t for t in _events.get(bucket, []) if now - t < window]
+        _events[bucket] = recent
+        if len(recent) >= limit:
+            return int(window - (now - recent[0])) + 1
+    return 0
+
+
+def record_event(bucket):
+    now = time.time()
+    with _events_lock:
+        if len(_events) > 10000:
+            # Keep memory bounded: drop buckets that haven't been touched for an hour.
+            for key in [k for k, v in _events.items() if not v or now - v[-1] > 3600]:
+                del _events[key]
+        _events.setdefault(bucket, []).append(now)
+
+
+def clear_events(bucket):
+    with _events_lock:
+        _events.pop(bucket, None)
+
+
+def too_many_attempts(wait):
+    response = jsonify({'error': 'Too many attempts. Please try again in a few minutes.'})
+    response.status_code = 429
+    response.headers['Retry-After'] = str(wait)
+    return response
+
+
+LOGIN_WINDOW = 15 * 60       # seconds
+LOGIN_FAILS_PER_ACCOUNT = 8  # wrong passwords per (visitor address + email) per window
+LOGIN_FAILS_PER_IP = 30      # wrong passwords from one address, across all emails
+REGISTER_WINDOW = 60 * 60
+REGISTER_PER_IP = 10         # sign-up attempts per address per hour
+
+
 @app.route('/register', methods=['POST'])
 def register():
-    data = request.get_json(silent=True) or {}
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        data = {}
     email = str(data.get('email', '')).strip().lower()
     password = str(data.get('password', ''))
+
+    ip_bucket = f'register:{client_ip()}'
+    wait = seconds_until_allowed(ip_bucket, REGISTER_PER_IP, REGISTER_WINDOW)
+    if wait:
+        return too_many_attempts(wait)
+    record_event(ip_bucket)
 
     if not EMAIL_PATTERN.match(email) or len(email) > 255:
         return jsonify({'error': 'Enter a valid email address'}), 400
@@ -120,21 +197,99 @@ def register():
 
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.get_json(silent=True) or {}
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        data = {}
     email = str(data.get('email', '')).strip().lower()
     password = str(data.get('password', ''))
 
+    # Count only WRONG attempts, and refuse to even check the password once a limit is hit.
+    ip = client_ip()
+    ip_bucket = f'login-ip:{ip}'
+    account_bucket = f'login:{ip}:{email[:255]}'
+    wait = max(
+        seconds_until_allowed(ip_bucket, LOGIN_FAILS_PER_IP, LOGIN_WINDOW),
+        seconds_until_allowed(account_bucket, LOGIN_FAILS_PER_ACCOUNT, LOGIN_WINDOW),
+    )
+    if wait:
+        return too_many_attempts(wait)
+
     user = User.query.filter_by(email=email).first()
-    password_ok = check_password_hash(user.password_hash if user else DUMMY_PASSWORD_HASH, password)
+    password_ok = len(password) <= 128 and check_password_hash(
+        user.password_hash if user else DUMMY_PASSWORD_HASH, password
+    )
     if user is None or not password_ok:
+        record_event(ip_bucket)
+        record_event(account_bucket)
         return jsonify({'error': 'Invalid email or password'}), 401
 
+    clear_events(account_bucket)
     return jsonify({'token': issue_token(user), 'user': user.to_dict()}), 200
 
 
 @app.route('/me', methods=['GET'])
 def me():
     return jsonify(g.user.to_dict())
+
+
+# INPUT VALIDATION =================================================================>>>>>>>
+MAX_MONEY = 1_000_000_000_000   # one trillion; far beyond any real balance
+MAX_GOAL = 2_000_000_000        # the goal columns are 32-bit integers
+
+
+class ValidationError(Exception):
+    """Raised by the helpers below; turned into a clean 400 response."""
+
+
+@app.errorhandler(ValidationError)
+def handle_validation_error(err):
+    return jsonify({'error': str(err)}), 400
+
+
+@app.errorhandler(413)
+def handle_too_large(err):
+    return jsonify({'error': 'Request is too large'}), 413
+
+
+def json_body():
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        raise ValidationError('Request body must be a JSON object')
+    return data
+
+
+def text_field(data, key, label, max_length):
+    value = data.get(key)
+    if not isinstance(value, str) or not value.strip():
+        raise ValidationError(f'{label} is required')
+    value = value.strip()
+    if len(value) > max_length:
+        raise ValidationError(f'{label} must be {max_length} characters or fewer')
+    return value
+
+
+def number_field(data, key, label, maximum=MAX_MONEY):
+    value = data.get(key)
+    if isinstance(value, bool):
+        raise ValidationError(f'{label} must be a number')
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        raise ValidationError(f'{label} must be a number')
+    if not math.isfinite(number):
+        raise ValidationError(f'{label} must be a number')
+    if number < 0:
+        raise ValidationError(f'{label} cannot be negative')
+    if number > maximum:
+        raise ValidationError(f'{label} is too large')
+    return number
+
+
+def date_field(data, key, label):
+    try:
+        return datetime.strptime(str(data.get(key, '')), '%Y-%m-%d').date()
+    except ValueError:
+        raise ValidationError(f'{label} must be a date in YYYY-MM-DD format')
 
 
 # INVESTMENTS ==========================================================================>>>>>
@@ -146,7 +301,7 @@ def get_market_caps():
         response = requests.get('https://api.coingecko.com/api/v3/coins/markets', params={
             'vs_currency': 'usd',
             'ids': 'bitcoin,ethereum,usd-coin'
-        })
+        }, timeout=10)
         return jsonify(response.json())
     except requests.exceptions.RequestException as e:
         return jsonify({'error': 'Error fetching market cap data'}), 500
@@ -163,12 +318,12 @@ def get_budgets():
 # POST
 @app.route('/budgets', methods=['POST'])
 def add_budget():
-    data = request.get_json()
+    data = json_body()
     new_budget = Budget(
         user_id=g.user.id,
-        item_name=data['item_name'],
-        amount=data['amount'],
-        date=datetime.strptime(data['date'], '%Y-%m-%d').date()
+        item_name=text_field(data, 'item_name', 'Item name', 80),
+        amount=number_field(data, 'amount', 'Amount'),
+        date=date_field(data, 'date', 'Date')
     )
     db.session.add(new_budget)
     db.session.commit()
@@ -192,7 +347,7 @@ def add_budget():
 
 @app.route('/budgets/<int:id>', methods=['PUT'])
 def update_budget(id):
-    data = request.get_json()
+    data = json_body()
     if 'item_name' not in data or 'amount' not in data or 'date' not in data:
         return jsonify({'error': 'Missing required fields'}), 400
     
@@ -200,23 +355,17 @@ def update_budget(id):
     if budget is None:
         return jsonify({'error': 'Budget not found'}), 404
     
-    budget.item_name = data['item_name']
+    budget.item_name = text_field(data, 'item_name', 'Item name', 80)
     
-    if data['amount']:
-        try:
-            budget.amount = float(data['amount'])
-        except ValueError:
-            return jsonify({'error': 'Invalid amount format, should be a number'}), 400
+    if data['amount'] in ('', None):
+        budget.amount = 0.0  # The "reset" button sends an empty amount on purpose
     else:
-        budget.amount = 0.0  # Set to a default value if needed
+        budget.amount = number_field(data, 'amount', 'Amount')
     
-    if data['date']:
-        try:
-            budget.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
-        except ValueError:
-            return jsonify({'error': 'Invalid date format, should be YYYY-MM-DD'}), 400
+    if data['date'] in ('', None):
+        budget.date = datetime.now().date()  # The "reset" button sends an empty date on purpose
     else:
-        budget.date = datetime.now().date()  # Set to the current date as a default value
+        budget.date = date_field(data, 'date', 'Date')
     
     db.session.commit()
     return jsonify(budget.to_dict())
@@ -246,12 +395,12 @@ def get_balance():
 # POST
 @app.route('/balance', methods=['POST'])
 def add_balance():
-    data = request.json
+    data = json_body()
     new_balance = Balance(
         user_id=g.user.id,
-        cash_on_hand=data['cash_on_hand'],
-        bank_account_balance=data['bank_account_balance'],
-        savings=data['savings']        
+        cash_on_hand=number_field(data, 'cash_on_hand', 'Cash on hand'),
+        bank_account_balance=number_field(data, 'bank_account_balance', 'Bank account balance'),
+        savings=number_field(data, 'savings', 'Savings')        
     )
     db.session.add(new_balance)
     db.session.commit()
@@ -260,13 +409,16 @@ def add_balance():
 # PUT
 @app.route('/balance/<int:id>', methods=['PUT'])
 def update_balance(id) :
-    data = request.json
+    data = json_body()
     balance = get_owned(Balance, id)
     if balance is None:
         return jsonify({'message': 'Balance not found'}), 404
-    balance.cash_on_hand = data.get('cash_on_hand', balance.cash_on_hand)
-    balance.bank_account_balance = data.get('bank_account_balance', balance.bank_account_balance)
-    balance.savings = data.get('savings', balance.savings)
+    # Only the fields that were sent are changed, and each one is checked.
+    for field, label in (('cash_on_hand', 'Cash on hand'),
+                         ('bank_account_balance', 'Bank account balance'),
+                         ('savings', 'Savings')):
+        if field in data:
+            setattr(balance, field, number_field(data, field, label))
     db.session.commit()
     return jsonify(balance.to_dict())
 
@@ -298,22 +450,18 @@ def get_transaction():
 # POST
 @app.route('/transactions', methods=['POST'])
 def add_transaction():
-    data = request.json
-    required_fields = ['category', 'date', 'description', 'amount']
-    for field in required_fields:
-        if field not in data:
-            return jsonify({'error': f'Missing field: {field}'}), 400
-    try:
-        date_obj = datetime.strptime(data['date'], '%Y-%m-%d').date()
-    except ValueError:
-        return jsonify({'error': 'Invalid date format, Use YYYY-MM-DD'}), 400
+    data = json_body()
+    category = text_field(data, 'category', 'Category', 80)
+    description = text_field(data, 'description', 'Description', 255)
+    amount = number_field(data, 'amount', 'Amount')
+    date_obj = date_field(data, 'date', 'Date')
     
     new_transaction = Transaction(
         user_id=g.user.id,
-        category=data['category'],
+        category=category,
         date=date_obj,
-        description=data['description'],
-        amount=data['amount']
+        description=description,
+        amount=amount
     )
     db.session.add(new_transaction)
     db.session.commit()
@@ -322,18 +470,15 @@ def add_transaction():
 # PUT
 @app.route('/transactions/<int:id>', methods=['PUT'])
 def update_transaction(id):
-    data = request.json
+    data = json_body()
     session: Session = db.session
     transaction = get_owned(Transaction, id)
     if transaction is None:
         return jsonify({'error': 'Transaction not found'}), 404
-    transaction.category = data['category']
-    try:
-        transaction.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
-    except ValueError:
-        return jsonify({'error': 'Invalid date format, Use YYYY-MM-DD'}), 400
-    transaction.description = data['description']
-    transaction.amount = data['amount']
+    transaction.category = text_field(data, 'category', 'Category', 80)
+    transaction.date = date_field(data, 'date', 'Date')
+    transaction.description = text_field(data, 'description', 'Description', 255)
+    transaction.amount = number_field(data, 'amount', 'Amount')
     session.commit()
     return jsonify(transaction.to_dict())
 
@@ -360,12 +505,17 @@ def get_goals():
 # POST
 @app.route('/goals', methods=['POST'])
 def add_goal():
-    data = request.get_json()
+    data = json_body()
+    target = int(round(number_field(data, 'target', 'Target', MAX_GOAL)))
+    if target <= 0:
+        raise ValidationError('Target must be greater than zero')
+    # Goal amounts are stored as whole numbers.
+    saved = int(round(number_field(data, 'saved', 'Saved amount', MAX_GOAL))) if 'saved' in data else 0
     new_goal = Goal(
         user_id=g.user.id,
-        name=data['name'],
-        target=data['target'],
-        saved=data['saved']
+        name=text_field(data, 'name', 'Goal name', 80),
+        target=target,
+        saved=saved
         )
     db.session.add(new_goal)
     db.session.commit()
@@ -381,12 +531,14 @@ def add_goal():
 # PUT
 @app.route('/goals/<int:goal_id>', methods=['PUT'])
 def update_goal(goal_id):
-    data = request.get_json()
+    data = json_body()
     goal = get_owned(Goal, goal_id)
     if goal is None:
         return jsonify({'error': 'Goal not found'}), 404
-    goal.name = data.get('name', goal.name)
-    goal.saved = data.get('saved', goal.saved)
+    if 'name' in data:
+        goal.name = text_field(data, 'name', 'Goal name', 80)
+    if 'saved' in data:
+        goal.saved = int(round(number_field(data, 'saved', 'Saved amount', MAX_GOAL)))
     db.session.commit()
     return jsonify(
         {
@@ -411,13 +563,13 @@ def delete_goal(goal_id):
 # POST
 @app.route('/investments', methods=['POST'])
 def add_investment():
-    data = request.json
+    data = json_body()
     new_investment = Investment(
         user_id=g.user.id,
-        name=data['name'],
-        pricePerUnit=data['pricePerUnit'],
-        amount=data['amount'],
-        total_price=data['totalPrice']
+        name=text_field(data, 'name', 'Name', 80),
+        pricePerUnit=number_field(data, 'pricePerUnit', 'Price per unit'),
+        amount=number_field(data, 'amount', 'Amount'),
+        total_price=number_field(data, 'totalPrice', 'Total price')
     )
     db.session.add(new_investment)
     db.session.commit()
@@ -442,13 +594,13 @@ def delete_investment(investment_id):
 # PUT
 @app.route('/investments/<int:investment_id>', methods=['PUT'])
 def update_investment(investment_id):
-    data = request.json
+    data = json_body()
     investment = get_owned(Investment, investment_id)
     if investment is None:
         return jsonify({'error': 'Investment not found'}), 404
     
-    investment.amount = float(data['amount'])
-    investment.total_price = float(data['totalPrice'])
+    investment.amount = number_field(data, 'amount', 'Amount')
+    investment.total_price = number_field(data, 'totalPrice', 'Total price')
     db.session.commit()
     return jsonify(investment.to_dict()), 200
 
