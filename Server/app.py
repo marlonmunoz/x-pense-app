@@ -1,5 +1,7 @@
 import jwt
 import datetime
+import hashlib
+import hmac
 import math
 import os
 import re
@@ -64,10 +66,20 @@ PUBLIC_ENDPOINTS = {'register', 'login', 'forgot_password', 'reset_password', 's
 DUMMY_PASSWORD_HASH = generate_password_hash('not-a-real-password')
 
 
+def password_fingerprint(user):
+    # A short code that changes whenever the user's password changes. It is built with the
+    # server's secret key, so nobody can work backwards from it to the stored password hash.
+    digest = hmac.new(
+        app.config['SECRET_KEY'].encode(), user.password_hash.encode(), hashlib.sha256
+    ).hexdigest()
+    return digest[:16]
+
+
 def issue_token(user):
     payload = {
         'sub': str(user.id),
         'role': user.role,
+        'pwv': password_fingerprint(user),  # "password version": see require_login
         'exp': datetime.now(timezone.utc) + timedelta(days=7),
     }
     return jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
@@ -89,6 +101,11 @@ def require_login():
         return jsonify({'error': 'Invalid or expired session'}), 401
 
     if user is None:
+        return jsonify({'error': 'Invalid or expired session'}), 401
+
+    # A token from before the last password change carries an old fingerprint, so it is
+    # refused. This is what "log out everywhere" means: every older session dies at once.
+    if not hmac.compare_digest(str(payload.get('pwv', '')), password_fingerprint(user)):
         return jsonify({'error': 'Invalid or expired session'}), 401
 
     g.user = user
