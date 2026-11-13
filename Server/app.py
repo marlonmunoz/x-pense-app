@@ -60,7 +60,7 @@ with app.app_context():
 
 # LOGIN ============================================================================>>>>>>>
 EMAIL_PATTERN = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
-PUBLIC_ENDPOINTS = {'register', 'login', 'static'}
+PUBLIC_ENDPOINTS = {'register', 'login', 'forgot_password', 'reset_password', 'static'}
 DUMMY_PASSWORD_HASH = generate_password_hash('not-a-real-password')
 
 
@@ -158,6 +158,15 @@ REGISTER_WINDOW = 60 * 60
 REGISTER_PER_IP = 10         # sign-up attempts per address per hour
 
 
+def password_problem(password):
+    """Return a message describing what is wrong with `password`, or None if it is fine."""
+    if len(password) < 8:
+        return 'Password must be at least 8 characters'
+    if len(password) > 128:
+        return 'Password must be 128 characters or fewer'
+    return None
+
+
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json(silent=True)
@@ -174,10 +183,9 @@ def register():
 
     if not EMAIL_PATTERN.match(email) or len(email) > 255:
         return jsonify({'error': 'Enter a valid email address'}), 400
-    if len(password) < 8:
-        return jsonify({'error': 'Password must be at least 8 characters'}), 400
-    if len(password) > 128:
-        return jsonify({'error': 'Password must be 128 characters or fewer'}), 400
+    problem = password_problem(password)
+    if problem:
+        return jsonify({'error': problem}), 400
     if User.query.filter_by(email=email).first():
         return jsonify({'error': 'An account with this email already exists'}), 409
 
@@ -230,6 +238,149 @@ def login():
 @app.route('/me', methods=['GET'])
 def me():
     return jsonify(g.user.to_dict())
+
+
+# PASSWORD RESET ===================================================================>>>>>>>
+# Where the link in the email should point. Production sets APP_URL on Railway;
+# on your own machine it falls back to the local front-end.
+APP_URL = os.environ.get('APP_URL', 'http://localhost:5173').rstrip('/')
+RESEND_API_KEY = os.environ.get('RESEND_API_KEY')
+MAIL_FROM = 'X-PENSE <noreply@x-penseapp.com>'
+RESET_TOKEN_MINUTES = 30
+
+
+def reset_key(user):
+    # The signing key mixes in the user's CURRENT password hash. The moment the password
+    # changes, the key changes, so any reset link already used (or older) stops working.
+    return app.config['SECRET_KEY'] + user.password_hash
+
+
+def issue_reset_token(user):
+    payload = {
+        'sub': str(user.id),
+        'purpose': 'password-reset',
+        'exp': datetime.now(timezone.utc) + timedelta(minutes=RESET_TOKEN_MINUTES),
+    }
+    return jwt.encode(payload, reset_key(user), algorithm='HS256')
+
+
+def user_from_reset_token(token):
+    """Return the user this reset token belongs to, or None if it is invalid or expired."""
+    try:
+        # Step 1: peek inside WITHOUT trusting it, only to learn whose key to check with.
+        claimed = jwt.decode(token, options={'verify_signature': False})
+        user_id = int(claimed['sub'])
+        if not 0 < user_id < 2**31:  # the database id column is a 32-bit integer
+            return None
+        user = db.session.get(User, user_id)
+        if user is None:
+            return None
+        # Step 2: now really verify the signature and expiry, using that user's key.
+        payload = jwt.decode(token, reset_key(user), algorithms=['HS256'])
+    except (jwt.InvalidTokenError, KeyError, ValueError, TypeError):
+        return None
+    if payload.get('purpose') != 'password-reset':
+        return None
+    return user
+
+
+def send_reset_email(to_email, token):
+    link = f'{APP_URL}/reset-password?token={token}'
+    if not RESEND_API_KEY:
+        # No email service configured (local development): show the link instead.
+        print(f'[dev] password reset link for {to_email}: {link}', flush=True)
+        return
+    try:
+        requests.post(
+            'https://api.resend.com/emails',
+            headers={'Authorization': f'Bearer {RESEND_API_KEY}'},
+            json={
+                'from': MAIL_FROM,
+                'to': [to_email],
+                'subject': 'Reset your X-PENSE password',
+                'text': (
+                    'Someone asked to reset the password for your X-PENSE account.\n\n'
+                    f'Open this link to choose a new password (it works for {RESET_TOKEN_MINUTES} minutes):\n'
+                    f'{link}\n\n'
+                    'If this was not you, ignore this email. Your password has not changed.'
+                ),
+            },
+            timeout=10,
+        )
+    except requests.exceptions.RequestException:
+        # Never let an email problem crash the request; just record it in the server log.
+        app.logger.exception('Could not send password reset email')
+
+
+FORGOT_WINDOW = 60 * 60
+FORGOT_PER_IP = 5      # reset requests per visitor address per hour
+FORGOT_PER_EMAIL = 3   # reset requests per email address per hour (stops inbox flooding)
+FORGOT_MESSAGE = 'If an account exists for that email, a reset link is on its way.'
+
+
+@app.route('/forgot-password', methods=['POST'])
+def forgot_password():
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        data = {}
+    email = str(data.get('email', '')).strip().lower()
+
+    # Limits are counted for EVERY request, whether or not the email has an account,
+    # so the limits themselves can't be used to find out who is registered.
+    ip_bucket = f'forgot-ip:{client_ip()}'
+    email_bucket = f'forgot-email:{email[:255]}'
+    wait = max(
+        seconds_until_allowed(ip_bucket, FORGOT_PER_IP, FORGOT_WINDOW),
+        seconds_until_allowed(email_bucket, FORGOT_PER_EMAIL, FORGOT_WINDOW),
+    )
+    if wait:
+        return too_many_attempts(wait)
+    record_event(ip_bucket)
+    record_event(email_bucket)
+
+    user = User.query.filter_by(email=email).first() if EMAIL_PATTERN.match(email) else None
+    if user:
+        token = issue_reset_token(user)
+        # Sending an email takes a moment. Doing it in the background keeps the response
+        # equally fast for real and unknown emails, so timing can't give the answer away.
+        threading.Thread(target=send_reset_email, args=(user.email, token), daemon=True).start()
+
+    # The same reply no matter what happened.
+    return jsonify({'message': FORGOT_MESSAGE}), 200
+
+
+RESET_PER_IP = 20  # attempts to use a reset link, per visitor address per hour
+
+
+@app.route('/reset-password', methods=['POST'])
+def reset_password():
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        data = {}
+    token = str(data.get('token', ''))
+    password = str(data.get('password', ''))
+
+    # Tokens can't realistically be guessed, but every attempt costs the server work
+    # (password hashing is deliberately slow), so we still cap them.
+    ip_bucket = f'reset-ip:{client_ip()}'
+    wait = seconds_until_allowed(ip_bucket, RESET_PER_IP, FORGOT_WINDOW)
+    if wait:
+        return too_many_attempts(wait)
+    record_event(ip_bucket)
+
+    user = user_from_reset_token(token)
+    if user is None:
+        return jsonify({'error': 'This reset link is invalid or has expired. Please request a new one.'}), 400
+
+    problem = password_problem(password)
+    if problem:
+        return jsonify({'error': problem}), 400
+
+    # Saving the new hash is also what kills this link (and any older ones): the key
+    # they were signed with included the old hash.
+    user.password_hash = generate_password_hash(password)
+    db.session.commit()
+    return jsonify({'message': 'Your password has been updated. You can now log in.'}), 200
 
 
 # INPUT VALIDATION =================================================================>>>>>>>
