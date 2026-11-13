@@ -347,8 +347,9 @@ function AppContent(props) {
     );
   }
 
-  // The start page and login page are the only public screens; everything else needs an account.
-  const isPublicPage = location.pathname === '/' || location.pathname === '/login';
+  // The start page and the account screens are the only public pages; everything else needs an account.
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/reset-password';
+  const isPublicPage = location.pathname === '/' || isAuthPage;
   if (!user && !isPublicPage) {
     return <Navigate to="/login" replace />;
   }
@@ -361,8 +362,8 @@ function AppContent(props) {
             <Route path='/' element={<StartPage />} />
           </Routes>
         </div>
-      ) : location.pathname === '/login' ? (
-        user ? (
+      ) : isAuthPage ? (
+        user && location.pathname === '/login' ? (
           <Navigate to="/dashboard" replace />
         ) : (
           <Login
