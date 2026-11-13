@@ -66,6 +66,8 @@ Create an account to get your own private profile. Your transactions, budgets, b
 - Dark-Light mode support
 - Mobile Compatibility
 - **User accounts**: sign up and log in with email and password; each user's data is private to their account, with an owner/admin role
+- **Password reset by email**: a "Forgot password?" link sends a single-use reset link that expires after 30 minutes; resetting a password also logs out every other session
+- **Security basics**: login and reset rate limiting, input validation on every data route, a CORS allow-list and a request size cap
 - Live Crypto Update APIs
 - Responsive Graphs and Progress Bars
 - CRUD ops 
@@ -77,6 +79,8 @@ Before the first run, copy `Server/.env.example` to `Server/.env` and fill in:
 - `DATABASE_URL`: your Postgres connection string (Supabase session pooler in production)
 - `SECRET_KEY`: a long random string that signs login tokens. The server will not start without it. Generate one with `python3 -c "import secrets; print(secrets.token_hex(32))"`
 - `ADMIN_EMAIL`: the account that signs up with this email becomes the owner/admin
+- `RESEND_API_KEY` (optional locally): API key from [Resend](https://resend.com) used to email password reset links. Without it, the reset link is printed in the server terminal instead of being emailed
+- `APP_URL` (production only): the address of the front-end, used to build the link in reset emails (for example `https://x-penseapp.com`). Locally it defaults to `http://localhost:5173`
 
 Never commit `.env`.
 
@@ -120,7 +124,7 @@ npm run dev
 `GET` | `PUT` | `POST` | `DELETE`
 
 ## Route Testing With POSTMAN
-Every route except `/register` and `/login` requires a login token. Send `POST /login` with `{"email": "...", "password": "..."}`, then add the returned token to each request as the header `Authorization: Bearer <token>`.
+Every route except `/register`, `/login`, `/forgot-password` and `/reset-password` requires a login token. Send `POST /login` with `{"email": "...", "password": "..."}`, then add the returned token to each request as the header `Authorization: Bearer <token>`.
 
 `GET` Route
 ```
@@ -211,7 +215,8 @@ http://localhost:5001/investments/97
 - **Flask 2.x**: Lightweight Python web framework with RESTful API design
 - **SQLAlchemy**: Advanced ORM with relationship management and query optimization
 - **PostgreSQL (Supabase)**: Production database, with a local SQLite fallback for development
-- **PyJWT**: Signed login tokens for user accounts, with passwords stored as salted hashes
+- **PyJWT**: Signed login tokens for user accounts, with passwords stored as salted hashes, and signed single-use links for password reset
+- **Resend**: Transactional email service that delivers password reset emails from `noreply@x-penseapp.com`
 - **Flask-Migrate**: Database version control and migration management
 - **Flask-CORS**: Cross-origin resource sharing for frontend-backend communication
 
