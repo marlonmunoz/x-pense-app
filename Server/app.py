@@ -1,5 +1,4 @@
 import jwt
-import datetime
 import hashlib
 import hmac
 import math
@@ -9,7 +8,6 @@ import threading
 import time
 from flask import Flask, request, jsonify, g
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -471,7 +469,7 @@ def get_market_caps():
             'ids': 'bitcoin,ethereum,usd-coin'
         }, timeout=10)
         return jsonify(response.json())
-    except requests.exceptions.RequestException as e:
+    except requests.exceptions.RequestException:
         return jsonify({'error': 'Error fetching market cap data'}), 500
 
 
@@ -684,7 +682,7 @@ def add_goal():
         name=text_field(data, 'name', 'Goal name', 80),
         target=target,
         saved=saved
-        )
+    )
     db.session.add(new_goal)
     db.session.commit()
     return jsonify(
@@ -694,7 +692,7 @@ def add_goal():
             'target': new_goal.target,
             'saved': new_goal.saved
         }
-        )
+    )
 
 # PUT
 @app.route('/goals/<int:goal_id>', methods=['PUT'])
@@ -715,8 +713,8 @@ def update_goal(goal_id):
             'target': goal.target,
             'saved': goal.saved
         }
-        )
-    
+    )
+
 # DELETE
 @app.route('/goals/<int:goal_id>', methods=['DELETE'])
 def delete_goal(goal_id):
