@@ -4,3 +4,5 @@ g_s_k.py
 .cursorignore
 __pycache__/
 *.pyc
+venv/
+.venv/
