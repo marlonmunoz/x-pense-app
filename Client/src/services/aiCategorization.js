@@ -258,18 +258,43 @@ export const TRANSACTION_CATEGORIES = [
   'Travel',
   'Personal Care',
   'Gifts & Donations',
+  'Insurance',
+  'Subscriptions',
+  'Pets',
+  'Clothing',
+  'Kids & Family',
   'Other'
 ];
 
+// One icon list for every screen. The last group are older names that existing transactions
+// may still use, so they keep their icon. Anything else (like a category the AI invented) gets a tag.
+const CATEGORY_ICONS = {
+  'Food & Dining': '🍕', 'Transportation': '🚗', 'Shopping': '🛍️', 'Groceries': '🛒',
+  'Entertainment': '🎬', 'Utilities': '⚡', 'Healthcare': '🏥', 'Finance': '💳',
+  'Housing': '🏠', 'Bills & Utilities': '📄', 'Education': '📚', 'Travel': '✈️',
+  'Personal Care': '💄', 'Gifts & Donations': '🎁', 'Insurance': '🛡️', 'Subscriptions': '🔁',
+  'Pets': '🐕', 'Clothing': '👔', 'Kids & Family': '👶', 'Other': '❓',
+  'Cable': '📺', 'Child Support': '👶', 'Clothes': '👔', 'Debt': '💳', 'Food': '🍕',
+  'Medical & Healthcare': '🏥', 'Mortgage': '🏘️', 'Restaurants': '🍽️', 'Savings & Investments': '💰'
+};
+const ICONS_BY_LOWERCASE_NAME = Object.fromEntries(
+  Object.entries(CATEGORY_ICONS).map(([name, icon]) => [name.toLowerCase(), icon])
+);
+
+export function getCategoryIcon(category) {
+  return ICONS_BY_LOWERCASE_NAME[String(category || '').toLowerCase()] || '🏷️';
+}
+
 // Ask the server (which asks OpenAI) first. If it can't answer, use the built-in keyword rules.
-// Always resolves with { category, source } ("openai" or "rules"); it never throws.
+// Always resolves with { category, source, isNew? } (source is "openai" or "rules"); it never throws.
+// With "openai" the category can be one the person has never used (isNew is true).
 export async function suggestCategory(description, amount) {
   try {
     const body = { description: description.trim() };
     if (amount > 0) body.amount = amount;
     const { data } = await api.post('/ai/categorize', body, { timeout: 8000 });
-    if (TRANSACTION_CATEGORIES.includes(data.category)) {
-      return { category: data.category, source: 'openai' };
+    if (typeof data.category === 'string' && data.category.trim()) {
+      return { category: data.category.trim(), source: 'openai', isNew: Boolean(data.isNew) };
     }
   } catch {
     // 503 (not available), 429 (limit reached), a timeout or no network: use the rules below.

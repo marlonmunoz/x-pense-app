@@ -1,7 +1,7 @@
 import { api } from "../config/api";
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom'
-import { aiCategorizer, suggestCategory, TRANSACTION_CATEGORIES } from '../services/aiCategorization';
+import { aiCategorizer, suggestCategory, getCategoryIcon, TRANSACTION_CATEGORIES } from '../services/aiCategorization';
 
 // X-PENSE Tab
 function AddTransactions( {amount, setAmount, category, setCategory, date, setDate, description, setDescription, darkMode } ) {
@@ -56,6 +56,22 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
             clearTimeout(timeout);
         };
     }, [description]);
+
+    // The dropdown offers the standard categories plus any this person has used (the server knows both).
+    const [categoryNames, setCategoryNames] = useState(TRANSACTION_CATEGORIES);
+    useEffect(() => {
+        let outdated = false;
+        api.get('/categories')
+            .then(({ data }) => {
+                if (!outdated && Array.isArray(data.categories)) setCategoryNames(data.categories);
+            })
+            .catch(() => {}); // keep the standard list if the server can't be reached
+        return () => { outdated = true; };
+    }, []);
+    // A category chosen through "Use This" may be brand new, so make sure the dropdown can show it.
+    const categoryOptions = category && !categoryNames.includes(category)
+        ? [...categoryNames, category]
+        : categoryNames;
 
     // Whether to show the banner is worked out from the current values on every render.
     // "Other" is not a useful suggestion, and rule-based guesses need decent confidence.
@@ -615,24 +631,9 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                             }}
                         > 
                             <option value="">🎯 Select A Category</option> 
-                            {TRANSACTION_CATEGORIES.map(cat => (
+                            {categoryOptions.map(cat => (
                                 <option key={cat} value={cat}>
-                                    {cat === 'Food & Dining' && '🍕'} 
-                                    {cat === 'Transportation' && '🚗'} 
-                                    {cat === 'Shopping' && '🛍️'} 
-                                    {cat === 'Groceries' && '🛒'} 
-                                    {cat === 'Entertainment' && '🎬'} 
-                                    {cat === 'Utilities' && '⚡'} 
-                                    {cat === 'Healthcare' && '�'} 
-                                    {cat === 'Finance' && '💳'} 
-                                    {cat === 'Housing' && '🏠'} 
-                                    {cat === 'Bills & Utilities' && '📄'} 
-                                    {cat === 'Education' && '📚'} 
-                                    {cat === 'Travel' && '✈️'} 
-                                    {cat === 'Personal Care' && '💄'} 
-                                    {cat === 'Gifts & Donations' && '�'} 
-                                    {cat === 'Other' && '❓'} 
-                                    {' ' + cat}
+                                    {getCategoryIcon(cat) + ' ' + cat}
                                 </option>
                             ))}
                         </select>
@@ -645,11 +646,13 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                                     <div className="ai-icon">🤖</div>
                                     <div className="ai-text">
                                         <div className="ai-main-text">
-                                            {aiSuggestion.source === 'openai' ? 'AI suggests' : 'Suggestion'}: <strong>{aiSuggestion.category}</strong>
+                                            {aiSuggestion.source === 'openai'
+                                                ? (aiSuggestion.isNew ? 'AI suggests a new category' : 'AI suggests')
+                                                : 'Suggestion'}: <strong>{aiSuggestion.category}</strong>
                                         </div>
                                         <div className="ai-confidence">
                                             {aiSuggestion.source === 'openai'
-                                                ? 'Suggested by OpenAI'
+                                                ? (aiSuggestion.isNew ? 'Not in your list yet. It will be added if you use it.' : 'Suggested by OpenAI')
                                                 : `Based on keywords (${aiSuggestion.confidence}% sure)`}
                                         </div>
                                     </div>

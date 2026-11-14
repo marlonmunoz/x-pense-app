@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../config/api'
+import { getCategoryIcon } from '../services/aiCategorization'
 import '/src/App.css'
 import { parseISO, format } from 'date-fns';
 
@@ -167,28 +168,6 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
         return [...new Set(transactions.map(t => t.category))];
     };
 
-    const getCategoryIcon = (category) => {
-        const icons = {
-            'Cable': '📺',
-            'Child Support': '👶',
-            'Clothes': '👔',
-            'Debt': '💳',
-            'Entertainment': '🎬',
-            'Food': '🍕',
-            'Housing': '🏠',
-            'Insurance': '🛡️',
-            'Medical & Healthcare': '🏥',
-            'Mortgage': '🏘️',
-            'Personal Care': '💄',
-            'Pets': '🐕',
-            'Restaurants': '🍽️',
-            'Savings & Investments': '💰',
-            'Shopping': '🛍️',
-            'Transportation': '🚗',
-            'Utilities': '⚡'
-        };
-        return icons[category] || '📄';
-    };
     
     
     return (
