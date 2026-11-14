@@ -1,3 +1,5 @@
+import { api } from '../config/api';
+
 // AI Transaction Categorization Service
 class TransactionCategorizer {
   constructor() {
@@ -258,3 +260,19 @@ export const TRANSACTION_CATEGORIES = [
   'Gifts & Donations',
   'Other'
 ];
+
+// Ask the server (which asks OpenAI) first. If it can't answer, use the built-in keyword rules.
+// Always resolves with { category, source } ("openai" or "rules"); it never throws.
+export async function suggestCategory(description, amount) {
+  try {
+    const body = { description: description.trim() };
+    if (amount > 0) body.amount = amount;
+    const { data } = await api.post('/ai/categorize', body, { timeout: 8000 });
+    if (TRANSACTION_CATEGORIES.includes(data.category)) {
+      return { category: data.category, source: 'openai' };
+    }
+  } catch {
+    // 503 (not available), 429 (limit reached), a timeout or no network: use the rules below.
+  }
+  return { ...aiCategorizer.categorizeTransaction(description, amount), source: 'rules' };
+}

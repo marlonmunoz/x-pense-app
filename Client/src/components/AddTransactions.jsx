@@ -1,7 +1,7 @@
 import { api } from "../config/api";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom'
-import { aiCategorizer, TRANSACTION_CATEGORIES } from '../services/aiCategorization';
+import { aiCategorizer, suggestCategory, TRANSACTION_CATEGORIES } from '../services/aiCategorization';
 
 // X-PENSE Tab
 function AddTransactions( {amount, setAmount, category, setCategory, date, setDate, description, setDescription, darkMode } ) {
@@ -14,43 +14,68 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
     
     // AI Categorization states
     const [aiSuggestion, setAiSuggestion] = useState(null);
-    const [showAiSuggestion, setShowAiSuggestion] = useState(false);
+    const [suggestionDismissed, setSuggestionDismissed] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-    // AI Categorization when description changes
-    useEffect(() => {
-        if (description.trim().length > 2) {
-            setIsAnalyzing(true);
-            
-            // Debounce the AI analysis
-            const timeout = setTimeout(() => {
-                const suggestion = aiCategorizer.categorizeTransaction(description, amount);
-                setAiSuggestion(suggestion);
-                setShowAiSuggestion(suggestion.confidence > 60 && suggestion.category !== category);
-                setIsAnalyzing(false);
-            }, 500);
+    // The newest amount, readable inside the effect below without making the effect re-run
+    // (and ask OpenAI again) on every keystroke in the amount box.
+    const amountRef = useRef(amount);
+    amountRef.current = amount;
+    // Answers we already got from OpenAI, so retyping the same description costs nothing.
+    const suggestionCache = useRef(new Map());
 
-            return () => clearTimeout(timeout);
-        } else {
-            setShowAiSuggestion(false);
+    // Ask for a suggestion when the description changes (and only then).
+    useEffect(() => {
+        const text = description.trim();
+        if (text.length <= 2) {
             setAiSuggestion(null);
             setIsAnalyzing(false);
+            return undefined;
         }
-    }, [description, amount, category]);
 
-    // Accept AI suggestion
+        setIsAnalyzing(true);
+        let outdated = false;
+
+        // Wait until the user pauses typing, so we ask once per pause instead of once per key.
+        const timeout = setTimeout(async () => {
+            const key = text.toLowerCase();
+            let suggestion = suggestionCache.current.get(key);
+            if (!suggestion) {
+                suggestion = await suggestCategory(text, amountRef.current);
+                if (suggestion.source === 'openai') suggestionCache.current.set(key, suggestion);
+            }
+            // The description changed while we were waiting: this answer is for old text.
+            if (outdated) return;
+            setAiSuggestion(suggestion);
+            setSuggestionDismissed(false);
+            setIsAnalyzing(false);
+        }, 800);
+
+        return () => {
+            outdated = true;
+            clearTimeout(timeout);
+        };
+    }, [description]);
+
+    // Whether to show the banner is worked out from the current values on every render.
+    // "Other" is not a useful suggestion, and rule-based guesses need decent confidence.
+    const showAiSuggestion =
+        aiSuggestion !== null &&
+        !suggestionDismissed &&
+        aiSuggestion.category !== category &&
+        aiSuggestion.category !== 'Other' &&
+        (aiSuggestion.source === 'openai' || aiSuggestion.confidence > 60);
+
+    // Accept AI suggestion (the banner hides itself because the category now matches)
     const acceptAiSuggestion = () => {
         if (aiSuggestion) {
             setCategory(aiSuggestion.category);
-            setShowAiSuggestion(false);
-            // Learn from user acceptance
-            aiCategorizer.learnFromCorrection(description, amount, aiSuggestion.category);
         }
     };
 
     // Dismiss AI suggestion
     const dismissAiSuggestion = () => {
-        setShowAiSuggestion(false);
+        setSuggestionDismissed(true);
     };
 
     const handleAmountChange = (e) => {
@@ -116,11 +141,12 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
             const response = await api.post('/transactions', newTransaction);
             console.log('Transaction added:', response.data);
             
-            // Learn from user's category choice if AI suggested something different.
+            // Teach the built-in keyword rules when the user overrides one of THEIR guesses.
+            // (OpenAI's suggestions are not learned from: the rules are only the backup.)
             // The transaction is already saved at this point, so a problem here must never
             // be reported as a failed save (that would lead to duplicate entries on retry).
             try {
-                if (aiSuggestion && aiSuggestion.category !== category && aiSuggestion.confidence > 50) {
+                if (aiSuggestion && aiSuggestion.source === 'rules' && aiSuggestion.category !== category && aiSuggestion.confidence > 50) {
                     aiCategorizer.learnFromCorrection(description, aiSuggestion.category, category);
                     console.log(`AI learned: "${description}" should be categorized as "${category}" not "${aiSuggestion.category}"`);
                 }
@@ -137,7 +163,6 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
             setDescription('');
             setAmount(0);
             setAiSuggestion(null);
-            setShowAiSuggestion(false);
             
             // Navigate after showing success
             setTimeout(() => {
@@ -579,10 +604,9 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                                 const newCategory = e.target.value;
                                 setCategory(newCategory);
                                 
-                                // If user manually selects a category after AI suggestion, learn from it
+                                // The user chose a different category by hand: stop showing the suggestion.
                                 if (aiSuggestion && newCategory && newCategory !== aiSuggestion.category) {
-                                    aiCategorizer.learnFromCorrection(description, amount, newCategory);
-                                    setShowAiSuggestion(false); // Hide suggestion after manual selection
+                                    setSuggestionDismissed(true);
                                 }
                                 
                                 if (errors.category) {
@@ -621,10 +645,12 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                                     <div className="ai-icon">🤖</div>
                                     <div className="ai-text">
                                         <div className="ai-main-text">
-                                            AI suggests: <strong>{aiSuggestion.category}</strong>
+                                            {aiSuggestion.source === 'openai' ? 'AI suggests' : 'Suggestion'}: <strong>{aiSuggestion.category}</strong>
                                         </div>
                                         <div className="ai-confidence">
-                                            Confidence: {aiSuggestion.confidence}%
+                                            {aiSuggestion.source === 'openai'
+                                                ? 'Suggested by OpenAI'
+                                                : `Based on keywords (${aiSuggestion.confidence}% sure)`}
                                         </div>
                                     </div>
                                     <div className="ai-actions">
