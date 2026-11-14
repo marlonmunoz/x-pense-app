@@ -555,8 +555,8 @@ def get_balance():
     balance = Balance.query.filter_by(user_id=g.user.id).order_by(Balance.id).first()
     if balance:
         return jsonify(balance.to_dict())
-    else:
-        return jsonify({'message': 'No balance found'}), 404
+    # A new account has no balance yet. That is not an error, so answer with an empty list.
+    return jsonify([])
     
 # POST
 @app.route('/balance', methods=['POST'])
