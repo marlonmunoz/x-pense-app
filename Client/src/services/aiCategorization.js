@@ -159,6 +159,8 @@ class TransactionCategorizer {
   // Learn from user corrections
   learnFromCorrection(description, originalCategory, correctedCategory) {
     const merchant = this.extractMerchantName(description);
+    // An empty name would match every future description, so there is nothing to learn from it.
+    if (!merchant) return;
     
     // Store the correction
     const correction = {
@@ -170,6 +172,11 @@ class TransactionCategorizer {
 
     this.userCorrections.push(correction);
     this.saveUserCorrections();
+
+    // Some categories (Housing, Travel, Other...) start without a keyword list, so create one.
+    if (!this.categoryPatterns[correctedCategory]) {
+      this.categoryPatterns[correctedCategory] = [];
+    }
 
     // Also add to pattern if it's a new merchant
     if (!this.categoryPatterns[correctedCategory].some(pattern => 

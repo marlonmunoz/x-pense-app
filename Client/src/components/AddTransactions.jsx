@@ -116,10 +116,16 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
             const response = await api.post('/transactions', newTransaction);
             console.log('Transaction added:', response.data);
             
-            // Learn from user's category choice if AI suggested something different
-            if (aiSuggestion && aiSuggestion.category !== category && aiSuggestion.confidence > 50) {
-                aiCategorizer.learnFromCorrection(description, aiSuggestion.category, category);
-                console.log(`AI learned: "${description}" should be categorized as "${category}" not "${aiSuggestion.category}"`);
+            // Learn from user's category choice if AI suggested something different.
+            // The transaction is already saved at this point, so a problem here must never
+            // be reported as a failed save (that would lead to duplicate entries on retry).
+            try {
+                if (aiSuggestion && aiSuggestion.category !== category && aiSuggestion.confidence > 50) {
+                    aiCategorizer.learnFromCorrection(description, aiSuggestion.category, category);
+                    console.log(`AI learned: "${description}" should be categorized as "${category}" not "${aiSuggestion.category}"`);
+                }
+            } catch (learnError) {
+                console.warn('Could not record the category correction:', learnError);
             }
             
             // Show success message
