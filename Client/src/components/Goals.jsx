@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CircularProgressbar, buildStyles} from 'react-circular-progressbar'
 import { buildApiUrl, authFetch } from '../config/api';
+import { Check, CheckCircle2, CirclePlus, Pencil, PiggyBank, Plus, RotateCcw, Target, Trash2, TrendingUp, TriangleAlert, Undo2, X, XCircle } from 'lucide-react';
 
 
 const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, goals, setGoals, inputAmounts, setInputAmounts, validated, setValidated, editingGoalId, setEditingGoalId, editedGoalName, setEditedGoalName, formatCurrency, darkMode } ) => {
@@ -52,12 +53,12 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                 setNewGoalName('');
                 setNewGoalAmount('');
                 setValidated(false);
-                setSuccessMessage('🎯 Goal added successfully!');
+                setSuccessMessage('Goal added successfully!');
                 setTimeout(() => setSuccessMessage(''), 3000);
             })
             .catch(error => {
                 console.error('Error adding goal:', error);
-                setSuccessMessage('❌ Failed to add goal. Please try again.');
+                setSuccessMessage('Failed to add goal. Please try again.');
                 setTimeout(() => setSuccessMessage(''), 3000);
             })
             .finally(() => setIsLoading(false));
@@ -67,7 +68,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
     const handleAddAmount = (goalId) => {
         const amountToAdd = Number(inputAmounts[goalId] || 0);
         if (amountToAdd <= 0) {
-            setSuccessMessage('⚠️ Please enter a valid amount greater than 0');
+            setSuccessMessage('Please enter a valid amount greater than 0');
             setTimeout(() => setSuccessMessage(''), 3000);
             return;
         }
@@ -86,7 +87,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                 if (!wasCompleted && isNowCompleted) {
                     setCelebrateGoal(goalId);
                     setTimeout(() => setCelebrateGoal(null), 3000);
-                    setSuccessMessage('🎉 Congratulations! Goal completed!');
+                    setSuccessMessage('Congratulations! Goal completed!');
                     setTimeout(() => setSuccessMessage(''), 5000);
                 }
                 
@@ -112,12 +113,12 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
             body: JSON.stringify(goalToUpdate)
         })
         .then(() => {
-            setSuccessMessage('💰 Amount added successfully!');
+            setSuccessMessage('Amount added successfully!');
             setTimeout(() => setSuccessMessage(''), 3000);
         })
         .catch(error => {
             console.error('Error updating goal:', error);
-            setSuccessMessage('❌ Failed to update goal. Please try again.');
+            setSuccessMessage('Failed to update goal. Please try again.');
             setTimeout(() => setSuccessMessage(''), 3000);
         })
         .finally(() => setIsLoading(false));
@@ -144,12 +145,12 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
             body: JSON.stringify(goalToUpdate)
         })
         .then(() => {
-            setSuccessMessage('🔄 Goal progress reset successfully!');
+            setSuccessMessage('Goal progress reset successfully!');
             setTimeout(() => setSuccessMessage(''), 3000);
         })
         .catch(error => {
             console.error('Error resetting goal amount:', error);
-            setSuccessMessage('❌ Failed to reset goal. Please try again.');
+            setSuccessMessage('Failed to reset goal. Please try again.');
             setTimeout(() => setSuccessMessage(''), 3000);
         })
         .finally(() => setIsLoading(false));
@@ -165,12 +166,12 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
             method: 'DELETE'
         })
         .then(() => {
-            setSuccessMessage('🗑️ Goal deleted successfully!');
+            setSuccessMessage('Goal deleted successfully!');
             setTimeout(() => setSuccessMessage(''), 3000);
         })
         .catch(error => {
             console.error('Error deleting goal:', error);
-            setSuccessMessage('❌ Failed to delete goal. Please try again.');
+            setSuccessMessage('Failed to delete goal. Please try again.');
             setTimeout(() => setSuccessMessage(''), 3000);
         })
         .finally(() => {
@@ -192,7 +193,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
 
     const handleSave = (goalId) => {
         if (!editedGoalName.trim()) {
-            setSuccessMessage('⚠️ Goal name cannot be empty');
+            setSuccessMessage('Goal name cannot be empty');
             setTimeout(() => setSuccessMessage(''), 3000);
             return;
         }
@@ -220,12 +221,12 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
             console.log('Updated goal:', data); // Debug log
             setEditingGoalId(null);
             setEditedGoalName('');
-            setSuccessMessage('✅ Goal updated successfully!');
+            setSuccessMessage('Goal updated successfully!');
             setTimeout(() => setSuccessMessage(''), 3000);
         })
         .catch(error => {
             console.error('Error updating goal:', error);
-            setSuccessMessage('❌ Failed to update goal. Please try again.');
+            setSuccessMessage('Failed to update goal. Please try again.');
             setTimeout(() => setSuccessMessage(''), 3000);
         })
         .finally(() => setIsLoading(false));
@@ -246,11 +247,11 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
 
     const getProgressMessage = (goal) => {
         const percentage = (goal.saved / goal.target) * 100;
-        if (percentage >= 100) return '🎉 Goal Completed!';
-        if (percentage >= 75) return '🔥 Almost there!';
-        if (percentage >= 50) return '💪 Halfway there!';
-        if (percentage >= 25) return '🚀 Great start!';
-        return '🎯 Let\'s begin!';
+        if (percentage >= 100) return 'Goal completed';
+        if (percentage >= 75) return 'Almost there';
+        if (percentage >= 50) return 'Halfway there';
+        if (percentage >= 25) return 'Great start';
+        return 'Let\'s begin';
     };
 
     return (
@@ -696,18 +697,23 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
             `}</style>
 
             <div className="goals-header">
-                <h5>🎯 Financial Goals</h5>
+                <h5><Target size={20} className="icon-gap" />Financial Goals</h5>
                 <p className="goals-subtitle">Turn your dreams into achievable targets</p>
             </div>
 
             {successMessage && (
                 <div className="success-message">
+                    {/^(failed|error)/i.test(successMessage)
+                        ? <XCircle size={16} className="icon-gap-sm" />
+                        : /^(please|goal name cannot)/i.test(successMessage)
+                            ? <TriangleAlert size={16} className="icon-gap-sm" />
+                            : <CheckCircle2 size={16} className="icon-gap-sm" />}
                     {successMessage}
                 </div>
             )}
 
             <div className="form-container">
-                <div className="form-subtitle">✨ Create a new financial goal to track your progress</div>
+                <div className="form-subtitle">Create a new financial goal to track your progress</div>
                 <form noValidate onSubmit={handleSubmit} className={`needs-validation ${validated ? 'was-validated' : ''}`}>
                     <div className="form-row">
                         <div className="form-group">
@@ -717,7 +723,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                                 value={newGoalName}
                                 onChange={(e) => setNewGoalName(e.target.value)}
                                 className={`form-input ${validated && !newGoalName ? 'is-invalid' : ''}`}
-                                placeholder="🎯 Goal Name (e.g., New Car, Vacation)"
+                                placeholder="Goal Name (e.g., New Car, Vacation)"
                                 required
                             />
                             <div className="invalid-feedback">
@@ -732,7 +738,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                                 value={newGoalAmount}
                                 onChange={(e) => setNewGoalAmount(e.target.value)}
                                 className={`form-input ${validated && !newGoalAmount ? 'is-invalid' : ''}`}
-                                placeholder="💰 Target Amount ($)"
+                                placeholder="Target Amount ($)"
                                 min="0"
                                 step="0.01"
                                 required
@@ -745,13 +751,13 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                     
                     <button type="submit" className="submit-button" disabled={isLoading}>
                         {isLoading ? <span className="loading-spinner"></span> : ''}
-                        {isLoading ? 'Adding Goal...' : '🚀 Create Goal'}
+                        {isLoading ? 'Adding Goal...' : <><Plus size={16} className="icon-gap-sm" />Create Goal</>}
                     </button>
                 </form>
             </div>
             
             <div className="goals-list-header">
-                💎 YOUR FINANCIAL JOURNEY
+                <TrendingUp size={16} className="icon-gap-sm" />YOUR FINANCIAL JOURNEY
             </div>
             
             {isLoading && goals.length === 0 ? (
@@ -761,7 +767,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                 </div>
             ) : goals.length === 0 ? (
                 <div className="no-goals">
-                    🎯 No Goals Have Been Added Yet!
+                    <Target size={22} className="icon-gap" />No Goals Have Been Added Yet!
                     <br />
                     <small>Start your financial journey by creating your first goal above.</small>
                 </div>
@@ -788,13 +794,13 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                                             disabled={isLoading}
                                         >
                                             {isLoading ? <span className="loading-spinner"></span> : ''}
-                                            ✅ Save
+                                            <Check size={14} className="icon-gap-sm" />Save
                                         </button>
                                         <button 
                                             onClick={handleCancel} 
                                             className="btn-modern btn-cancel"
                                         >
-                                            ❌ Cancel
+                                            <X size={14} className="icon-gap-sm" />Cancel
                                         </button>
                                     </div>
                                 </>
@@ -830,13 +836,13 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
 
                                     <div className="goal-stats">
                                         <div className="stat-item">
-                                            <div className="stat-label">💰 Saved</div>
+                                            <div className="stat-label"><PiggyBank size={16} className="icon-gap-sm" />Saved</div>
                                             <div className="stat-value" style={{ color: '#38a169' }}>
                                                 {formatCurrency(goal.saved)}
                                             </div>
                                         </div>
                                         <div className="stat-item">
-                                            <div className="stat-label">🎯 Remaining</div>
+                                            <div className="stat-label"><Target size={16} className="icon-gap-sm" />Remaining</div>
                                             <div className="stat-value" style={{ color: '#f59e0b' }}>
                                                 {formatCurrency(Math.max(0, goal.target - goal.saved))}
                                             </div>
@@ -850,7 +856,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                                         value={inputAmounts[goal.id] || ''}
                                         onChange={(e) => setInputAmounts({ ...inputAmounts, [goal.id]: e.target.value })}
                                         className="amount-input"
-                                        placeholder="💵 Enter amount to add..."
+                                        placeholder="Enter amount to add..."
                                         min="0"
                                         step="0.01"
                                     />
@@ -858,7 +864,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                                     {deleteConfirm === goal.id ? (
                                         <div className="delete-confirm">
                                             <div className="confirm-text">
-                                                ⚠️ Are you sure you want to delete "{goal.name}"?
+                                                <TriangleAlert size={16} className="icon-gap-sm" />Are you sure you want to delete "{goal.name}"?
                                             </div>
                                             <div className="confirm-actions">
                                                 <button 
@@ -867,13 +873,13 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                                                     disabled={isLoading}
                                                 >
                                                     {isLoading ? <span className="loading-spinner"></span> : ''}
-                                                    🗑️ Yes, Delete
+                                                    <Trash2 size={14} className="icon-gap-sm" />Yes, Delete
                                                 </button>
                                                 <button 
                                                     onClick={() => setDeleteConfirm(null)} 
                                                     className="btn-modern btn-cancel"
                                                 >
-                                                    ↩️ Cancel
+                                                    <Undo2 size={14} className="icon-gap-sm" />Cancel
                                                 </button>
                                             </div>
                                         </div>
@@ -885,7 +891,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                                                 disabled={isLoading}
                                             >
                                                 {isLoading ? <span className="loading-spinner"></span> : ''}
-                                                💰 Add Amount
+                                                <CirclePlus size={14} className="icon-gap-sm" />Add Amount
                                             </button>
                                             <button 
                                                 onClick={() => handleResetAmount(goal.id)} 
@@ -893,19 +899,19 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                                                 disabled={isLoading}
                                             >
                                                 {isLoading ? <span className="loading-spinner"></span> : ''}
-                                                🔄 Reset
+                                                <RotateCcw size={14} className="icon-gap-sm" />Reset
                                             </button>
                                             <button 
                                                 onClick={() => handleDeleteClick(goal.id)} 
                                                 className="btn-modern btn-delete"
                                             >
-                                                🗑️ Delete
+                                                <Trash2 size={14} className="icon-gap-sm" />Delete
                                             </button>
                                             <button 
                                                 onClick={() => handleEdit(goal.id, goal.name)} 
                                                 className="btn-modern btn-edit"
                                             >
-                                                ✏️ Edit
+                                                <Pencil size={14} className="icon-gap-sm" />Edit
                                             </button>
                                         </div>
                                     )}
