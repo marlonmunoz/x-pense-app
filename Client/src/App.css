@@ -14,16 +14,6 @@
   }
 }
 
-/* Hide scrollbar for mobile navigation */
-.mobile-nav-container::-webkit-scrollbar {
-  display: none;
-}
-
-.mobile-nav-container {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
 /* Ensure mobile navigation stays in place */
 @media (max-width: 767.98px) {
   body {
@@ -56,16 +46,9 @@
     position: relative;
   }
   
-  /* Force navigation container positioning */
-  .mobile-nav-container {
-    height: 100% !important;
-    position: relative !important;
-  }
-  
   /* Prevent scroll restoration and focus scrolling on mobile */
   * {
     scroll-margin-top: 0 !important;
-    scroll-margin-bottom: 70px !important;
   }
   
   /* Disable focus outline scrolling */
@@ -419,24 +402,6 @@ body.light-mode #root {
     position: relative !important;
     transform: translateX(0) !important;
     width: 250px !important;
-  }
-}
-
-/* Mobile Bottom Navigation */
-@media (max-width: 767.98px) {
-  /* Add bottom padding to main content to prevent overlap with bottom nav */
-  .mobile-content {
-    padding-bottom: 70px !important;
-  }
-  
-  /* Hide hamburger menu when bottom nav is available */
-  .hamburger-container {
-    display: none !important;
-  }
-  
-  /* Hide the sidebar completely on mobile when using bottom nav */
-  .mobile-sidebar {
-    display: none !important;
   }
 }
 

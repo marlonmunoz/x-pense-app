@@ -1,23 +1,31 @@
-import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { BarChart3, Circle, CreditCard, DollarSign, Lightbulb, Menu, Moon, Plus, Receipt, Sun, Target, TrendingUp, User, X } from 'lucide-react';
 
 // Left-hand navigation (plus the mobile hamburger button and overlay), the welcome box and Log out.
 function Sidebar({ darkMode, toggleDarkMode, sidebarOpen, setSidebarOpen, user, onLogout }) {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // On phones the menu covers the page, so close it as soon as a link takes you somewhere
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
 
   return (
     <>
-    {/* Mobile Hamburger Menu */}
-    <div className="d-md-none hamburger-container">
-      <button 
-        className={`btn hamburger-btn ${darkMode ? 'dark-mode' : ''}`}
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        aria-label="Toggle navigation menu"
-      >
-        <Menu size={22} />
-      </button>
-    </div>
+    {/* Mobile Hamburger Menu (hidden while the menu is open, which has its own close button) */}
+    {!sidebarOpen && (
+      <div className="d-md-none hamburger-container">
+        <button 
+          className={`btn hamburger-btn ${darkMode ? 'dark-mode' : ''}`}
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Open navigation menu"
+        >
+          <Menu size={22} />
+        </button>
+      </div>
+    )}
 
     {/* Overlay for mobile when sidebar is open */}
     {sidebarOpen && (

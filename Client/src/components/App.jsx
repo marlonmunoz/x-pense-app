@@ -14,7 +14,6 @@ import Investments from '../components/Investments';
 import StartPage from './StartPage';
 import Footer from '../components/Footer';
 import AiDemo from '../components/AiDemo';
-import MobileBottomNav from './MobileBottomNav';
 import Sidebar from './Sidebar';
 import '/src/App.css'
 import { Moon, Sun } from 'lucide-react';
@@ -404,7 +403,7 @@ function AppContent(props) {
           />
           
           {/* Main Content Area */}
-          <div className="flex-grow-1 p-4" style={{paddingTop: window.innerWidth < 768 ? '60px' : '1rem'}}>
+          <div className="flex-grow-1 p-4" style={{paddingTop: window.innerWidth < 768 ? '76px' : '1rem'}}>
             
             {/* Mobile Dark Mode Toggle - Only visible on mobile */}
             <div className="d-md-none mb-3">
@@ -610,9 +609,6 @@ function AppContent(props) {
           </div>
         </div>
       )}
-      
-      {/* Mobile Bottom Navigation - Only visible on mobile and after Get Started is clicked */}
-      {!isPublicPage && <MobileBottomNav darkMode={darkMode} />}
     </div>
   )
 }
