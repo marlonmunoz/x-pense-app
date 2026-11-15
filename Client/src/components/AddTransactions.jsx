@@ -633,7 +633,7 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                             <option value="">🎯 Select A Category</option> 
                             {categoryOptions.map(cat => (
                                 <option key={cat} value={cat}>
-                                    {getCategoryIcon(cat) + ' ' + cat}
+                                    {cat}
                                 </option>
                             ))}
                         </select>

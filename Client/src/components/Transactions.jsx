@@ -3,6 +3,7 @@ import { api } from '../config/api'
 import { getCategoryIcon } from '../services/aiCategorization'
 import '/src/App.css'
 import { parseISO, format } from 'date-fns';
+import { ArrowUpDown, BarChart3, Bell, Briefcase, Calendar, Check, CheckCircle2, DollarSign, FileText, Filter, ListOrdered, Pencil, Search, Settings, Tag, Trash2, TriangleAlert, Undo2, Wallet, X, XCircle } from 'lucide-react';
 
 
 const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, setTotalAmount, editIndex, setEditIndex, editTransaction, setEditTransaction, formatCurrency, reminderDate, setSuccessMessage, successMessage, parseDate }) => {
@@ -60,7 +61,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
             setTransactions(newTransactions);
             setAnimateRow(index);
             setTimeout(() => setAnimateRow(null), 500);
-            setSuccessMessage('🗑️ Transaction deleted successfully!');
+            setSuccessMessage('Transaction deleted successfully!');
             setTimeout(() => setSuccessMessage(''), 3000);
         })
         .catch(error => console.error('Error deleting transaction:', error))
@@ -99,11 +100,11 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
             setTransactions(newTransactions);
             setEditIndex(null);
             setEditTransaction({ category: '', date: '', description: '', amount: '' });
-            setSuccessMessage('✅ Transaction updated successfully!');
+            setSuccessMessage('Transaction updated successfully!');
             setTimeout(() => setSuccessMessage(''), 3000);
         } catch (error) {
             console.error('Error updating transaction:', error);
-            setSuccessMessage('❌ Failed to update transaction. Please try again.');
+            setSuccessMessage('Failed to update transaction. Please try again.');
             setTimeout(() => setSuccessMessage(''), 3000);
         } finally {
             setIsLoading(false);
@@ -116,18 +117,18 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
 
         if (reminderTime > 0) {
             setTimeout(() => {
-                alert(`🔔 Reminder: You need to make a payment of ${amount} for ${transaction.description} on ${transaction.date}`);
+                alert(`Reminder: You need to make a payment of ${amount} for ${transaction.description} on ${transaction.date}`);
             },  reminderTime);
-            setSuccessMessage(`⏰ Payment Reminder set for ${transaction.description} on ${reminderDate}`);
+            setSuccessMessage(`Payment Reminder set for ${transaction.description} on ${reminderDate}`);
             setTimeout(() => setSuccessMessage(''), 5000);
         } else {
-            alert('⚠️ Reminder date must be in the future.')
+            alert('Reminder date must be in the future.')
         }
     }
 
     const handleSetReminderClick = (transaction) => {
-        const reminderDate = prompt('📅 Enter the reminder date (MM-DD-YYYY):');
-        const amount = prompt('💰 Enter the amount that needs to be paid:');
+        const reminderDate = prompt('Enter the reminder date (MM-DD-YYYY):');
+        const amount = prompt('Enter the amount that needs to be paid:');
         if (reminderDate && amount) {
             handleReminder(transaction, reminderDate, amount)
         }
@@ -646,19 +647,22 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
             `}</style>
 
             <div className="transactions-header">
-                <h5>💼 Transaction History</h5>
+                <h5><Briefcase size={20} className="icon-gap" />Transaction History</h5>
                 <p className="transactions-subtitle">Track your financial journey with style</p>
             </div>
 
             {successMessage && (
                 <div className="success-alert">
+                    {/^failed|error/i.test(successMessage)
+                        ? <XCircle size={16} className="icon-gap-sm" />
+                        : <CheckCircle2 size={16} className="icon-gap-sm" />}
                     {successMessage}
                 </div>
             )}
 
             <div className="controls-section">
                 <div className="control-group">
-                    <label className="control-label">🔍 Search Transactions</label>
+                    <label className="control-label"><Search size={16} className="icon-gap-sm" />Search Transactions</label>
                     <input
                         type="text"
                         className="control-input"
@@ -668,7 +672,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                     />
                 </div>
                 <div className="control-group">
-                    <label className="control-label">📂 Filter by Category</label>
+                    <label className="control-label"><Filter size={16} className="icon-gap-sm" />Filter by Category</label>
                     <select
                         className="control-input"
                         value={filterCategory}
@@ -677,26 +681,26 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                         <option value="">All Categories</option>
                         {getUniqueCategories().map(category => (
                             <option key={category} value={category}>
-                                {getCategoryIcon(category)} {category}
+                                {category}
                             </option>
                         ))}
                     </select>
                 </div>
                 <div className="control-group">
-                    <label className="control-label">🔄 Sort By</label>
+                    <label className="control-label"><ArrowUpDown size={16} className="icon-gap-sm" />Sort By</label>
                     <select
                         className="control-input"
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
                     >
-                        <option value="date">📅 Date</option>
-                        <option value="amount">💰 Amount</option>
-                        <option value="category">📂 Category</option>
-                        <option value="description">📝 Description</option>
+                        <option value="date">Date</option>
+                        <option value="amount">Amount</option>
+                        <option value="category">Category</option>
+                        <option value="description">Description</option>
                     </select>
                 </div>
                 <div className="control-group">
-                    <label className="control-label">⬆️⬇️ Order</label>
+                    <label className="control-label"><ListOrdered size={16} className="icon-gap-sm" />Order</label>
                     <select
                         className="control-input"
                         value={sortOrder}
@@ -716,7 +720,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                     </div>
                 ) : transactions.length === 0 ? (
                     <div className="no-transactions">
-                        📊 No Transactions Have Been Added Yet!
+                        <BarChart3 size={22} className="icon-gap" />No Transactions Have Been Added Yet!
                         <br />
                         <small>Start tracking your expenses by adding your first transaction.</small>
                     </div>
@@ -725,11 +729,11 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                         <table className="enhanced-table">
                             <thead>
                                 <tr>
-                                    <th>📝 Description</th>
-                                    <th>📂 Category</th>
-                                    <th>📅 Date</th>
-                                    <th>💰 Amount</th>
-                                    <th>⚙️ Actions</th>
+                                    <th><FileText size={14} className="icon-gap-sm" />Description</th>
+                                    <th><Tag size={14} className="icon-gap-sm" />Category</th>
+                                    <th><Calendar size={14} className="icon-gap-sm" />Date</th>
+                                    <th><DollarSign size={14} className="icon-gap-sm" />Amount</th>
+                                    <th><Settings size={14} className="icon-gap-sm" />Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -787,13 +791,13 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                                                 className="btn-modern btn-save"
                                                                 disabled={isLoading}
                                                             >
-                                                                ✅ Save
+                                                                <Check size={14} className="icon-gap-sm" />Save
                                                             </button>
                                                             <button 
                                                                 onClick={() => setEditIndex(null)} 
                                                                 className="btn-modern btn-cancel"
                                                             >
-                                                                ❌ Cancel
+                                                                <X size={14} className="icon-gap-sm" />Cancel
                                                             </button>
                                                         </div>
                                                     </td>
@@ -818,20 +822,20 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                                     <td data-label="Actions">
                                                         {deleteConfirm === originalIndex ? (
                                                             <div className="delete-confirm">
-                                                                <div className="confirm-text">⚠️ Confirm deletion?</div>
+                                                                <div className="confirm-text"><TriangleAlert size={16} className="icon-gap-sm" />Confirm deletion?</div>
                                                                 <div className="action-buttons">
                                                                     <button 
                                                                         onClick={() => handleDelete(originalIndex)} 
                                                                         className="btn-modern btn-delete"
                                                                         disabled={isLoading}
                                                                     >
-                                                                        🗑️ Yes, Delete
+                                                                        <Trash2 size={14} className="icon-gap-sm" />Yes, Delete
                                                                     </button>
                                                                     <button 
                                                                         onClick={() => setDeleteConfirm(null)} 
                                                                         className="btn-modern btn-cancel"
                                                                     >
-                                                                        ↩️ Cancel
+                                                                        <Undo2 size={14} className="icon-gap-sm" />Cancel
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -847,19 +851,19 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                                                     }} 
                                                                     className="btn-modern btn-edit"
                                                                 >
-                                                                    ✏️ Edit
+                                                                    <Pencil size={14} className="icon-gap-sm" />Edit
                                                                 </button>
                                                                 <button 
                                                                     onClick={() => handleDeleteClick(originalIndex)} 
                                                                     className="btn-modern btn-delete"
                                                                 >
-                                                                    🗑️ Delete
+                                                                    <Trash2 size={14} className="icon-gap-sm" />Delete
                                                                 </button>
                                                                 <button 
                                                                     onClick={() => handleSetReminderClick(transaction)} 
                                                                     className="btn-modern btn-reminder"
                                                                 >
-                                                                    ⏰ Remind
+                                                                    <Bell size={14} className="icon-gap-sm" />Remind
                                                                 </button>
                                                             </div>
                                                         )}
@@ -870,7 +874,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                     )
                                 })}
                                 <tr className="total-row">
-                                    <td colSpan="4"><strong>💰 Total Expenses:</strong></td>
+                                    <td colSpan="4"><strong><Wallet size={16} className="icon-gap-sm" />Total Expenses:</strong></td>
                                     <td className="amount-cell"><strong>{formatCurrency(totalAmount)}</strong></td>
                                 </tr>
                             </tbody>
@@ -888,7 +892,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                     </div>
                 ) : transactions.length === 0 ? (
                     <div className="no-transactions">
-                        📊 No Transactions Have Been Added Yet!
+                        <BarChart3 size={22} className="icon-gap" />No Transactions Have Been Added Yet!
                         <br />
                         <small>Start tracking your expenses by adding your first transaction.</small>
                     </div>
@@ -939,13 +943,13 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                                     className="btn-modern btn-save"
                                                     disabled={isLoading}
                                                 >
-                                                    ✅ Save
+                                                    <Check size={14} className="icon-gap-sm" />Save
                                                 </button>
                                                 <button 
                                                     onClick={() => setEditIndex(null)} 
                                                     className="btn-modern btn-cancel"
                                                 >
-                                                    ❌ Cancel
+                                                    <X size={14} className="icon-gap-sm" />Cancel
                                                 </button>
                                             </div>
                                         </div>
@@ -961,13 +965,13 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                             </div>
                                             
                                             <div className="card-details">
-                                                <span className="card-label">📂 Category:</span>
+                                                <span className="card-label"><Tag size={14} className="icon-gap-sm" />Category:</span>
                                                 <div className="card-value card-category">
                                                     <span>{getCategoryIcon(transaction.category)}</span>
                                                     <span>{transaction.category}</span>
                                                 </div>
                                                 
-                                                <span className="card-label">📅 Date:</span>
+                                                <span className="card-label"><Calendar size={14} className="icon-gap-sm" />Date:</span>
                                                 <span className="card-value">
                                                     {formatDate(parseDate(transaction.date))}
                                                 </span>
@@ -976,20 +980,20 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                             <div className="card-actions">
                                                 {deleteConfirm === originalIndex ? (
                                                     <div className="delete-confirm-card">
-                                                        <div className="confirm-text">⚠️ Confirm deletion?</div>
+                                                        <div className="confirm-text"><TriangleAlert size={16} className="icon-gap-sm" />Confirm deletion?</div>
                                                         <div className="action-buttons">
                                                             <button 
                                                                 onClick={() => handleDelete(originalIndex)} 
                                                                 className="btn-modern btn-delete"
                                                                 disabled={isLoading}
                                                             >
-                                                                🗑️ Yes, Delete
+                                                                <Trash2 size={14} className="icon-gap-sm" />Yes, Delete
                                                             </button>
                                                             <button 
                                                                 onClick={() => setDeleteConfirm(null)} 
                                                                 className="btn-modern btn-cancel"
                                                             >
-                                                                ↩️ Cancel
+                                                                <Undo2 size={14} className="icon-gap-sm" />Cancel
                                                             </button>
                                                         </div>
                                                     </div>
@@ -1005,19 +1009,19 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                                                             }} 
                                                             className="btn-modern btn-edit"
                                                         >
-                                                            ✏️ Edit
+                                                            <Pencil size={14} className="icon-gap-sm" />Edit
                                                         </button>
                                                         <button 
                                                             onClick={() => handleDeleteClick(originalIndex)} 
                                                             className="btn-modern btn-delete"
                                                         >
-                                                            🗑️ Delete
+                                                            <Trash2 size={14} className="icon-gap-sm" />Delete
                                                         </button>
                                                         <button 
                                                             onClick={() => handleSetReminderClick(transaction)} 
                                                             className="btn-modern btn-reminder"
                                                         >
-                                                            ⏰ Remind
+                                                            <Bell size={14} className="icon-gap-sm" />Remind
                                                         </button>
                                                     </div>
                                                 )}
@@ -1029,7 +1033,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                         })}
                         
                         <div className="total-card">
-                            <div className="total-label">💰 Total Expenses:</div>
+                            <div className="total-label"><Wallet size={16} className="icon-gap-sm" />Total Expenses:</div>
                             <div className="total-amount">{formatCurrency(totalAmount)}</div>
                         </div>
                     </>

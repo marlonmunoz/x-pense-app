@@ -1,3 +1,9 @@
+import { createElement } from 'react';
+import {
+  Utensils, Car, ShoppingBag, ShoppingCart, Film, Zap, Stethoscope, CreditCard, House, FileText,
+  BookOpen, Plane, Smile, Gift, Shield, Repeat, PawPrint, Shirt, Baby, CircleQuestionMark, Tv,
+  Landmark, PiggyBank, Tag
+} from 'lucide-react';
 import { api, accountKey } from '../config/api';
 
 // AI Transaction Categorization Service
@@ -277,20 +283,22 @@ export const TRANSACTION_CATEGORIES = [
 // One icon list for every screen. The last group are older names that existing transactions
 // may still use, so they keep their icon. Anything else (like a category the AI invented) gets a tag.
 const CATEGORY_ICONS = {
-  'Food & Dining': '🍕', 'Transportation': '🚗', 'Shopping': '🛍️', 'Groceries': '🛒',
-  'Entertainment': '🎬', 'Utilities': '⚡', 'Healthcare': '🏥', 'Finance': '💳',
-  'Housing': '🏠', 'Bills & Utilities': '📄', 'Education': '📚', 'Travel': '✈️',
-  'Personal Care': '💄', 'Gifts & Donations': '🎁', 'Insurance': '🛡️', 'Subscriptions': '🔁',
-  'Pets': '🐕', 'Clothing': '👔', 'Kids & Family': '👶', 'Other': '❓',
-  'Cable': '📺', 'Child Support': '👶', 'Clothes': '👔', 'Debt': '💳', 'Food': '🍕',
-  'Medical & Healthcare': '🏥', 'Mortgage': '🏘️', 'Restaurants': '🍽️', 'Savings & Investments': '💰'
+  'Food & Dining': Utensils, 'Transportation': Car, 'Shopping': ShoppingBag, 'Groceries': ShoppingCart,
+  'Entertainment': Film, 'Utilities': Zap, 'Healthcare': Stethoscope, 'Finance': CreditCard,
+  'Housing': House, 'Bills & Utilities': FileText, 'Education': BookOpen, 'Travel': Plane,
+  'Personal Care': Smile, 'Gifts & Donations': Gift, 'Insurance': Shield, 'Subscriptions': Repeat,
+  'Pets': PawPrint, 'Clothing': Shirt, 'Kids & Family': Baby, 'Other': CircleQuestionMark,
+  'Cable': Tv, 'Child Support': Baby, 'Clothes': Shirt, 'Debt': CreditCard, 'Food': Utensils,
+  'Medical & Healthcare': Stethoscope, 'Mortgage': Landmark, 'Restaurants': Utensils, 'Savings & Investments': PiggyBank
 };
 const ICONS_BY_LOWERCASE_NAME = Object.fromEntries(
   Object.entries(CATEGORY_ICONS).map(([name, icon]) => [name.toLowerCase(), icon])
 );
 
-export function getCategoryIcon(category) {
-  return ICONS_BY_LOWERCASE_NAME[String(category || '').toLowerCase()] || '🏷️';
+// Returns a ready-to-render icon element (this file has no JSX, so it uses createElement).
+export function getCategoryIcon(category, size = 16) {
+  const Icon = ICONS_BY_LOWERCASE_NAME[String(category || '').toLowerCase()] || Tag;
+  return createElement(Icon, { size });
 }
 
 // Ask the server (which asks OpenAI) first. If it can't answer, use the built-in keyword rules.
