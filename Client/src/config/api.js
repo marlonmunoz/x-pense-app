@@ -2,10 +2,22 @@ import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001';
 const TOKEN_KEY = 'xpense_token';
+const ACCOUNT_KEY = 'xpense_account_id';
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
 export const setToken = (token) => localStorage.setItem(TOKEN_KEY, token);
-export const clearToken = () => localStorage.removeItem(TOKEN_KEY);
+export const clearToken = () => {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(ACCOUNT_KEY);
+};
+
+// Data the browser keeps for convenience (learned hints, patterns) is stored under a name
+// that includes the account id, so two people sharing one browser never see each other's.
+export const setAccountId = (id) => localStorage.setItem(ACCOUNT_KEY, String(id));
+export const accountKey = (name) => {
+  const id = localStorage.getItem(ACCOUNT_KEY);
+  return id ? `${name}:${id}` : null;
+};
 
 export const api = axios.create({ baseURL: API_BASE_URL });
 

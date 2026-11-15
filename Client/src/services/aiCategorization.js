@@ -1,4 +1,4 @@
-import { api } from '../config/api';
+import { api, accountKey } from '../config/api';
 
 // AI Transaction Categorization Service
 class TransactionCategorizer {
@@ -204,7 +204,8 @@ class TransactionCategorizer {
   // Load user corrections from localStorage
   loadUserCorrections() {
     try {
-      const stored = localStorage.getItem('ai_transaction_corrections');
+      const key = accountKey('ai_transaction_corrections');
+      const stored = key && localStorage.getItem(key);
       return stored ? JSON.parse(stored) : [];
     } catch (error) {
       console.error('Error loading user corrections:', error);
@@ -212,10 +213,17 @@ class TransactionCategorizer {
     }
   }
 
+  // Called right after login: switch to the signed-in account's saved corrections
+  reload() {
+    this.userCorrections = this.loadUserCorrections();
+  }
+
   // Save user corrections to localStorage
   saveUserCorrections() {
     try {
-      localStorage.setItem('ai_transaction_corrections', JSON.stringify(this.userCorrections));
+      const key = accountKey('ai_transaction_corrections');
+      if (!key) return;
+      localStorage.setItem(key, JSON.stringify(this.userCorrections));
     } catch (error) {
       console.error('Error saving user corrections:', error);
     }

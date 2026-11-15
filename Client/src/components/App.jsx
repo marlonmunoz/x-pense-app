@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { api, getToken, clearToken } from '../config/api'
+import { api, getToken, clearToken, setAccountId } from '../config/api'
+import { aiCategorizer } from '../services/aiCategorization'
+import { dashboardAI } from '../services/dashboardAI'
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate }  from 'react-router-dom';
 import AddTransactions from '../components/AddTransactions';
 import Balance from '../components/Balance'
@@ -117,10 +119,23 @@ function App() {
       return;
     }
     api.get('/me')
-      .then((response) => setUser(response.data))
+      .then((response) => startSession(response.data))
       .catch(() => clearToken())
       .finally(() => setAuthChecked(true));
   }, []);
+
+  // Runs for every sign-in (fresh login or an already-saved one). The account id has to be
+  // saved BEFORE the services reload, because it decides which saved data they read.
+  const startSession = (account) => {
+    setAccountId(account.id);
+    // Older versions kept this data under one shared name for everyone on the browser.
+    // Nobody can tell whose it was, so it is removed instead of handed to whoever logs in.
+    ['ai_transaction_corrections', 'dashboardAI_preferences', 'dashboardAI_patterns',
+      'smart_update_history', 'smart_update_patterns'].forEach((name) => localStorage.removeItem(name));
+    aiCategorizer.reload();
+    dashboardAI.reload();
+    setUser(account);
+  };
 
   // LOGOUT ==========>>>>>>
   // A full page load wipes every piece of in-memory data, so the next person to sign in
@@ -213,7 +228,7 @@ function App() {
         toggleDarkMode={toggleDarkMode}
         user={user}
         authChecked={authChecked}
-        onAuthenticated={setUser}
+        onAuthenticated={startSession}
         onLogout={handleLogout}
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}

@@ -1,3 +1,5 @@
+import { accountKey } from '../config/api';
+
 // Smart Update Service - AI-Powered Update Assistance
 class SmartUpdateService {
   constructor() {
@@ -417,7 +419,8 @@ class SmartUpdateService {
   // Storage functions with error handling
   loadUpdateHistory() {
     try {
-      const stored = localStorage.getItem('smart_update_history');
+      const key = accountKey('smart_update_history');
+      const stored = key && localStorage.getItem(key);
       return stored ? JSON.parse(stored) : [];
     } catch (error) {
       console.warn('Error loading update history:', error);
@@ -429,7 +432,8 @@ class SmartUpdateService {
     try {
       // Keep only last 100 records to prevent storage bloat
       const trimmed = this.updateHistory.slice(-100);
-      localStorage.setItem('smart_update_history', JSON.stringify(trimmed));
+      const key = accountKey('smart_update_history');
+      if (key) localStorage.setItem(key, JSON.stringify(trimmed));
     } catch (error) {
       console.warn('Error saving update history:', error);
     }
@@ -437,7 +441,8 @@ class SmartUpdateService {
 
   loadUpdatePatterns() {
     try {
-      const stored = localStorage.getItem('smart_update_patterns');
+      const key = accountKey('smart_update_patterns');
+      const stored = key && localStorage.getItem(key);
       return stored ? JSON.parse(stored) : {};
     } catch (error) {
       console.warn('Error loading update patterns:', error);
@@ -447,7 +452,8 @@ class SmartUpdateService {
 
   saveUpdatePatterns() {
     try {
-      localStorage.setItem('smart_update_patterns', JSON.stringify(this.updatePatterns));
+      const key = accountKey('smart_update_patterns');
+      if (key) localStorage.setItem(key, JSON.stringify(this.updatePatterns));
     } catch (error) {
       console.warn('Error saving update patterns:', error);
     }

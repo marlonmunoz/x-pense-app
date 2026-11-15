@@ -71,7 +71,7 @@ These run entirely in the browser, use fixed rules or simple formulas, and make 
 - **Smart update validation** (`smartUpdateService.js`): fixed rules that comment on your balance updates, for example warning about a very high share of cash or a low share of savings. The code also contains rules for budgets and investments, but only the balance screen uses them today. The "market timing" hint is a placeholder, not real market analysis.
 - **Keyword fallbacks**: the category matcher (`aiCategorization.js`) and the question-box keyword matcher (`dashboardAI.js`) are the backups used when OpenAI is not available. The keyword question matcher looks for words such as "spent", "month", "balance" or "goal" and replies with a prepared answer, so it cannot understand free-form language. The category matcher remembers your corrections in your browser's `localStorage`.
 
-Note: the rule-based features keep their small bits of history and preferences in `localStorage`, which belongs to the browser, not to your account. Anyone sharing a browser profile shares that data.
+Note: the rule-based features keep their small bits of history and preferences in `localStorage`, which belongs to the browser, not to the server. Each entry is saved under a name that includes your account id (for example `dashboardAI_preferences:12`), so two people sharing one browser do not see each other's data. This data never leaves the browser, and logging out does not erase it, so it is still there the next time you log in. Older versions saved it under one shared name; that data is deleted the first time anyone logs in with the new version.
 
 ## CORE-Features
 
@@ -221,7 +221,7 @@ http://localhost:5001/investments/97
 ### Data
 - **PostgreSQL**: Production relational database
 - **SQLite**: Lightweight database for local development
-- **localStorage**: Browser storage for the keyword fallback's corrections and the rule-based features' preferences
+- **localStorage**: Browser storage (kept separately per account) for the keyword fallback's corrections and the rule-based features' preferences
 - **JSON**: Data interchange format for the API
 
 ## Technologies Used

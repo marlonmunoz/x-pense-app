@@ -1,3 +1,5 @@
+import { accountKey } from '../config/api';
+
 // AI-Powered Dashboard Intelligence Service
 class DashboardAI {
   constructor() {
@@ -8,10 +10,17 @@ class DashboardAI {
     this.spendingPatterns = this.loadSpendingPatterns();
   }
 
+  // Called right after login: switch to the signed-in account's saved data
+  reload() {
+    this.userPreferences = this.loadUserPreferences();
+    this.spendingPatterns = this.loadSpendingPatterns();
+  }
+
   // Load user preferences from localStorage
   loadUserPreferences() {
     try {
-      return JSON.parse(localStorage.getItem('dashboardAI_preferences')) || {
+      const key = accountKey('dashboardAI_preferences');
+      return JSON.parse(key && localStorage.getItem(key)) || {
         riskTolerance: 'medium',
         savingsGoal: 20, // percentage
         notificationLevel: 'normal',
@@ -30,7 +39,8 @@ class DashboardAI {
   // Load spending patterns from localStorage
   loadSpendingPatterns() {
     try {
-      return JSON.parse(localStorage.getItem('dashboardAI_patterns')) || {};
+      const key = accountKey('dashboardAI_patterns');
+      return JSON.parse(key && localStorage.getItem(key)) || {};
     } catch (error) {
       return {};
     }
@@ -38,12 +48,14 @@ class DashboardAI {
 
   // Save user preferences
   saveUserPreferences() {
-    localStorage.setItem('dashboardAI_preferences', JSON.stringify(this.userPreferences));
+    const key = accountKey('dashboardAI_preferences');
+    if (key) localStorage.setItem(key, JSON.stringify(this.userPreferences));
   }
 
   // Save spending patterns
   saveSpendingPatterns() {
-    localStorage.setItem('dashboardAI_patterns', JSON.stringify(this.spendingPatterns));
+    const key = accountKey('dashboardAI_patterns');
+    if (key) localStorage.setItem(key, JSON.stringify(this.spendingPatterns));
   }
 
   // 1. SMART FINANCIAL INSIGHTS
