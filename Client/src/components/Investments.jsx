@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import bitcoinIcon from '../assets/bitcoin.png'
 import ethereumIcon from '../assets/ethereum.png'
 import usdcIcon from '../assets/usdc.png'
+import { Activity, BarChart3, Bitcoin, CheckCircle2, CirclePlus, Coins, RefreshCw, RotateCcw, Tag, TrendingDown, TrendingUp, TriangleAlert, Wallet, XCircle } from 'lucide-react';
 
 const Investments = ({ darkMode, investments, setInvestments, amounts, setAmounts, marketCaps, setMarketCaps, formatCurrency, addedInvestments, setAddedInvestments }) => {
     const navigate = useNavigate();
@@ -63,7 +64,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                 
             } catch (error) {
                 console.error("Error fetching investments", error);
-                setSuccessMessage('❌ Failed to fetch live prices. Please try again.');
+                setSuccessMessage('Failed to fetch live prices. Please try again.');
                 setTimeout(() => setSuccessMessage(''), 3000);
             } finally {
                 setIsLoading(false);
@@ -122,7 +123,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
         const amount = amounts[index];
     
         if (!amount || amount <= 0) {
-            setSuccessMessage('⚠️ Please enter a valid amount greater than 0');
+            setSuccessMessage('Please enter a valid amount greater than 0');
             setTimeout(() => setSuccessMessage(''), 3000);
             return;
         }
@@ -156,7 +157,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                     totalPrice: updatedTotalPrice
                 };
                 setAddedInvestments(updatedInvestments);
-                setSuccessMessage(`💰 Updated ${investment.name} investment successfully!`);
+                setSuccessMessage(`Updated ${investment.name} investment successfully!`);
             } else {
                 // Add the new investment using POST
                 const response = await api.post('/investments', newInvestment, {
@@ -165,7 +166,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                     },
                 });
                 setAddedInvestments([...addedInvestments, newInvestment]);
-                setSuccessMessage(`🚀 Added ${investment.name} investment successfully!`);
+                setSuccessMessage(`Added ${investment.name} investment successfully!`);
             }
 
             // Animate the row
@@ -183,7 +184,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
             setTimeout(() => navigate('/dashboard'), 2000);
         } catch (error) {
             console.error('Error adding/updating investment:', error);
-            setSuccessMessage('❌ Failed to add investment. Please try again.');
+            setSuccessMessage('Failed to add investment. Please try again.');
             setTimeout(() => setSuccessMessage(''), 3000);
         } finally {
             setIsLoading(false);
@@ -196,7 +197,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
         const newAmounts = [...amounts];
         newAmounts[index] = 0;
         setAmounts(newAmounts);
-        setSuccessMessage(`🔄 Reset ${investments[index]?.name} amount`);
+        setSuccessMessage(`Reset ${investments[index]?.name} amount`);
         setTimeout(() => setSuccessMessage(''), 2000);
     }
 
@@ -219,11 +220,11 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
             ];
 
             setInvestments(data);
-            setSuccessMessage('🔄 Prices refreshed successfully!');
+            setSuccessMessage('Prices refreshed successfully!');
             setTimeout(() => setSuccessMessage(''), 3000);
         } catch (error) {
             console.error('Error refreshing prices:', error);
-            setSuccessMessage('❌ Failed to refresh prices. Please try again.');
+            setSuccessMessage('Failed to refresh prices. Please try again.');
             setTimeout(() => setSuccessMessage(''), 3000);
         } finally {
             setRefreshing(false);
@@ -242,7 +243,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
             // case 'ripple':
             //     return <img src={xrpIcon} alt="XRP" className="crypto-icon" style={{ width: '24px', height: '24px' }} />;
             default:
-                return <div className="crypto-placeholder">💰</div>;
+                return <div className="crypto-placeholder"><Coins size={16} /></div>;
             }
     };
 
@@ -258,8 +259,8 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
 
     const getPriceChangeIndicator = (investmentId) => {
         const change = priceChanges[investmentId];
-        if (change === 'up') return '📈';
-        if (change === 'down') return '📉';
+        if (change === 'up') return <TrendingUp size={14} style={{ marginLeft: 6 }} />;
+        if (change === 'down') return <TrendingDown size={14} style={{ marginLeft: 6 }} />;
         return '';
     };
 
@@ -917,12 +918,17 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
             `}</style>
 
             <div className="investments-header">
-                <h5>🚀 Crypto Investments</h5>
+                <h5><Bitcoin size={20} className="icon-gap" />Crypto Investments</h5>
                 <p className="investments-subtitle">Invest in the future with real-time market data</p>
             </div>
 
             {successMessage && (
                 <div className="success-message">
+                    {/^failed/i.test(successMessage)
+                        ? <XCircle size={16} className="icon-gap-sm" />
+                        : /^please/i.test(successMessage)
+                            ? <TriangleAlert size={16} className="icon-gap-sm" />
+                            : <CheckCircle2 size={16} className="icon-gap-sm" />}
                     {successMessage}
                 </div>
             )}
@@ -930,14 +936,14 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
             <div className="control-section">
                 <div className="live-indicator">
                     <span className="live-badge">Live</span>
-                    <span>📊 Make Informed Decisions With Live Crypto Updates</span>
+                    <span><Activity size={16} className="icon-gap-sm" />Make Informed Decisions With Live Crypto Updates</span>
                 </div>
                 <button 
                     className="refresh-button" 
                     onClick={handleRefresh}
                     disabled={refreshing}
                 >
-                    {refreshing ? <span className="loading-spinner"></span> : '🔄'}
+                    {refreshing ? <span className="loading-spinner"></span> : <RefreshCw size={16} className="icon-gap-sm" />}
                     {refreshing ? 'Refreshing...' : 'Refresh Prices'}
                 </button>
             </div>
@@ -1012,7 +1018,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                                                     onClick={() => handleAddClick(index)}
                                                     disabled={isLoading || !amounts[index] || amounts[index] <= 0}
                                                 >
-                                                    {isLoading ? <span className="loading-spinner"></span> : '💰'}
+                                                    {isLoading ? <span className="loading-spinner"></span> : <CirclePlus size={14} className="icon-gap-sm" />}
                                                     Add
                                                 </button>
                                                 <button 
@@ -1020,7 +1026,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                                                     onClick={() => handleResetClick(index)}
                                                     disabled={isLoading}
                                                 >
-                                                    🔄 Reset
+                                                    <RotateCcw size={14} className="icon-gap-sm" />Reset
                                                 </button>
                                             </div>
                                         </td>
@@ -1064,12 +1070,12 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                                 </div>
                                 
                                 <div className="card-details">
-                                    <span className="card-label">🏷️ Type:</span>
+                                    <span className="card-label"><Tag size={14} className="icon-gap-sm" />Type:</span>
                                     <span className={`card-value type-badge ${investment.type === 'Cryptocurrency' ? 'type-crypto' : 'type-stablecoin'}`}>
                                         {investment.type === 'Cryptocurrency' ? 'Crypto' : 'Stable'}
                                     </span>
                                     
-                                    <span className="card-label">📊 Market Cap:</span>
+                                    <span className="card-label"><BarChart3 size={14} className="icon-gap-sm" />Market Cap:</span>
                                     <span className="card-value card-market-cap">
                                         {marketCaps[investment.id] ? 
                                             `$${formatMarketCap(marketCaps[investment.id])}` : 
@@ -1079,7 +1085,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                                 </div>
 
                                 <div className="card-input-section">
-                                    <label className="input-label">💰 Investment Amount</label>
+                                    <label className="input-label"><Wallet size={16} className="icon-gap-sm" />Investment Amount</label>
                                     <input 
                                         type="number" 
                                         className="amount-input-mobile"
@@ -1097,7 +1103,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                                             onClick={() => handleAddClick(index)}
                                             disabled={isLoading || !amounts[index] || amounts[index] <= 0}
                                         >
-                                            {isLoading ? <span className="loading-spinner"></span> : '💰'}
+                                            {isLoading ? <span className="loading-spinner"></span> : <CirclePlus size={14} className="icon-gap-sm" />}
                                             Add Investment
                                         </button>
                                         <button 
@@ -1105,7 +1111,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                                             onClick={() => handleResetClick(index)}
                                             disabled={isLoading}
                                         >
-                                            🔄 Reset
+                                            <RotateCcw size={14} className="icon-gap-sm" />Reset
                                         </button>
                                     </div>
                                 </div>
