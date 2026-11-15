@@ -836,14 +836,28 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
             margin: 0 auto 25px;
           }
 
-          .predictions-grid {
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-          }
-
           .ai-tabs {
             max-width: 800px;
             margin: 0 auto 25px;
+          }
+        }
+
+        /* Kept last on purpose, so it wins over every screen-size rule above. */
+        .ai-insights-panel {
+          padding-bottom: 28px;
+        }
+
+        /* Three prediction cards always share one row (one per row only on phones) */
+        .predictions-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 15px;
+          max-width: 960px;
+          margin: 0 auto;
+        }
+
+        @media (max-width: 480px) {
+          .predictions-grid {
+            grid-template-columns: 1fr;
           }
         }
       `}</style>
