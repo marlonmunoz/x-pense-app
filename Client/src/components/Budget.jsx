@@ -1,5 +1,6 @@
 import { api } from "../config/api";
 import React, { useState, useEffect } from "react";
+import { BarChart3, Calendar, CheckCircle2, ClipboardList, DollarSign, FileText, Lightbulb, Pencil, Pin, Plus, RotateCcw, Save, Settings, Target, Trash2, TriangleAlert, Wallet, X, XCircle } from 'lucide-react';
 
 function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCurrency,items, setItems, name, setName, amount, setAmount, newBudget, setNewBudget, error, setError, editingIndex, setEditingIndex, editAmount, setEditAmount, date, setDate, totalBudgetAmount, parseDate }) {
 
@@ -740,26 +741,26 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
             
             {/* Budget Header */}
             <div className="budget-header">
-                <h5>💰 Budget Management</h5>
+                <h5><Wallet size={20} className="icon-gap" />Budget Management</h5>
                 <p className="budget-subtitle">Plan and track your financial allocations</p>
             </div>
 
             {/* Success/Error Messages */}
             {success && (
                 <div className="alert-success">
-                    <strong>✅ Success!</strong> {success}
+                    <strong><CheckCircle2 size={16} className="icon-gap-sm" />Success!</strong> {success}
                 </div>
             )}
             
             {error && (
                 <div className="alert-danger">
-                    <strong>❌ Error!</strong> {error}
+                    <strong><XCircle size={16} className="icon-gap-sm" />Error!</strong> {error}
                 </div>
             )}
 
             {/* Set Main Budget Section */}
             <div className="budget-section">
-                <h5 className="budget-title">🎯 Set Main Budget</h5>
+                <h5 className="budget-title"><Target size={20} className="icon-gap" />Set Main Budget</h5>
                 <div className="input-group">
                     <input 
                         type="number"
@@ -770,7 +771,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                             setNewBudget(value === '' ? '' : parseFloat(value));
                         }}
                         className={`enhanced-input ${validated ? 'is-valid' : 'is-invalid'}`}
-                        placeholder="💵 Enter Budget Amount"
+                        placeholder="Enter Budget Amount"
                         disabled={loading}
                     />
                     <input 
@@ -788,7 +789,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                         disabled={loading}
                     >
                         {loading ? <span className="loading-spinner"></span> : ''}
-                        🎯 Set Budget
+                        <Target size={16} className="icon-gap-sm" />Set Budget
                     </button>
                     <button 
                         className={`btn-enhanced btn-warning-enhanced ${loading ? 'btn-disabled' : ''}`} 
@@ -796,18 +797,18 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                         disabled={loading}
                     >
                         {loading ? <span className="loading-spinner"></span> : ''}
-                        🔄 Reset
+                        <RotateCcw size={16} className="icon-gap-sm" />Reset
                     </button>
                 </div>
             </div>
 
             {/* Add New Budget Section */}
             <div className="budget-section">
-                <h5 className="budget-title">📝 Add New Budget Item</h5>
+                <h5 className="budget-title"><ClipboardList size={20} className="icon-gap" />Add New Budget Item</h5>
                 <div className="input-group">
                     <input
                         type="text"
-                        placeholder="📝 Item Name (e.g., Groceries, Entertainment)"
+                        placeholder="Item Name (e.g., Groceries, Entertainment)"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="enhanced-input"
@@ -817,7 +818,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                     />
                     <input
                         type="number"
-                        placeholder="💵 Amount"
+                        placeholder="Amount"
                         value={isNaN(amount) ? '' : amount}
                         onChange={(e) => {
                             const value = e.target.value;
@@ -843,13 +844,13 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                         disabled={loading}
                     >
                         {loading ? <span className="loading-spinner"></span> : ''}
-                        ✨ Add Item
+                        <Plus size={16} className="icon-gap-sm" />Add Item
                     </button>
                 </div>
             </div>
             {/* Budget Items Table */}
             <div className="budget-section">
-                <h5 className="budget-title">📊 Budget Overview</h5>
+                <h5 className="budget-title"><BarChart3 size={20} className="icon-gap" />Budget Overview</h5>
                 {loading && items.length === 0 ? (
                     <div className="loading-container">
                         <div className="large-spinner"></div>
@@ -860,10 +861,10 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                         <table className="table table-striped table-hover table-bordered responsive-table">
                             <thead>
                                 <tr>
-                                    <th>📝 Item Name</th>
-                                    <th>💰 Amount</th>
-                                    <th>📅 Date</th>
-                                    <th>⚙️ Actions</th>
+                                    <th><FileText size={14} className="icon-gap-sm" />Item Name</th>
+                                    <th><DollarSign size={14} className="icon-gap-sm" />Amount</th>
+                                    <th><Calendar size={14} className="icon-gap-sm" />Date</th>
+                                    <th><Settings size={14} className="icon-gap-sm" />Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -873,11 +874,11 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                             <td data-label="Item Name">
                                                 {item.item_name === 'Set Budget' ? (
                                                     <span className="main-budget-badge">
-                                                        🎯 {item.item_name}
+                                                        <Target size={14} className="icon-gap-sm" />{item.item_name}
                                                     </span>
                                                 ) : (
                                                     <span className="item-name-badge">
-                                                        📌 {item.item_name}
+                                                        <Pin size={14} className="icon-gap-sm" />{item.item_name}
                                                     </span>
                                                 )}
                                             </td>
@@ -907,7 +908,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                                     />
                                                 ) : (
                                                     <span className="date-display">
-                                                        📅 {item.date || 'No date set'}
+                                                        <Calendar size={14} className="icon-gap-sm" />{item.date || 'No date set'}
                                                     </span>
                                                 )}
                                             </td>
@@ -920,13 +921,13 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                                             disabled={loading}
                                                         >
                                                             {loading ? <span className="loading-spinner" style={{ width: '12px', height: '12px' }}></span> : ''}
-                                                            💾 Save
+                                                            <Save size={14} className="icon-gap-sm" />Save
                                                         </button>
                                                         <button 
                                                             className="btn-table btn-cancel-table" 
                                                             onClick={cancelEdit}
                                                         >
-                                                            ❌ Cancel
+                                                            <X size={14} className="icon-gap-sm" />Cancel
                                                         </button>
                                                     </div>
                                                 ) : (
@@ -935,13 +936,13 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                                             className="btn-table btn-edit-table" 
                                                             onClick={() => editBudget(index)}
                                                         >
-                                                            ✏️ Edit
+                                                            <Pencil size={14} className="icon-gap-sm" />Edit
                                                         </button>
                                                         <button 
                                                             className={`btn-table ${deleteConfirm === index ? 'confirm-delete' : 'btn-delete-table'}`}
                                                             onClick={() => deleteItem(index)}
                                                         >
-                                                            {deleteConfirm === index ? '⚠️ Confirm?' : '🗑️ Delete'}
+                                                            {deleteConfirm === index ? <><TriangleAlert size={14} className="icon-gap-sm" />Confirm?</> : <><Trash2 size={14} className="icon-gap-sm" />Delete</>}
                                                         </button>
                                                     </div>
                                                 )}
@@ -952,19 +953,19 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                     <tr>
                                         <td colSpan="4" className="no-items">
                                             <div>
-                                                <h4>🎯 Start Your Budget Journey!</h4>
+                                                <h4><Target size={22} className="icon-gap" />Start Your Budget Journey!</h4>
                                                 <p>Set your main budget above, then add specific budget categories!</p>
-                                                <small>💡 Pro tip: Create categories like groceries, entertainment, utilities, savings</small>
+                                                <small><Lightbulb size={14} className="icon-gap-sm" />Pro tip: Create categories like groceries, entertainment, utilities, savings</small>
                                             </div>
                                         </td>
                                     </tr>
                                 )}
                                 {items.length > 0 && (
                                     <tr className="total-row">
-                                        <td><strong>🏆 TOTAL BUDGET</strong></td>
+                                        <td><strong><Wallet size={16} className="icon-gap-sm" />TOTAL BUDGET</strong></td>
                                         <td><strong>{formatCurrency(totalBudgetAmount)}</strong></td>
                                         <td colSpan="2">
-                                            <small>💡 This represents your complete budget allocation</small>
+                                            <small><Lightbulb size={14} className="icon-gap-sm" />This represents your complete budget allocation</small>
                                         </td>
                                     </tr>
                                 )}
