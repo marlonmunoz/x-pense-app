@@ -5,72 +5,70 @@
 <!-- # X-pense App -->
 ![Alt text](./Client/public/ai-xpense-v2.png)
 
-A full-stack expense tracking application built with React and Flask, now powered by advanced AI features.
+A full-stack personal finance tracker built with React and Flask. Transaction categories are suggested by OpenAI; everything else described here is plain, deterministic code.
 
 **Live site:** [https://x-penseapp.com](https://x-penseapp.com)
 
 Create an account to get your own private profile. Your transactions, budgets, balances, goals and investments are only visible to you.
 
-## 🤖 AI-POWERED FEATURES
+## About
 
-### Intelligent Transaction Categorization
-- **Automatic AI Categorization**: Transactions are automatically categorized using pattern recognition and machine learning
-- **Smart Learning**: The AI learns from your corrections and improves categorization accuracy over time
-- **Confidence Scoring**: Each categorization comes with a confidence score to help you trust the AI's decisions
-- **Bulk Training**: Train the AI with multiple transactions at once for faster learning
+X-PENSE lets you track your cash on hand, bank account balances, savings and expenses, and set financial goals. The backend is Flask and the frontend is React. Under the Investments tab you can follow live crypto prices and add them to the dashboard to calculate your overall budget.
 
-### Advanced Dashboard AI
-- **Financial Insights**: Get intelligent analysis of your spending patterns and financial health
-- **Predictive Analytics**: AI-powered predictions for future expenses and savings goals
-- **Smart Alerts**: Receive intelligent notifications about unusual spending or opportunities to save
-- **Natural Language Queries**: Ask questions about your finances in plain English (e.g., "How much did I spend on food last month?")
-- **Personalized Recommendations**: Get AI-driven suggestions for budget optimization and financial improvements
+## 🤖 What is (and is not) AI
 
-### Professional Financial Analysis
-- **Financial Health Scoring**: Comprehensive scoring system that evaluates your overall financial wellness
-- **Emergency Fund Analysis**: Intelligent assessment of your emergency fund adequacy with months of coverage calculation
-- **Liquidity Ratio Analysis**: Professional-grade analysis of your liquid assets vs. total assets
-- **Smart Allocation Assistant**: AI-powered recommendations for optimal money distribution across accounts
-- **Risk Assessment**: Automated evaluation of financial risks and opportunities
+Only one feature calls an AI model. The rest are rules and arithmetic that run in your browser. They are useful, but they are not artificial intelligence, and this README says so on purpose.
 
-### Enhanced Balance Management
-- **Intelligent Account Consolidation**: AI suggests when and how to consolidate low-balance accounts
-- **Optimal Allocation Suggestions**: Smart recommendations for distributing money across cash, bank, and savings
-- **Financial Health Dashboard**: Real-time metrics and insights about your financial wellness
-- **Quick Preset Applications**: AI-curated presets for different financial situations (emergency, student, family)
-- **Smart Update Validation**: AI-powered validation and suggestions during balance updates
-- **Bulk Update Operations**: Efficiently update multiple accounts with intelligent recommendations
-- **Update History Tracking**: AI tracks and analyzes your update patterns for insights
+### Real AI: category suggestions (OpenAI)
 
-### Interactive AI Assistant
-- **Natural Language Processing**: Chat with your financial data using everyday language
-- **Actionable Insights**: AI provides not just information, but actionable recommendations
-- **Contextual Help**: Get relevant financial advice based on your current situation
-- **Learning Preferences**: AI adapts to your financial goals and preferences over time
-- **Smart Update Assistance**: AI guides you through updates with intelligent suggestions and validation
+When you type a transaction description, X-PENSE suggests a category.
 
-## Features is a personal finance management application that allows users to track their cash on hand, bank account balances, savings, expenses and set financial goals. The application is built using Flask for the backend and React for the frontend. In addition, under Investments tab, the user can check a live crypto price update that can be added to the dashboard to calculate over all budget.
+- **How it works**: after you pause typing, the browser asks the server (`POST /ai/categorize`). The server asks an OpenAI model (default `gpt-6-luna`, set with `OPENAI_MODEL`) and returns one category name.
+- **It can invent categories**: the model is told to prefer your existing categories, but to create a new short name (for example "Wedding") when none really fits. The banner then reads "AI suggests a new category". The category is only added to your list if you click **Use This** and save the transaction.
+- **It follows your habits**: each request includes your own category names and your 20 most recent transactions, so the suggestion reflects how *you* label things. The model itself is not trained on your data and does not remember anything between requests.
+- **Safe by design**: the model must answer in a fixed JSON shape, and the server cleans and validates the category name (30 characters or fewer, letters, digits, spaces and a few symbols only) before it reaches the browser. If the name is not acceptable, it is ignored.
+- **Always works without it**: if OpenAI is not configured, is slow, fails, or a limit is reached, the form falls back to a small built-in keyword matcher (for example "starbucks" gives Food & Dining) and labels it "Based on keywords". Adding a transaction never depends on OpenAI.
+
+**What is sent to OpenAI**
+
+| Sent | Never sent |
+|---|---|
+| The description (and amount, if you typed one) of the transaction being added | Your email or account id |
+| Your category names (standard list plus your own) | Your balances, budgets, goals or investments |
+| Description and category of your 20 most recent transactions | Your password or login token |
+
+Requests are marked `store: false`, which asks OpenAI not to keep them; see OpenAI's own data policy for details. The API key lives only on the server and is never sent to the browser.
+
+**Cost controls**: each account is limited to 60 suggestions per hour, and the whole app to 1000 per day. Every request has a 10 second timeout. Set a monthly spending limit in your OpenAI account as a second safety net.
+
+### Not AI: rule-based smart features
+
+These run entirely in the browser, use fixed rules or simple formulas, and make no network calls to any AI service.
+
+- **Dashboard insights and alerts** (`dashboardAI.js`, shown in the AI Insights panel): rules over your own data, such as "X% of your spending is in one category" or "you spent more than usual".
+- **Predictions**: simple arithmetic. Next month's spending is your average weekly spending times 4.33, and the budget runway and goal completion dates are straight-line estimates. They are rough guides, not forecasts.
+- **"Ask a question" box**: keyword matching. It looks for words such as "spent", "month", "balance" or "goal" and replies with a prepared answer built from your numbers. It does not understand free-form language.
+- **Financial health score, emergency fund coverage and liquidity ratio** (`financialCalculator.js`): standard formulas.
+- **Smart update validation** (`smartUpdateService.js`): fixed rules that comment on your balance updates, for example warning about a very high share of cash or a low share of savings. The code also contains rules for budgets and investments, but only the balance screen uses them today. The "market timing" hint is a placeholder, not real market analysis.
+- **Keyword fallback categorizer** (`aiCategorization.js`): the backup described above. It remembers your category corrections in your browser's `localStorage`.
+
+Note: the rule-based features keep their small bits of history and preferences in `localStorage`, which belongs to the browser, not to your account. Anyone sharing a browser profile shares that data.
 
 ## CORE-Features
 
-- Add and manage transactions
-- **Smart Categorization Updates**: Modify and refine transaction categories with AI learning
-- **Set and track budget goals**
-- **AI-Powered Budget Optimization**: Intelligent budget adjustments based on spending patterns
-- **Bulk Budget Updates**: Update multiple budget items efficiently with AI validation
-- **Smart Budget Recommendations**: AI suggests budget modifications based on financial analysis
-- **Investment Portfolio Updates**: Real-time updates with AI-powered portfolio optimization
-- **Smart Investment Adjustments**: AI analyzes market conditions and suggests portfolio updates
-- **Bulk Investment Operations**: Update multiple investments efficiently with intelligent recommendations
-- **View balance and budget summaries**
+- Add and manage transactions, with category suggestions
+- Edit categories on any transaction; your own categories show up in the dropdown next time
+- Set and track budget goals
+- Bulk updates for balances (add, subtract, set or apply a percentage to several accounts at once)
+- Investment portfolio with live crypto prices
+- View balance and budget summaries
 - Dark-Light mode support
-- Mobile Compatibility
+- Mobile compatibility
 - **User accounts**: sign up and log in with email and password; each user's data is private to their account, with an owner/admin role
 - **Password reset by email**: a "Forgot password?" link sends a single-use reset link that expires after 30 minutes; resetting a password also logs out every other session
 - **Security basics**: login and reset rate limiting, input validation on every data route, a CORS allow-list and a request size cap
-- Live Crypto Update APIs
-- Responsive Graphs and Progress Bars
-- CRUD ops 
+- Responsive graphs and progress bars
+- CRUD operations
 - Input validation checks
 
 ### SERVER - Backend Activation
@@ -81,6 +79,8 @@ Before the first run, copy `Server/.env.example` to `Server/.env` and fill in:
 - `ADMIN_EMAIL`: the account that signs up with this email becomes the owner/admin
 - `RESEND_API_KEY` (optional locally): API key from [Resend](https://resend.com) used to email password reset links. Without it, the reset link is printed in the server terminal instead of being emailed
 - `APP_URL` (production only): the address of the front-end, used to build the link in reset emails (for example `https://x-penseapp.com`). Locally it defaults to `http://localhost:5173`
+- `OPENAI_API_KEY` (optional): API key from [OpenAI](https://platform.openai.com) used for category suggestions. Without it the app simply uses the keyword fallback. Create the key inside its own OpenAI project with restricted permissions
+- `OPENAI_MODEL` (optional): the model to use. Defaults to `gpt-6-luna`; change it here instead of in the code
 
 Never commit `.env`.
 
@@ -90,7 +90,11 @@ Never commit `.env`.
 ```
 cd Server
 ```
-1. Run the Flask application: 
+2. Install the dependencies:
+```
+pip install -r requirements.txt
+```
+3. Run the Flask application:
 ```
 python app.py
 ```
@@ -100,28 +104,33 @@ python app.py
 ```
 cd Client
 ```
-2. Install the required dependencies: 
+2. Use the right Node version and install the dependencies:
 ```
 nvm use 20.16
+npm install
 ```
 3. Start the React application:
 ```
 npm run dev
 ```
-## Usage
 
 ## Usage
 
-- **AI-Enhanced Dashboard**: Consolidates all transactions with intelligent insights and predictions
-- **Smart Transaction Entry**: Add transactions with automatic AI categorization and validation
-- **Intelligent Balance Management**: Manage cash on hand, bank account balance, savings with AI-powered financial analysis
-- **AI-Driven Goal Setting**: Set future goals with intelligent progress tracking and predictive completion dates
-- **Smart Investment Tracking**: Monitor crypto investments with live price updates and AI-powered portfolio analysis
-- **Natural Language Queries**: Ask questions about your finances in plain English and get intelligent responses
-- **Automated Financial Health Monitoring**: Receive real-time financial health scores and professional-grade analysis
+- **Dashboard**: all your transactions in one place, with charts and rule-based insights
+- **Add transactions**: type a description and get a category suggestion from OpenAI (or the keyword fallback)
+- **Balance management**: track cash on hand, bank account balance and savings, with a financial health score
+- **Goals**: set future goals and track progress with estimated completion dates
+- **Investments**: monitor crypto investments with live price updates
 
 ## RESTful APIs:
 `GET` | `PUT` | `POST` | `DELETE`
+
+Main routes: `/transactions`, `/budgets`, `/balance`, `/goals`, `/investments`, plus `/ai/categorize` and `/categories` for category suggestions.
+
+| Route | Method | What it does |
+|---|---|---|
+| `/ai/categorize` | `POST` | Body `{"description": "...", "amount": 12.5}` (amount optional). Returns `{"category": "...", "source": "openai", "isNew": false}`. Answers `503` when AI is unavailable and `429` when your hourly limit is reached |
+| `/categories` | `GET` | The standard categories plus any you have used |
 
 ## Route Testing With POSTMAN
 Every route except `/register`, `/login`, `/forgot-password` and `/reset-password` requires a login token. Send `POST /login` with `{"email": "...", "password": "..."}`, then add the returned token to each request as the header `Authorization: Bearer <token>`.
@@ -150,159 +159,61 @@ Example:
 ```
 Example:
 
-{   
+{
     "amount": 1,
     "totalPrice": 96063.99
 }
 ```
-
-
 
 `DELETE` Route <sup>Replace the id# with your id</sup>
 ```
 http://localhost:5001/investments/97
 ```
 
-## 🧠 AI Features Breakdown
-
-### 1. Intelligent Transaction Categorization Service (`aiCategorization.js`)
-- **Pattern Recognition**: Advanced algorithms recognize merchant names and transaction patterns
-- **Machine Learning**: Learns from user corrections to improve accuracy over time
-- **Confidence Scoring**: Provides confidence levels for each categorization decision
-- **Bulk Training**: Process multiple transactions simultaneously for faster AI training
-- **Persistent Learning**: Stores learning patterns in localStorage for consistent improvement
-
-### 2. Comprehensive Dashboard AI (`dashboardAI.js`)
-- **Financial Insights Generator**: Analyzes spending patterns and provides actionable insights
-- **Predictive Analytics Engine**: Forecasts future expenses based on historical data
-- **Smart Alert System**: Monitors for unusual spending patterns and optimization opportunities
-- **Recommendation Engine**: Provides personalized financial advice and suggestions
-- **Natural Language Processing**: Interprets user queries and provides relevant financial information
-
-### 3. Professional Financial Calculator (`financialCalculator.js`)
-- **Financial Health Scoring**: Comprehensive scoring algorithm evaluating overall financial wellness
-- **Emergency Fund Analysis**: Calculates months of expenses covered by emergency savings
-- **Liquidity Ratio Calculation**: Professional-grade analysis of liquid assets vs. total assets
-- **Optimal Allocation Engine**: AI-powered recommendations for money distribution
-- **Risk Assessment**: Evaluates financial risks and provides mitigation strategies
-
-### 4. Interactive AI Insights Panel (`AIInsightsPanel.jsx`)
-- **Tabbed Interface**: Organized presentation of insights, predictions, alerts, and recommendations
-- **Natural Language Queries**: Chat interface for asking financial questions in plain English
-- **Actionable Navigation**: Direct links to relevant sections based on AI recommendations
-- **Real-time Updates**: Dynamic content that adapts to current financial data
-
-### 5. Enhanced Balance Management with AI
-- **Smart Validation**: Intelligent input validation with helpful suggestions
-- **AI-Powered Update Recommendations**: Real-time suggestions during balance updates
-- **Bulk Update Operations**: Efficiently update multiple accounts with AI validation
-- **Account Consolidation**: AI-powered recommendations for optimizing account structure
-- **Financial Health Dashboard**: Real-time metrics display with professional calculations
-- **Quick Presets**: AI-curated balance presets for different life situations
-- **Allocation Assistant**: Smart suggestions for optimal fund distribution
-- **Update History Tracking**: AI tracks and analyzes update patterns for insights
-- **Smart Warning System**: Intelligent alerts during potentially problematic updates
-
-## 🔧 Enhanced Technology Stack
+## 🔧 Technology Stack
 
 ### Frontend Technologies
-- **React 18+**: Modern JavaScript library with hooks and context for state management
+- **React 18+**: JavaScript library with hooks
 - **Bootstrap 5**: Responsive CSS framework with custom dark/light mode support
-- **HTML5/CSS3**: Modern web standards with advanced styling capabilities
-- **JavaScript ES6+**: Modern JavaScript features including async/await, destructuring, and modules
+- **HTML5/CSS3**: Modern web standards
+- **JavaScript ES6+**: async/await, destructuring and modules
 
 ### Backend Technologies
-- **Flask 2.x**: Lightweight Python web framework with RESTful API design
-- **SQLAlchemy**: Advanced ORM with relationship management and query optimization
+- **Flask 2.x**: Lightweight Python web framework with a RESTful API design
+- **SQLAlchemy**: ORM for the database models and queries
 - **PostgreSQL (Supabase)**: Production database, with a local SQLite fallback for development
 - **PyJWT**: Signed login tokens for user accounts, with passwords stored as salted hashes, and signed single-use links for password reset
 - **Resend**: Transactional email service that delivers password reset emails from `noreply@x-penseapp.com`
+- **OpenAI API**: Category suggestions through the Responses API with structured (JSON schema) output, called only from the server
 - **Flask-Migrate**: Database version control and migration management
 - **Flask-CORS**: Cross-origin resource sharing for frontend-backend communication
 
-### AI & Intelligence Technologies
-- **Custom AI Engines**: Purpose-built artificial intelligence services for financial analysis
-- **Pattern Recognition Algorithms**: Advanced pattern matching for transaction categorization
-- **Machine Learning Models**: Adaptive learning systems that improve accuracy over time
-- **Natural Language Processing**: Text analysis and understanding for user query interpretation
-- **Predictive Analytics**: Statistical models for forecasting financial trends and behaviors
-- **Financial Mathematics**: Industry-standard algorithms for professional financial calculations
-- **Smart Validation Engine**: AI-powered input validation with intelligent recommendations
-- **Bulk Operation Intelligence**: Advanced algorithms for efficient multi-item updates
-
-### Update & Validation Technologies
-- **SmartUpdateService**: AI-powered update validation and recommendation engine
-- **Real-time Validation**: Instant feedback and suggestions during data entry
-- **Bulk Processing Engine**: Efficient handling of multiple simultaneous updates
-- **Pattern Analysis**: Historical update analysis for personalized recommendations
-- **Risk Assessment**: Automated evaluation of update risks and warnings
-
 ### Development & DevOps
-- **Python 3.8+**: Modern Python runtime with type hints and advanced features
-- **Node.js 20.16+**: JavaScript runtime for frontend development and build tools
-- **npm/pipenv**: Package management for both frontend and backend dependencies
-- **Git**: Distributed version control system for collaborative development
-- **VS Code**: Integrated development environment with AI assistance
+- **Python 3.8+**
+- **Node.js 20.16+**
+- **npm/pipenv**: Package management for the frontend and backend
+- **Git**: Version control
+- **VS Code / Cursor**: Development environment
 - **Cloudflare Pages**: Hosts the React frontend at x-penseapp.com
 - **Railway**: Hosts the Flask API
 - **Supabase**: Hosts the PostgreSQL database
 
-### Data Management & Persistence
-- **localStorage**: Client-side storage for AI learning patterns and user preferences
-- **SQLite**: Lightweight database for development and testing
-- **PostgreSQL**: Production-ready relational database with advanced features
-- **JSON**: Data interchange format for API communication and configuration
+### Data
+- **PostgreSQL**: Production relational database
+- **SQLite**: Lightweight database for local development
+- **localStorage**: Browser storage for the keyword fallback's corrections and the rule-based features' preferences
+- **JSON**: Data interchange format for the API
 
-## 💡 Enhanced User Experience Features
-
-### AI-Powered Interactions
-- **Smart Form Validation**: Intelligent input validation with contextual error messages
-- **Predictive Text**: Auto-suggestions based on previous transactions and patterns
-- **Contextual Help**: Dynamic assistance that adapts to user's current financial situation
-- **Learning Preferences**: AI system that remembers and adapts to user preferences
-
-### Professional Financial Analysis
-- **Real-time Metrics**: Live calculation of financial health indicators and ratios
-- **Visual Analytics**: Enhanced charts and graphs with AI-generated insights
-- **Goal Tracking**: Intelligent progress monitoring with predictive completion dates
-- **Risk Assessment**: Automated evaluation of financial risks and opportunities
-
-### Intelligent Automation
-- **Auto-categorization**: Seamless transaction classification without user intervention
-- **Smart Notifications**: Relevant alerts and recommendations based on spending patterns
-- **Optimization Suggestions**: AI-driven recommendations for improving financial health
-- **Bulk Operations**: Intelligent batch processing for account management
-
-### Advanced Update Features
-- **Smart Update Validation**: Real-time validation with AI-powered suggestions and warnings
-- **Bulk Update Intelligence**: Efficiently update multiple items with comprehensive validation
-- **Update Pattern Analysis**: AI learns from your update history to provide better recommendations
-- **Risk-Aware Updates**: Intelligent warnings for potentially problematic changes
-- **Optimization Recommendations**: AI suggests improvements during update processes
-
-## Usage
-
-- **AI-Enhanced Dashboard**: Consolidates all transactions with intelligent insights and predictions
-- **Smart Transaction Entry**: Add transactions with automatic AI categorization and validation
 ## Technologies Used
 
-### 🤖 AI & Machine Learning
 <div style="text-align: center;">
     <div style='display: inline-block;'>
-        <img src="./Client/src/tech_pngs/JS_logo.png" alt="JavaScript AI Services" width="70" height="70">
-        <img src="./Client/src/tech_pngs/python_logo.png" alt="Python Backend with AI" width="70" height="70">
-        <img src="./Client/src/tech_pngs/React.webp" alt="React with AI Components" width="70" height="70">
-        <img src="./Client/src/tech_pngs/flask_logo.png" alt="Flask API with AI Endpoints" width="80" height="70">
-        <img src="./Client/src/tech_pngs/psql_logo.webp" alt="Database with AI Analytics" width="70" height="70">
-        <img src="./Client/src/tech_pngs/Bootstrap_logo.png" alt="Responsive AI Interface" width="70" height="70">
-        <img src="./Client/src/tech_pngs/html_css_logo.png" alt="Modern Web with AI Features" width="80" height="70">
+        <img src="./Client/src/tech_pngs/JS_logo.png" alt="JavaScript" width="70" height="70">
+        <img src="./Client/src/tech_pngs/python_logo.png" alt="Python" width="70" height="70">
+        <img src="./Client/src/tech_pngs/React.webp" alt="React" width="70" height="70">
+        <img src="./Client/src/tech_pngs/flask_logo.png" alt="Flask" width="80" height="70">
+        <img src="./Client/src/tech_pngs/psql_logo.webp" alt="PostgreSQL" width="70" height="70">
+        <img src="./Client/src/tech_pngs/Bootstrap_logo.png" alt="Bootstrap" width="70" height="70">
+        <img src="./Client/src/tech_pngs/html_css_logo.png" alt="HTML and CSS" width="80" height="70">
     </div>
 </div>
-
-**Enhanced with Custom AI Services:**
-- 🧠 **Intelligent Transaction Categorization** - Advanced pattern recognition and machine learning
-- 📊 **Financial Health Analysis** - Professional-grade financial calculations and insights  
-- 🔮 **Predictive Analytics** - AI-powered forecasting and trend analysis
-- 💬 **Natural Language Processing** - Chat with your financial data in plain English
-- 🎯 **Smart Recommendations** - Personalized financial advice and optimization suggestions
-- 🤖 **Adaptive Learning** - AI that improves and learns from your financial behavior
