@@ -683,7 +683,12 @@ ASK_INSTRUCTIONS = (
     'All amounts are US dollars. The numbers are exact and were already added up for you, so '
     'quote them and do any extra arithmetic carefully. The current month is not finished: '
     '"today" and "days_into_current_month" tell you how far along it is, so do not call a '
-    'partial month "low" without saying so. "spending_by_month" is oldest first. You do not have '
+    'partial month "low" without saying so. "spending_by_month" is oldest first. For the current '
+    'month, "total_spent" includes entries dated AFTER today (bills entered in advance): '
+    '"spent_through_today" is what has already happened and "dated_after_today" is still to come, '
+    'and together they make "total_spent". Use "so far" only for spent_through_today, and mention '
+    'the amount dated later when it is not zero. "dated_in_later_months" is dated beyond this '
+    'month. You do not have '
     'individual purchases or descriptions, only totals. If the data cannot answer the question, '
     'say so plainly instead of guessing. Answer in one to three short sentences of plain text, '
     'no markdown. You may point out patterns, but do not recommend specific investments or '
@@ -708,12 +713,19 @@ def build_finance_summary(user_id):
     first_day = datetime.strptime(months[0] + '-01', '%Y-%m-%d').date()
 
     spending = {m: {} for m in months}
+    after_today_this_month = 0.0      # entered already, but dated later this month
+    later_months = 0.0                # dated in a month that has not started yet
     rows = (db.session.query(Transaction.date, Transaction.category, Transaction.amount)
             .filter(Transaction.user_id == user_id, Transaction.date >= first_day).all())
     for day, category, amount in rows:
-        bucket = spending.get(f'{day.year}-{day.month:02d}')
+        key = f'{day.year}-{day.month:02d}'
+        bucket = spending.get(key)
         if bucket is not None:
             bucket[category] = bucket.get(category, 0.0) + amount
+            if day > today:
+                after_today_this_month += amount
+        else:
+            later_months += amount
 
     by_month = {}
     for m in months:
@@ -722,6 +734,10 @@ def build_finance_summary(user_id):
         if ranked[10:]:
             categories['All other categories'] = round(sum(total for _, total in ranked[10:]), 2)
         by_month[m] = {'total_spent': round(sum(spending[m].values()), 2), 'by_category': categories}
+
+    current = by_month[months[-1]]
+    current['dated_after_today'] = round(after_today_this_month, 2)
+    current['spent_through_today'] = round(current['total_spent'] - current['dated_after_today'], 2)
 
     finished = [by_month[m]['total_spent'] for m in months[:-1] if by_month[m]['total_spent'] > 0]
 
@@ -746,6 +762,7 @@ def build_finance_summary(user_id):
         'today': today.isoformat(),
         'days_into_current_month': today.day,
         'spending_by_month': by_month,
+        'dated_in_later_months': round(later_months, 2),
         'average_spent_in_finished_months': round(sum(finished) / len(finished), 2) if finished else None,
         'balance': balance_info,
         'budget_total': round(budget_total, 2),
