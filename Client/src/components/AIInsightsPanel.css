@@ -227,11 +227,6 @@
   color: #f0fff4;
 }
 
-.recommendations-list li:before {
-  content: "💡";
-  font-size: 18px;
-}
-
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

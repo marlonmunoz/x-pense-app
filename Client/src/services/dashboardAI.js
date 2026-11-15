@@ -71,7 +71,7 @@ class DashboardAI {
     if (avgMonthlySpending > budget * 0.8) {
       insights.push({
         type: 'warning',
-        title: '⚠️ High Spending Alert',
+        title: 'High Spending Alert',
         message: `You're spending ${((avgMonthlySpending / budget) * 100).toFixed(0)}% of your budget monthly. Consider reviewing your expenses.`,
         actionable: true,
         action: 'View Category Details',
@@ -85,7 +85,7 @@ class DashboardAI {
     if (topCategory && topCategory.percentage > 40) {
       insights.push({
         type: 'info',
-        title: '📊 Spending Pattern Insight',
+        title: 'Spending Pattern Insight',
         message: `${topCategory.percentage.toFixed(0)}% of your spending is on ${topCategory.category}. Consider reviewing this category's transactions.`,
         actionable: true,
         action: 'View Category Details',
@@ -101,7 +101,7 @@ class DashboardAI {
       if (investmentRatio < 20) {
         insights.push({
           type: 'opportunity',
-          title: '🚀 Investment Opportunity',
+          title: 'Investment Opportunity',
           message: `Only ${investmentRatio.toFixed(0)}% of your portfolio is invested. Consider increasing investments for better returns.`,
           actionable: true,
           action: 'Explore Investments',
@@ -116,7 +116,7 @@ class DashboardAI {
       if (strugglingGoals.length > 0) {
         insights.push({
           type: 'motivation',
-          title: '🎯 Goal Achievement Tip',
+          title: 'Goal Achievement Tip',
           message: `You have ${strugglingGoals.length} goals with low progress. Consider reviewing your goals and adjusting target amounts.`,
           actionable: true,
           action: 'Review Goal Strategy',
@@ -170,7 +170,7 @@ class DashboardAI {
     if (budgetUsed > 90) {
       alerts.push({
         type: 'critical',
-        title: '🚨 Budget Almost Exceeded',
+        title: 'Budget Almost Exceeded',
         message: `You've used ${budgetUsed.toFixed(0)}% of your monthly budget!`,
         timestamp: today,
         urgent: true
@@ -178,7 +178,7 @@ class DashboardAI {
     } else if (budgetUsed > 75) {
       alerts.push({
         type: 'warning',
-        title: '⚠️ Budget Alert',
+        title: 'Budget Alert',
         message: `You've used ${budgetUsed.toFixed(0)}% of your monthly budget. Consider slowing down spending.`,
         timestamp: today,
         urgent: false
@@ -190,7 +190,7 @@ class DashboardAI {
     if (unusualTransactions.length > 0) {
       alerts.push({
         type: 'info',
-        title: '🔍 Unusual Spending Detected',
+        title: 'Unusual Spending Detected',
         message: `Detected ${unusualTransactions.length} transactions that seem unusual for your spending pattern.`,
         timestamp: today,
         urgent: false,
@@ -207,7 +207,7 @@ class DashboardAI {
         if (daysUntilDeadline <= 30 && progress < 80) {
           alerts.push({
             type: 'warning',
-            title: '⏰ Goal Deadline Approaching',
+            title: 'Goal Deadline Approaching',
             message: `"${goal.name}" has ${daysUntilDeadline} days left but only ${progress.toFixed(0)}% complete.`,
             timestamp: today,
             urgent: daysUntilDeadline <= 7
@@ -231,7 +231,7 @@ class DashboardAI {
     if (overspentCategories.length > 0) {
       recommendations.push({
         type: 'optimization',
-        title: '💡 Budget Optimization',
+        title: 'Budget Optimization',
         description: `Consider reducing spending in ${overspentCategories[0].category} by 10% to free up $${(overspentCategories[0].amount * 0.1).toFixed(2)} monthly.`,
         impact: 'medium',
         effort: 'low',
@@ -245,7 +245,7 @@ class DashboardAI {
       if (cryptoTypes.length < 3) {
         recommendations.push({
           type: 'diversification',
-          title: '🚀 Diversify Your Portfolio',
+          title: 'Diversify Your Portfolio',
           description: 'Consider adding different crypto assets to reduce risk and increase potential returns.',
           impact: 'high',
           effort: 'medium',
@@ -259,7 +259,7 @@ class DashboardAI {
     if (savingsRate < 20) {
       recommendations.push({
         type: 'savings',
-        title: '💰 Increase Savings Rate',
+        title: 'Increase Savings Rate',
         description: `Current savings rate is ${savingsRate.toFixed(0)}%. Try to save at least 20% for better financial health.`,
         impact: 'high',
         effort: 'medium',
@@ -459,21 +459,6 @@ class DashboardAI {
 export const dashboardAI = new DashboardAI();
 
 // Export additional utility functions
-export const formatInsight = (insight) => {
-  const icons = {
-    warning: '⚠️',
-    info: 'ℹ️',
-    opportunity: '🚀',
-    motivation: '🎯'
-  };
-  
-  return {
-    ...insight,
-    icon: icons[insight.type] || '💡',
-    formattedMessage: `${icons[insight.type] || '💡'} ${insight.message}`
-  };
-};
-
 export const prioritizeAlerts = (alerts) => {
   return alerts.sort((a, b) => {
     const priorityOrder = { critical: 3, warning: 2, info: 1 };

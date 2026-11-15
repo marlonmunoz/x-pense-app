@@ -68,3 +68,14 @@ button:focus-visible {
 } */
 
 
+
+/* Icons (lucide-react): thin lines, aligned with the text next to them */
+svg.lucide {
+  stroke-width: 1.75;
+  vertical-align: -0.15em;
+  flex-shrink: 0;
+}
+
+/* Space between an icon and the text that follows it (scales with the text size) */
+svg.lucide.icon-gap { margin-right: 0.5em; }
+svg.lucide.icon-gap-sm { margin-right: 0.35em; }

@@ -1,8 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { dashboardAI, formatInsight, prioritizeAlerts } from '../services/dashboardAI';
+import { dashboardAI, prioritizeAlerts } from '../services/dashboardAI';
+import { MessageSquare, Search, Bot, Loader2, Lightbulb, Bell, ListChecks, ChartLine, TriangleAlert, OctagonAlert, Info, TrendingUp, TrendingDown, Target, ChartPie, PiggyBank } from 'lucide-react';
 import { api } from '../config/api';
 import './AIInsightsPanel.css';
+
+// The icon shown in front of an insight, alert or tip title, chosen from its type
+const TYPE_ICONS = {
+  critical: OctagonAlert,
+  warning: TriangleAlert,
+  info: Info,
+  opportunity: TrendingUp,
+  motivation: Target,
+  optimization: Lightbulb,
+  diversification: ChartPie,
+  savings: PiggyBank
+};
+const typeIcon = (type) => {
+  const Icon = TYPE_ICONS[type] || Lightbulb;
+  return <Icon size={18} className="icon-gap" />;
+};
 
 const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, darkMode }) => {
   const navigate = useNavigate();
@@ -865,7 +882,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
           marginBottom: '15px',
           fontWeight: '700'
         }}>
-          💬 Ask Your AI Assistant
+          <MessageSquare size={20} className="icon-gap" />Ask Your AI Assistant
         </h5>
         <div className="nl-query-container">
           <input
@@ -879,12 +896,16 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
             onKeyPress={handleKeyPress}
           />
           <button className="nl-query-btn" onClick={handleNLQuery} disabled={isAsking}>
-            {isAsking ? '⏳ Thinking...' : '🔍 Ask AI'}
+            {isAsking
+              ? <><Loader2 size={16} className="icon-gap-sm" style={{ animation: 'spin 1s linear infinite' }} />Thinking...</>
+              : <><Search size={16} className="icon-gap-sm" />Ask AI</>}
           </button>
         </div>
         {nlResponse && (
           <div className="nl-response">
-            <strong>{nlResponse.source === 'openai' ? '🤖 AI Assistant:' : '🔎 Keyword answer:'}</strong> {nlResponse.answer}
+            <strong>{nlResponse.source === 'openai'
+              ? <><Bot size={16} className="icon-gap-sm" />AI Assistant:</>
+              : <><Search size={16} className="icon-gap-sm" />Keyword answer:</>}</strong> {nlResponse.answer}
             <div style={{ fontSize: '0.8rem', opacity: 0.8, marginTop: '8px' }}>
               {nlResponse.source === 'openai'
                 ? 'Answered by OpenAI from your spending totals (no transaction descriptions are sent).'
@@ -902,7 +923,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
           className={`ai-tab ${activeTab === 'insights' ? 'active' : ''}`}
           onClick={() => setActiveTab('insights')}
         >
-          <div style={{ fontSize: '1.4rem', minWidth: '28px', flexShrink: '0' }}>💡</div>
+          <div style={{ minWidth: '28px', flexShrink: '0', display: 'flex' }}><Lightbulb size={24} /></div>
           <div style={{ flex: '1', textAlign: 'left' }}>
             <div style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '3px' }}>Insights</div>
             <div style={{ fontSize: '0.9rem', opacity: '0.85' }}>{insights.length} available</div>
@@ -913,7 +934,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
           className={`ai-tab ${activeTab === 'alerts' ? 'active' : ''}`}
           onClick={() => setActiveTab('alerts')}
         >
-          <div style={{ fontSize: '1.4rem', minWidth: '28px', flexShrink: '0' }}>🚨</div>
+          <div style={{ minWidth: '28px', flexShrink: '0', display: 'flex' }}><Bell size={24} /></div>
           <div style={{ flex: '1', textAlign: 'left' }}>
             <div style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '3px' }}>Alerts</div>
             <div style={{ fontSize: '0.9rem', opacity: '0.85' }}>{alerts.length} notifications</div>
@@ -924,7 +945,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
           className={`ai-tab ${activeTab === 'recommendations' ? 'active' : ''}`}
           onClick={() => setActiveTab('recommendations')}
         >
-          <div style={{ fontSize: '1.4rem', minWidth: '28px', flexShrink: '0' }}>💡</div>
+          <div style={{ minWidth: '28px', flexShrink: '0', display: 'flex' }}><ListChecks size={24} /></div>
           <div style={{ flex: '1', textAlign: 'left' }}>
             <div style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '3px' }}>Tips</div>
             <div style={{ fontSize: '0.9rem', opacity: '0.85' }}>{recommendations.length} suggestions</div>
@@ -935,7 +956,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
           className={`ai-tab ${activeTab === 'predictions' ? 'active' : ''}`}
           onClick={() => setActiveTab('predictions')}
         >
-          <div style={{ fontSize: '1.4rem', minWidth: '28px', flexShrink: '0' }}>🔮</div>
+          <div style={{ minWidth: '28px', flexShrink: '0', display: 'flex' }}><ChartLine size={24} /></div>
           <div style={{ flex: '1', textAlign: 'left' }}>
             <div style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '3px' }}>Predictions</div>
             <div style={{ fontSize: '0.9rem', opacity: '0.85' }}>AI forecasts</div>
@@ -957,7 +978,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
             <div>
               {insights.length === 0 ? (
                 <div className="empty-state">
-                  <div className="empty-state-icon">💡</div>
+                  <div className="empty-state-icon" style={{ opacity: 0.6, marginBottom: 8 }}><Lightbulb size={40} /></div>
                   <h5>No insights yet</h5>
                   <p>Add more transactions to get personalized insights!</p>
                 </div>
@@ -965,7 +986,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
                 insights.map((insight, index) => (
                   <div key={index} className={`insight-card ${insight.type}`}>
                     <div className="card-header">
-                      <h6 className="card-title">{insight.title}</h6>
+                      <h6 className="card-title">{typeIcon(insight.type)}{insight.title}</h6>
                       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                         {insight.priority && (
                           <span className={`priority-badge priority-${insight.priority}`}>
@@ -996,7 +1017,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
             <div>
               {alerts.length === 0 ? (
                 <div className="empty-state">
-                  <div className="empty-state-icon">🚨</div>
+                  <div className="empty-state-icon" style={{ opacity: 0.6, marginBottom: 8 }}><Bell size={40} /></div>
                   <h5>No alerts</h5>
                   <p>You're doing great! No urgent alerts at the moment.</p>
                 </div>
@@ -1004,7 +1025,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
                 alerts.map((alert, index) => (
                   <div key={index} className={`alert-card ${alert.type}`}>
                     <div className="card-header">
-                      <h6 className="card-title">{alert.title}</h6>
+                      <h6 className="card-title">{typeIcon(alert.type)}{alert.title}</h6>
                       <small style={{ color: darkMode ? '#a0aec0' : '#718096' }}>
                         {alert.timestamp.toLocaleDateString()}
                       </small>
@@ -1023,7 +1044,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
             <div>
               {recommendations.length === 0 ? (
                 <div className="empty-state">
-                  <div className="empty-state-icon">💡</div>
+                  <div className="empty-state-icon" style={{ opacity: 0.6, marginBottom: 8 }}><ListChecks size={40} /></div>
                   <h5>No recommendations yet</h5>
                   <p>Keep using the app to get personalized recommendations!</p>
                 </div>
@@ -1031,7 +1052,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
                 recommendations.map((rec, index) => (
                   <div key={index} className="recommendation-card">
                     <div className="card-header">
-                      <h6 className="card-title">{rec.title}</h6>
+                      <h6 className="card-title">{typeIcon(rec.type)}{rec.title}</h6>
                       <div style={{ display: 'flex', gap: '8px' }}>
                         <span className={`priority-badge priority-${rec.impact === 'high' ? 'high' : rec.impact === 'medium' ? 'medium' : 'low'}`}>
                           {rec.impact} impact
@@ -1081,7 +1102,9 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
                 <div className="prediction-value" style={{ 
                   color: predictions.nextMonthSpending < budget * 0.8 ? '#10b981' : '#ef4444' 
                 }}>
-                  {predictions.nextMonthSpending < budget * 0.8 ? '📈 Good' : '📉 Review'}
+                  {predictions.nextMonthSpending < budget * 0.8
+                    ? <><TrendingUp size={20} className="icon-gap-sm" />Good</>
+                    : <><TrendingDown size={20} className="icon-gap-sm" />Review</>}
                 </div>
                 <small style={{ color: darkMode ? '#a0aec0' : '#718096' }}>
                   Based on budget vs spending

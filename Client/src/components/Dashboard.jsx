@@ -6,6 +6,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 // import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import { CircularProgressbar, buildStyles} from 'react-circular-progressbar'
 import AIInsightsPanel from './AIInsightsPanel';
+import { Activity, ArrowRight, ArrowUpRight, BarChart3, Bitcoin, Briefcase, ChartLine, ChartPie, CheckCircle2, ClipboardList, Coins, CreditCard, DollarSign, Flag, LayoutGrid, Minus, Pause, Pencil, Percent, PiggyBank, Play, Plus, Receipt, Save, Scale, Table, Target, Trash2, TrendingDown, TrendingUp, Wallet, X } from 'lucide-react';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler, ArcElement);
 
 function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,formatCurrency, goals, setGoals, formatDate, goalsProgress, setGoalsProgress, totalBudgetAmount, parseDate, setItems, setBalances, setCashOnHand, setBankAccountBalance, setSavings, setTransactions, setAmounts, addedInvestments, setAddedInvestments }) {
@@ -529,14 +530,14 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
   // Function to get icon for overview items
   const getOverviewItemIcon = (itemName) => {
     const icons = {
-      'Budget': '💰',
-      'Balance': '💳',
-      'X-penses': '💸',
-      'Goals (saved)': '🎯', 
-      'Investments': '📈',
-      'Overview Total': '📊'
+      'Budget': <PiggyBank size="1em" />,
+      'Balance': <CreditCard size="1em" />,
+      'X-penses': <Receipt size="1em" />,
+      'Goals (saved)': <Target size="1em" />,
+      'Investments': <TrendingUp size="1em" />,
+      'Overview Total': <BarChart3 size="1em" />
     };
-    return icons[itemName] || '📋';
+    return icons[itemName] || <ClipboardList size="1em" />;
   };
 
   // Goals helper functions
@@ -548,33 +549,21 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
     return '#dc3545'; // Red for just started
   };
 
-  const getGoalIcon = (progress, category) => {
-    // Icons based on goal category or progress
-    const categoryIcons = {
-      'savings': '💰',
-      'vacation': '✈️',
-      'car': '🚗',
-      'house': '🏠',
-      'education': '🎓',
-      'emergency': '🚨',
-      'retirement': '👴',
-      'investment': '📈'
-    };
-    
-    // Default icons based on progress
-    if (progress >= 100) return '🎉';
-    if (progress >= 75) return '🔥';
-    if (progress >= 50) return '⭐';
-    if (progress >= 25) return '📈';
-    return '🚀';
+  const getGoalIcon = (progress) => {
+    // The icon reflects how far along the goal is
+    if (progress >= 100) return <CheckCircle2 size="1em" />;
+    if (progress >= 75) return <TrendingUp size="1em" />;
+    if (progress >= 50) return <Target size="1em" />;
+    if (progress >= 25) return <ArrowUpRight size="1em" />;
+    return <Flag size="1em" />;
   };
 
   const getProgressLabel = (progress) => {
-    if (progress >= 100) return 'Completed! 🎉';
-    if (progress >= 75) return 'Almost there! 🔥';
-    if (progress >= 50) return 'Halfway! ⭐';
-    if (progress >= 25) return 'Good start! 📈';
-    return 'Just started 🚀';
+    if (progress >= 100) return 'Completed';
+    if (progress >= 75) return 'Almost there';
+    if (progress >= 50) return 'Halfway';
+    if (progress >= 25) return 'Good start';
+    return 'Just started';
   };
 
   // Goals chart data
@@ -686,29 +675,18 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
     return performanceColors[index % performanceColors.length];
   };
 
-  const getInvestmentIcon = (investment) => {
+  // Plain-text symbol for coins that have one (used in chart text, which cannot hold an icon)
+  const getInvestmentSymbol = (investment) => {
     const name = investment.name.toLowerCase();
-    const cryptoIcons = {
-      'bitcoin': '₿',
-      'btc': '₿',
-      'ethereum': 'Ξ',
-      'eth': 'Ξ',
-      'usdc': '💵',
-      'xrp': '🌊',
-      'ripple': '🌊',
-      'cardano': '🎴',
-      'ada': '🎴',
-      'solana': '☀️',
-      'sol': '☀️'
-    };
-    
-    for (const crypto in cryptoIcons) {
-      if (name.includes(crypto)) {
-        return cryptoIcons[crypto];
-      }
-    }
-    
-    return '🪙'; // Default crypto icon
+    if (name.includes('bitcoin') || name.includes('btc')) return '₿';
+    if (name.includes('ethereum') || name.includes('eth')) return 'Ξ';
+    return '';
+  };
+
+  // Same idea for cards on screen: the symbol if there is one, otherwise a coin icon
+  const getInvestmentIcon = (investment) => {
+    const symbol = getInvestmentSymbol(investment);
+    return symbol ? <span>{symbol}</span> : <Coins size="1em" />;
   };
 
   const getInvestmentPerformance = (investment) => {
@@ -718,10 +696,10 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
   };
 
   const getPerformanceLabel = (performance) => {
-    if (performance > 5) return { label: 'Strong Gain! 🚀', class: 'success' };
-    if (performance > 0) return { label: 'Gaining 📈', class: 'success' };
-    if (performance > -5) return { label: 'Stable 📊', class: 'warning' };
-    return { label: 'Down 📉', class: 'danger' };
+    if (performance > 5) return { label: 'Strong gain', class: 'success', icon: <TrendingUp size={12} /> };
+    if (performance > 0) return { label: 'Gaining', class: 'success', icon: <TrendingUp size={12} /> };
+    if (performance > -5) return { label: 'Stable', class: 'warning', icon: <Minus size={12} /> };
+    return { label: 'Down', class: 'danger', icon: <TrendingDown size={12} /> };
   };
 
   // Investments chart data
@@ -767,7 +745,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
             
             return labels.map((label, index) => {
               const investment = addedInvestments[index];
-              label.text = `${getInvestmentIcon(investment)} ${label.text}`;
+              label.text = `${getInvestmentSymbol(investment)} ${label.text}`.trim();
               return label;
             });
           }
@@ -783,7 +761,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
         callbacks: {
           title: function(context) {
             const investment = addedInvestments[context[0].dataIndex];
-            return `${getInvestmentIcon(investment)} ${investment.name}`;
+            return `${getInvestmentSymbol(investment)} ${investment.name}`.trim();
           },
           label: function(context) {
             const investment = addedInvestments[context.dataIndex];
@@ -878,7 +856,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                         onClick={() => setChartType('line')}
                         title="Line Chart"
                       >
-                        📈
+                        <ChartLine size={16} />
                       </button>
                       <button 
                         type="button" 
@@ -886,7 +864,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                         onClick={() => setChartType('bar')}
                         title="Bar Chart"
                       >
-                        📊
+                        <BarChart3 size={16} />
                       </button>
                       <button 
                         type="button" 
@@ -894,7 +872,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                         onClick={() => setChartType('doughnut')}
                         title="Doughnut Chart"
                       >
-                        🍩
+                        <ChartPie size={16} />
                       </button>
                     </div>
 
@@ -932,7 +910,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                       onClick={() => setAnimationsEnabled(!animationsEnabled)}
                       title={animationsEnabled ? 'Disable Animations' : 'Enable Animations'}
                     >
-                      {animationsEnabled ? '🎬' : '⏸️'}
+                      {animationsEnabled ? <Play size={16} /> : <Pause size={16} />}
                     </button>
                   </div>
                 </div>
@@ -941,14 +919,14 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                 <div style={{height: '400px', position: 'relative'}}>
                   {formattedTransactions.length === 0 ? (
                     <div className="text-center p-5">
-                      <div className="mb-3" style={{fontSize: '4rem'}}>📊</div>
+                      <div className="mb-3 text-muted"><BarChart3 size={56} /></div>
                       <h5 className="text-muted">No Transactions Have Been Added!</h5>
                       <p className="text-muted">Start tracking your expenses to see spending patterns</p>
                       <button 
                         className={`btn ${darkMode ? 'btn-outline-light' : 'btn-outline-primary'}`}
                         onClick={() => navigate('/transactions')}
                       >
-                        ➕ Add Your First Transaction
+                        <Plus size={16} className="icon-gap-sm" /> Add Your First Transaction
                       </button>
                     </div>
                   ) : (
@@ -993,7 +971,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                       margin: '0 0 10px 0', 
                       textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
                       color: darkMode ? '#e2e8f0' : '#2d3748'
-                  }}>🚀 Crypto Investments</h6>
+                  }}><Bitcoin size={26} className="icon-gap" />Crypto Investments</h6>
                   <p style={{ color: 'gray' }}><sup>Interactive Portfolio Tracking Dashboard</sup></p>
                 </div>
                 
@@ -1006,7 +984,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                       onClick={() => setInvestmentsViewMode('cards')}
                       title="Card View"
                     >
-                      🎴
+                      <LayoutGrid size={16} />
                     </button>
                     <button 
                       type="button" 
@@ -1014,7 +992,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                       onClick={() => setInvestmentsViewMode('table')}
                       title="Table View"
                     >
-                      📋
+                      <Table size={16} />
                     </button>
                   </div>
 
@@ -1025,7 +1003,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                     onClick={() => setShowInvestmentsChart(!showInvestmentsChart)}
                     title={showInvestmentsChart ? 'Hide Portfolio Chart' : 'Show Portfolio Chart'}
                   >
-                    {showInvestmentsChart ? '📊' : '📈'}
+                    {showInvestmentsChart ? <BarChart3 size={16} /> : <ChartLine size={16} />}
                   </button>
                   
                   {/* Animation Toggle */}
@@ -1035,7 +1013,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                     onClick={() => setInvestmentsAnimations(!investmentsAnimations)}
                     title={investmentsAnimations ? 'Disable Animations' : 'Enable Animations'}
                   >
-                    {investmentsAnimations ? '🎬' : '⏸️'}
+                    {investmentsAnimations ? <Play size={16} /> : <Pause size={16} />}
                   </button>
                 </div>
               </div>
@@ -1061,14 +1039,14 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
 
               {addedInvestments.length === 0 ? (
                 <div className="text-center p-5">
-                  <div className="mb-3" style={{fontSize: '4rem'}}>🚀</div>
+                  <div className="mb-3 text-muted"><Bitcoin size={56} /></div>
                   <h5 className="text-muted">No Investments Have Been Added!</h5>
                   <p className="text-muted">Start building your crypto portfolio today</p>
                   <button 
                     className={`btn ${darkMode ? 'btn-outline-light' : 'btn-outline-primary'}`}
                     onClick={() => navigate('/investments')}
                   >
-                    ➕ Add Your First Investment
+                    <Plus size={16} className="icon-gap-sm" /> Add Your First Investment
                   </button>
                 </div>
               ) : (
@@ -1118,13 +1096,13 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                 <div className="d-flex justify-content-between align-items-start mb-3">
                                   <div className="flex-grow-1">
                                     <h6 className="card-title mb-2 d-flex align-items-center" style={{color: investmentColor}}>
-                                      <span className="me-2" style={{fontSize: '2rem'}}>
+                                      <span style={{fontSize: '1.5rem', marginRight: '0.75rem'}}>
                                         {getInvestmentIcon(investment)}
                                       </span>
                                       <div>
                                         <div>{investment.name}</div>
                                         <small className={`badge bg-${performanceInfo.class} mt-1`}>
-                                          {performanceInfo.label}
+                                          {performanceInfo.icon} {performanceInfo.label}
                                         </small>
                                       </div>
                                     </h6>
@@ -1211,14 +1189,14 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                         className="btn btn-sm btn-success flex-fill"
                                         style={{borderRadius: '8px'}}
                                       >
-                                        💾 Save
+                                        <Save size={14} className="icon-gap-sm" /> Save
                                       </button>
                                       <button 
                                         onClick={handleCancelEdit} 
                                         className="btn btn-sm btn-secondary flex-fill"
                                         style={{borderRadius: '8px'}}
                                       >
-                                        ❌ Cancel
+                                        <X size={14} className="icon-gap-sm" /> Cancel
                                       </button>
                                     </>
                                   ) : (
@@ -1233,14 +1211,14 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                           borderRadius: '8px'
                                         }}
                                       >
-                                        ✏️ Edit
+                                        <Pencil size={14} className="icon-gap-sm" /> Edit
                                       </button>
                                       <button 
                                         onClick={() => handleRemoveInvestment(index)} 
                                         className="btn btn-sm btn-outline-danger flex-fill"
                                         style={{borderRadius: '8px'}}
                                       >
-                                        🗑️ Remove
+                                        <Trash2 size={14} className="icon-gap-sm" /> Remove
                                       </button>
                                     </>
                                   )}
@@ -1254,7 +1232,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                          border: `1px solid ${investmentColor}40`,
                                          animation: investmentsAnimations ? 'fadeIn 0.3s ease-in' : 'none'
                                        }}>
-                                    <h6 style={{color: investmentColor}}>📊 Investment Analytics</h6>
+                                    <h6 style={{color: investmentColor}}><BarChart3 size={18} className="icon-gap" />Investment Analytics</h6>
                                     <div className="row text-center">
                                       <div className="col-4">
                                         <small>Total Return</small><br />
@@ -1271,7 +1249,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                       <div className="col-4">
                                         <small>Risk Level</small><br />
                                         <strong style={{color: investmentColor}}>
-                                          {Math.abs(performance) > 5 ? 'High 🔥' : Math.abs(performance) > 2 ? 'Medium ⚡' : 'Low 🛡️'}
+                                          {Math.abs(performance) > 5 ? 'High' : Math.abs(performance) > 2 ? 'Medium' : 'Low'}
                                         </strong>
                                       </div>
                                     </div>
@@ -1320,14 +1298,14 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                               >
                                 <td>
                                   <div className="d-flex align-items-center">
-                                    <span style={{fontSize: '1.5rem', marginRight: '10px'}}>
+                                    <span style={{fontSize: '1.25rem', marginRight: '0.75rem'}}>
                                       {getInvestmentIcon(investment)}
                                     </span>
                                     <div>
                                       <strong style={{color: investmentColor}}>{investment.name}</strong>
                                       <br />
                                       <small className={`badge bg-${performanceInfo.class}`}>
-                                        {performanceInfo.label}
+                                        {performanceInfo.icon} {performanceInfo.label}
                                       </small>
                                     </div>
                                   </div>
@@ -1356,7 +1334,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                 <td>
                                   <div className="d-flex align-items-center">
                                     <span style={{color: performance > 0 ? '#28a745' : '#dc3545', marginRight: '8px'}}>
-                                      {performance > 0 ? '📈' : '📉'}{performance.toFixed(2)}%
+                                      {performance > 0 ? <TrendingUp size={14} /> : <TrendingDown size={14} />} {performance.toFixed(2)}%
                                     </span>
                                   </div>
                                 </td>
@@ -1367,13 +1345,13 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                         onClick={(e) => {e.stopPropagation(); handleSaveInvestment(index);}} 
                                         className="btn btn-sm btn-success"
                                       >
-                                        💾
+                                        <Save size={14} />
                                       </button>
                                       <button 
                                         onClick={(e) => {e.stopPropagation(); handleCancelEdit();}} 
                                         className="btn btn-sm btn-secondary"
                                       >
-                                        ❌
+                                        <X size={14} />
                                       </button>
                                     </div>
                                   ) : (
@@ -1387,13 +1365,13 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                           border: `1px solid ${investmentColor}40`
                                         }}
                                       >
-                                        ✏️
+                                        <Pencil size={14} />
                                       </button>
                                       <button 
                                         onClick={(e) => {e.stopPropagation(); handleRemoveInvestment(index);}} 
                                         className="btn btn-sm btn-outline-danger"
                                       >
-                                        🗑️
+                                        <Trash2 size={14} />
                                       </button>
                                     </div>
                                   )}
@@ -1412,20 +1390,20 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                         fontSize: '1.2rem', 
                         fontWeight: '700',
                         color: darkMode ? '#e2e8f0' : '#2d3748'
-                    }}>💼 Portfolio Summary</h6>
+                    }}><Briefcase size={20} className="icon-gap" />Portfolio Summary</h6>
                     <div className="row text-center">
                       <div className="col-md-3">
-                        <strong style={{color: '#28a745'}}>🚀 Total Assets</strong><br />
+                        <strong style={{color: '#28a745'}}><Wallet size={16} className="icon-gap" />Total Assets</strong><br />
                         <span style={{color: '#28a745', fontSize: '1.5rem'}}>{addedInvestments.length}</span>
                       </div>
                       <div className="col-md-3">
-                        <strong style={{color: '#17a2b8'}}>💰 Portfolio Value</strong><br />
+                        <strong style={{color: '#17a2b8'}}><DollarSign size={16} className="icon-gap" />Portfolio Value</strong><br />
                         <span style={{color: '#17a2b8', fontSize: '1.2rem'}}>
                           {formatCurrency(totalPrice)}
                         </span>
                       </div>
                       <div className="col-md-3">
-                        <strong style={{color: '#ffc107'}}>📊 Avg. Performance</strong><br />
+                        <strong style={{color: '#ffc107'}}><Activity size={16} className="icon-gap" />Avg. Performance</strong><br />
                         <span style={{color: '#ffc107', fontSize: '1.2rem'}}>
                           {addedInvestments.length > 0 ? 
                             (addedInvestments.reduce((sum, inv) => sum + getInvestmentPerformance(inv), 0) / addedInvestments.length).toFixed(2) + '%' : 
@@ -1434,7 +1412,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                         </span>
                       </div>
                       <div className="col-md-3">
-                        <strong style={{color: '#dc3545'}}>🎯 Diversity Score</strong><br />
+                        <strong style={{color: '#dc3545'}}><ChartPie size={16} className="icon-gap" />Diversity Score</strong><br />
                         <span style={{color: '#dc3545', fontSize: '1.2rem'}}>
                           {addedInvestments.length > 0 ? Math.min(addedInvestments.length * 20, 100) : 0}%
                         </span>
@@ -1453,7 +1431,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                       margin: '0 0 10px 0', 
                       textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
                       color: darkMode ? '#e2e8f0' : '#2d3748'
-                  }}>🎯 Goals Progress</h6>
+                  }}><Target size={26} className="icon-gap" />Goals Progress</h6>
                   <p style={{ color: 'gray' }}><sup>Interactive Goal Tracking Dashboard</sup></p>
                 </div>
                 
@@ -1466,7 +1444,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                       onClick={() => setGoalsViewMode('cards')}
                       title="Card View"
                     >
-                      🎴
+                      <LayoutGrid size={16} />
                     </button>
                     <button 
                       type="button" 
@@ -1474,7 +1452,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                       onClick={() => setGoalsViewMode('list')}
                       title="List View"
                     >
-                      📋
+                      <Table size={16} />
                     </button>
                   </div>
 
@@ -1485,7 +1463,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                     onClick={() => setShowGoalsChart(!showGoalsChart)}
                     title={showGoalsChart ? 'Hide Goals Chart' : 'Show Goals Chart'}
                   >
-                    {showGoalsChart ? '📊' : '📈'}
+                    {showGoalsChart ? <BarChart3 size={16} /> : <ChartLine size={16} />}
                   </button>
                   
                   {/* Animation Toggle */}
@@ -1495,7 +1473,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                     onClick={() => setGoalsAnimations(!goalsAnimations)}
                     title={goalsAnimations ? 'Disable Animations' : 'Enable Animations'}
                   >
-                    {goalsAnimations ? '🎬' : '⏸️'}
+                    {goalsAnimations ? <Play size={16} /> : <Pause size={16} />}
                   </button>
                 </div>
               </div>
@@ -1521,14 +1499,14 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
 
               {goalsProgress.length === 0 ? (
                 <div className="text-center p-5">
-                  <div className="mb-3" style={{fontSize: '4rem'}}>🎯</div>
+                  <div className="mb-3 text-muted"><Target size={56} /></div>
                   <h5 className="text-muted">No Goals Have Been Added!</h5>
                   <p className="text-muted">Start setting financial goals to track your progress</p>
                   <button 
                     className={`btn ${darkMode ? 'btn-outline-light' : 'btn-outline-primary'}`}
                     onClick={() => navigate('/goals')}
                   >
-                    ➕ Add Your First Goal
+                    <Plus size={16} className="icon-gap-sm" /> Add Your First Goal
                   </button>
                 </div>
               ) : (
@@ -1577,8 +1555,8 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                 <div className="d-flex justify-content-between align-items-start mb-3">
                                   <div className="flex-grow-1">
                                     <h6 className="card-title mb-1 d-flex align-items-center" style={{color: goalColor}}>
-                                      <span className="me-2" style={{fontSize: '1.5rem'}}>
-                                        {getGoalIcon(progress, goal.category)}
+                                      <span style={{fontSize: '1.25rem', marginRight: '0.6rem'}}>
+                                        {getGoalIcon(progress)}
                                       </span>
                                       {goal.name}
                                     </h6>
@@ -1653,7 +1631,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                       ${(goal.target - goal.saved).toFixed(2)} remaining
                                     </small>
                                     <small style={{color: goalColor}}>
-                                      {progress >= 100 ? '🎉 Complete!' : `${(100 - progress).toFixed(1)}% to go`}
+                                      {progress >= 100 ? 'Complete' : `${(100 - progress).toFixed(1)}% to go`}
                                     </small>
                                   </div>
                                 </div>
@@ -1666,7 +1644,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                          border: `1px solid ${goalColor}40`,
                                          animation: goalsAnimations ? 'fadeIn 0.3s ease-in' : 'none'
                                        }}>
-                                    <h6 style={{color: goalColor}}>📊 Goal Analytics</h6>
+                                    <h6 style={{color: goalColor}}><BarChart3 size={18} className="icon-gap" />Goal Analytics</h6>
                                     <div className="row text-center">
                                       <div className="col-4">
                                         <small>Monthly Need</small><br />
@@ -1719,8 +1697,8 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                           >
                             <div className="d-flex align-items-center justify-content-between">
                               <div className="d-flex align-items-center flex-grow-1">
-                                <span style={{fontSize: '2rem', marginRight: '1rem'}}>
-                                  {getGoalIcon(progress, goal.category)}
+                                <span style={{fontSize: '1.6rem', marginRight: '1rem'}}>
+                                  {getGoalIcon(progress)}
                                 </span>
                                 <div className="flex-grow-1">
                                   <h6 className="mb-1" style={{color: goalColor}}>
@@ -1764,26 +1742,26 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                         fontSize: '1.2rem', 
                         fontWeight: '700',
                         color: darkMode ? '#e2e8f0' : '#2d3748'
-                    }}>📈 Goals Summary</h6>
+                    }}><TrendingUp size={20} className="icon-gap" />Goals Summary</h6>
                     <div className="row text-center">
                       <div className="col-md-3">
-                        <strong style={{color: '#28a745'}}>🎯 Total Goals</strong><br />
+                        <strong style={{color: '#28a745'}}><Target size={16} className="icon-gap" />Total Goals</strong><br />
                         <span style={{color: '#28a745', fontSize: '1.5rem'}}>{goalsProgress.length}</span>
                       </div>
                       <div className="col-md-3">
-                        <strong style={{color: '#17a2b8'}}>✅ Completed</strong><br />
+                        <strong style={{color: '#17a2b8'}}><CheckCircle2 size={16} className="icon-gap" />Completed</strong><br />
                         <span style={{color: '#17a2b8', fontSize: '1.5rem'}}>
                           {goalsProgress.filter(goal => (goal.saved / goal.target) * 100 >= 100).length}
                         </span>
                       </div>
                       <div className="col-md-3">
-                        <strong style={{color: '#ffc107'}}>💰 Total Saved</strong><br />
+                        <strong style={{color: '#ffc107'}}><PiggyBank size={16} className="icon-gap" />Total Saved</strong><br />
                         <span style={{color: '#ffc107', fontSize: '1.2rem'}}>
                           ${totalGoalsSaved.toFixed(2)}
                         </span>
                       </div>
                       <div className="col-md-3">
-                        <strong style={{color: '#dc3545'}}>🎪 Total Target</strong><br />
+                        <strong style={{color: '#dc3545'}}><Flag size={16} className="icon-gap" />Total Target</strong><br />
                         <span style={{color: '#dc3545', fontSize: '1.2rem'}}>
                           ${goalsProgress.reduce((sum, goal) => sum + goal.target, 0).toFixed(2)}
                         </span>
@@ -1802,7 +1780,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                 margin: '0 0 10px 0', 
                                 textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
                                 color: darkMode ? '#e2e8f0' : '#2d3748'
-                            }}>💼 Financial Overview</h6>
+                            }}><Briefcase size={26} className="icon-gap" />Financial Overview</h6>
                             <p style={{ color: 'gray' }}><sup>Interactive Summary Dashboard</sup></p>
                         </div>
                         
@@ -1814,7 +1792,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                 onClick={() => setShowOverviewChart(!showOverviewChart)}
                                 title={showOverviewChart ? 'Hide Chart' : 'Show Chart'}
                             >
-                                {showOverviewChart ? '📊' : '📈'}
+                                {showOverviewChart ? <BarChart3 size={16} /> : <ChartLine size={16} />}
                             </button>
                             
                             {/* Animation Toggle */}
@@ -1824,7 +1802,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                 onClick={() => setOverviewAnimations(!overviewAnimations)}
                                 title={overviewAnimations ? 'Disable Animations' : 'Enable Animations'}
                             >
-                                {overviewAnimations ? '🎬' : '⏸️'}
+                                {overviewAnimations ? <Play size={16} /> : <Pause size={16} />}
                             </button>
                         </div>
                     </div>
@@ -1887,7 +1865,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                                     {formatCurrency(item.value)}
                                                 </h4>
                                                 <small className={`text-${item.trend === 'up' ? 'success' : item.trend === 'down' ? 'danger' : 'muted'}`}>
-                                                    {item.trend === 'up' ? '📈 Positive' : item.trend === 'down' ? '📉 Negative' : '➡️ Stable'}
+                                                    {item.trend === 'up' ? <><TrendingUp size={14} /> Positive</> : item.trend === 'down' ? <><TrendingDown size={14} /> Negative</> : <><ArrowRight size={14} /> Stable</>}
                                                 </small>
                                             </div>
                                             <div className="text-end">
@@ -1944,19 +1922,19 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                     <div className={`mt-3 p-3 rounded ${darkMode ? 'bg-secondary' : 'bg-light'}`}>
                         <div className="row text-center">
                             <div className="col-md-3">
-                                <strong style={{color: '#28a745'}}>💰 Total Assets</strong><br />
+                                <strong style={{color: '#28a745'}}><Wallet size={16} className="icon-gap" />Total Assets</strong><br />
                                 <span style={{color: '#28a745'}}>{formatCurrency(totalBudgetAmount + balance + totalGoalsSaved + totalPrice)}</span>
                             </div>
                             <div className="col-md-3">
-                                <strong style={{color: '#dc3545'}}>💸 Total Spent</strong><br />
+                                <strong style={{color: '#dc3545'}}><Receipt size={16} className="icon-gap" />Total Spent</strong><br />
                                 <span style={{color: '#dc3545'}}>{formatCurrency(totalAmount)}</span>
                             </div>
                             <div className="col-md-3">
-                                <strong style={{color: '#17a2b8'}}>📊 Net Worth</strong><br />
+                                <strong style={{color: '#17a2b8'}}><Scale size={16} className="icon-gap" />Net Worth</strong><br />
                                 <span style={{color: overviewTotal >= 0 ? '#28a745' : '#dc3545'}}>{formatCurrency(overviewTotal)}</span>
                             </div>
                             <div className="col-md-3">
-                                <strong style={{color: '#ffc107'}}>🎯 Savings Rate</strong><br />
+                                <strong style={{color: '#ffc107'}}><Percent size={16} className="icon-gap" />Savings Rate</strong><br />
                                 <span style={{color: '#ffc107'}}>
                                     {totalBudgetAmount > 0 ? ((totalGoalsSaved / totalBudgetAmount) * 100).toFixed(1) : '0.0'}%
                                 </span>
