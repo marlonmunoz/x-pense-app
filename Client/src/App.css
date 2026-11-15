@@ -336,6 +336,21 @@ body.light-mode #root {
   .mobile-sidebar .d-flex {
     display: flex !important;
   }
+
+  /* Keep the panel a single vertical column. The global small-screen rules
+     (.d-flex { flex-wrap: wrap } and, at <=480px, .d-flex > * { flex: 1 1 100% })
+     would otherwise make each block as tall as the panel and wrap it into its
+     own column, so the menu scrolls sideways on phones. */
+  .mobile-sidebar,
+  .mobile-sidebar .d-flex {
+    flex-wrap: nowrap !important;
+  }
+
+  .mobile-sidebar > *,
+  .mobile-sidebar .d-flex > * {
+    flex: 0 1 auto !important;
+    margin-bottom: 0;
+  }
   
   .mobile-sidebar .align-items-center {
     align-items: center !important;
