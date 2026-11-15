@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SmartUpdateService from '../services/smartUpdateService';
+import { Banknote, BarChart3, Bot, Calendar, CheckCircle2, ClipboardList, Eye, Flag, Landmark, ListChecks, Loader2, PiggyBank, RefreshCw, Scale, SlidersHorizontal, TrendingUp, TriangleAlert, Wallet, X, XCircle } from 'lucide-react';
 
 function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose }) {
   const [smartUpdateService] = useState(() => {
@@ -207,10 +208,10 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
       case 'balance':
         return (
           <div className="bulk-update-form">
-            <h6>💰 Bulk Balance Update</h6>
+            <h6><Wallet size={18} className="icon-gap" />Bulk Balance Update</h6>
             <div className="row">
               <div className="col-md-4">
-                <label className="form-label">💵 Cash Adjustment</label>
+                <label className="form-label"><Banknote size={16} className="icon-gap-sm" />Cash Adjustment</label>
                 <div className="input-group">
                   <select 
                     className="form-select"
@@ -231,7 +232,7 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
                 </div>
               </div>
               <div className="col-md-4">
-                <label className="form-label">🏦 Bank Adjustment</label>
+                <label className="form-label"><Landmark size={16} className="icon-gap-sm" />Bank Adjustment</label>
                 <div className="input-group">
                   <select 
                     className="form-select"
@@ -252,7 +253,7 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
                 </div>
               </div>
               <div className="col-md-4">
-                <label className="form-label">🐷 Savings Adjustment</label>
+                <label className="form-label"><PiggyBank size={16} className="icon-gap-sm" />Savings Adjustment</label>
                 <div className="input-group">
                   <select 
                     className="form-select"
@@ -279,10 +280,10 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
       case 'budget':
         return (
           <div className="bulk-update-form">
-            <h6>📊 Bulk Budget Update</h6>
+            <h6><ClipboardList size={18} className="icon-gap" />Bulk Budget Update</h6>
             <div className="row">
               <div className="col-md-6">
-                <label className="form-label">💰 Amount Adjustment</label>
+                <label className="form-label"><Wallet size={16} className="icon-gap-sm" />Amount Adjustment</label>
                 <div className="input-group">
                   <select 
                     className="form-select"
@@ -304,7 +305,7 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
                 </div>
               </div>
               <div className="col-md-6">
-                <label className="form-label">📅 Date Update</label>
+                <label className="form-label"><Calendar size={16} className="icon-gap-sm" />Date Update</label>
                 <input
                   type="date"
                   className="form-control"
@@ -318,10 +319,10 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
       case 'investment':
         return (
           <div className="bulk-update-form">
-            <h6>📈 Bulk Investment Update</h6>
+            <h6><TrendingUp size={18} className="icon-gap" />Bulk Investment Update</h6>
             <div className="row">
               <div className="col-md-6">
-                <label className="form-label">📊 Amount Adjustment</label>
+                <label className="form-label"><BarChart3 size={16} className="icon-gap-sm" />Amount Adjustment</label>
                 <div className="input-group">
                   <select 
                     className="form-select"
@@ -342,7 +343,7 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
                 </div>
               </div>
               <div className="col-md-6">
-                <label className="form-label">💡 Rebalancing Strategy</label>
+                <label className="form-label"><Scale size={16} className="icon-gap-sm" />Rebalancing Strategy</label>
                 <select 
                   className="form-select"
                   onChange={(e) => handleBulkUpdateChange('rebalanceStrategy', e.target.value)}
@@ -369,11 +370,11 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
 
     return (
       <div className="ai-suggestions-panel mb-4">
-        <h6>🤖 AI Recommendations</h6>
+        <h6><Bot size={18} className="icon-gap" />AI Recommendations</h6>
         
         {aiSuggestions.priority.length > 0 && (
           <div className="mb-3">
-            <h6 className="text-danger">🔥 Priority Actions</h6>
+            <h6 className="text-danger"><Flag size={16} className="icon-gap-sm" />Priority Actions</h6>
             {aiSuggestions.priority.map((suggestion, index) => (
               <div key={index} className="alert alert-warning">
                 <strong>{suggestion.message}</strong>
@@ -386,7 +387,7 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
 
         {aiSuggestions.optimization.length > 0 && (
           <div className="mb-3">
-            <h6 className="text-info">⚡ Optimization Opportunities</h6>
+            <h6 className="text-info"><SlidersHorizontal size={16} className="icon-gap-sm" />Optimization Opportunities</h6>
             {aiSuggestions.optimization.map((suggestion, index) => (
               <div key={index} className="alert alert-info">
                 <strong>{suggestion.message}</strong>
@@ -405,17 +406,17 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
 
     return (
       <div className="validation-results mb-4">
-        <h6>✅ Validation Results</h6>
+        <h6><CheckCircle2 size={18} className="icon-gap" />Validation Results</h6>
         
         {validation.validUpdates.length > 0 && (
           <div className="alert alert-success">
-            <strong>✅ {validation.validUpdates.length} items ready for update</strong>
+            <strong><CheckCircle2 size={16} className="icon-gap-sm" />{validation.validUpdates.length} items ready for update</strong>
           </div>
         )}
 
         {validation.invalidUpdates.length > 0 && (
           <div className="alert alert-danger">
-            <strong>❌ {validation.invalidUpdates.length} items have validation errors</strong>
+            <strong><XCircle size={16} className="icon-gap-sm" />{validation.invalidUpdates.length} items have validation errors</strong>
             <ul className="mt-2 mb-0">
               {validation.invalidUpdates.slice(0, 3).map((update, index) => (
                 <li key={index}>
@@ -428,7 +429,7 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
 
         {validation.warnings.length > 0 && (
           <div className="alert alert-warning">
-            <strong>⚠️ Warnings:</strong>
+            <strong><TriangleAlert size={16} className="icon-gap-sm" />Warnings:</strong>
             <ul className="mt-2 mb-0">
               {validation.warnings.slice(0, 3).map((warning, index) => (
                 <li key={index}>{warning}</li>
@@ -439,7 +440,7 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
 
         {validation.aiRecommendations.length > 0 && (
           <div className="alert alert-info">
-            <strong>🤖 AI Recommendations:</strong>
+            <strong><Bot size={16} className="icon-gap-sm" />AI Recommendations:</strong>
             <ul className="mt-2 mb-0">
               {validation.aiRecommendations.slice(0, 3).map((rec, index) => (
                 <li key={index}>{rec.message}</li>
@@ -580,13 +581,13 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
       <div className="bulk-update-content" style={{ width: '800px' }}>
         <div className="bulk-update-header">
           <div className="d-flex justify-content-between align-items-center">
-            <h4>🔄 Bulk Update - {updateType.charAt(0).toUpperCase() + updateType.slice(1)}</h4>
+            <h4><RefreshCw size={22} className="icon-gap" />Bulk Update - {updateType.charAt(0).toUpperCase() + updateType.slice(1)}</h4>
             <button 
               className="btn btn-link text-white p-0"
               onClick={onClose}
               style={{ fontSize: '1.5rem', textDecoration: 'none' }}
             >
-              ✕
+              <X size={18} />
             </button>
           </div>
         </div>
@@ -598,7 +599,7 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
           {/* Item Selection */}
           <div className="mb-4">
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <h6>📋 Select Items to Update ({selectedItems.length}/{items.length})</h6>
+              <h6><ListChecks size={18} className="icon-gap" />Select Items to Update ({selectedItems.length}/{items.length})</h6>
               <button 
                 className="btn btn-sm btn-outline-primary"
                 onClick={handleSelectAll}
@@ -656,21 +657,21 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
                 className="btn-bulk btn-secondary-bulk"
                 onClick={onClose}
               >
-                ❌ Cancel
+                <X size={16} className="icon-gap-sm" />Cancel
               </button>
               <button 
                 className="btn-bulk btn-primary-bulk"
                 onClick={handlePreview}
                 disabled={selectedItems.length === 0}
               >
-                👁️ Preview Changes
+                <Eye size={16} className="icon-gap-sm" />Preview Changes
               </button>
               <button 
                 className="btn-bulk btn-success-bulk"
                 onClick={handleBulkUpdate}
                 disabled={selectedItems.length === 0 || isProcessing}
               >
-                {isProcessing ? '⏳ Processing...' : '✅ Apply Updates'}
+                {isProcessing ? <><Loader2 size={16} className="icon-gap-sm" style={{ animation: 'spin 1s linear infinite' }} />Processing...</> : <><CheckCircle2 size={16} className="icon-gap-sm" />Apply Updates</>}
               </button>
             </div>
           </div>

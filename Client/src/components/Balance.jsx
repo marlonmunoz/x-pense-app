@@ -3,6 +3,7 @@ import { FinancialCalculator } from "../services/financialCalculator";
 import SmartUpdateService from "../services/smartUpdateService";
 import BulkUpdatePanel from "./BulkUpdatePanel";
 import { api, API_ENDPOINTS, buildApiUrl } from "../config/api";
+import { Activity, Banknote, BarChart3, Bot, ChartPie, Check, CheckCircle2, ChevronDown, ChevronUp, Flag, GraduationCap, Hash, Landmark, Layers, Lightbulb, Merge, Pencil, PiggyBank, Receipt, RotateCcw, Save, Settings, Shield, SlidersHorizontal, Target, Trash2, TriangleAlert, Users, Wallet, X, XCircle } from 'lucide-react';
 
 function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setBankAccountBalance, savings, setSavings, setTotal, formatCurrency, balanceId, setBalanceId, balances, setBalances, editIndex, setEditIndex, editBalance, setEditBalance, balanceError, setBalanceError}) {
 
@@ -1110,7 +1111,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       
       {/* Balance Header */}
       <div className="balance-header">
-        <h5>💰 Balance Management</h5>
+        <h5><Wallet size={20} className="icon-gap" />Balance Management</h5>
         <p className="balance-subtitle">Track your financial accounts in one place</p>
       </div>
 
@@ -1118,11 +1119,11 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       {updateSuggestions && updateSuggestions.priority && updateSuggestions.optimization && 
        (updateSuggestions.priority.length > 0 || updateSuggestions.optimization.length > 0) && (
         <div className="insights-section">
-          <h5 className="balance-title">🤖 Smart Update Recommendations</h5>
+          <h5 className="balance-title"><Bot size={20} className="icon-gap" />Smart Update Recommendations</h5>
           
           {updateSuggestions.priority.length > 0 && (
             <div className="mb-3">
-              <h6 style={{color: '#f56565', fontWeight: '700'}}>🔥 High Priority</h6>
+              <h6 style={{color: '#f56565', fontWeight: '700'}}><Flag size={18} className="icon-gap" />High Priority</h6>
               {updateSuggestions.priority.map((suggestion, index) => (
                 <div key={index} className="insight-card critical">
                   <strong>{suggestion.message}</strong>
@@ -1135,7 +1136,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
 
           {updateSuggestions.optimization.length > 0 && (
             <div className="mb-3">
-              <h6 style={{color: '#4299e1', fontWeight: '700'}}>⚡ Optimization Opportunities</h6>
+              <h6 style={{color: '#4299e1', fontWeight: '700'}}><SlidersHorizontal size={18} className="icon-gap" />Optimization Opportunities</h6>
               {updateSuggestions.optimization.map((suggestion, index) => (
                 <div key={index} className="insight-card opportunity">
                   <strong>{suggestion.message}</strong>
@@ -1162,13 +1163,13 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       {/* Success/Error Messages */}
       {success && (
         <div className="alert-success-balance">
-          <strong>✅ Success!</strong> {success}
+          <strong><CheckCircle2 size={16} className="icon-gap-sm" />Success!</strong> {success}
         </div>
       )}
       
       {balanceError && (
         <div className="alert-error-balance">
-          <strong>❌ Error!</strong> {balanceError}
+          <strong><XCircle size={16} className="icon-gap-sm" />Error!</strong> {balanceError}
         </div>
       )}
 
@@ -1177,7 +1178,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
         <h5 className="balance-title">� Add New Balance Account</h5>
         
         <div className="input-row">
-          <label htmlFor="cashOnHand" className="input-label">💵 Cash On Hand</label>
+          <label htmlFor="cashOnHand" className="input-label"><Banknote size={16} className="icon-gap-sm" />Cash On Hand</label>
           <input 
             type="number" 
             id="cashOnHand"
@@ -1198,7 +1199,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
         </div>
 
         <div className="input-row">
-          <label htmlFor="bankAccountBalance" className="input-label">🏦 Bank Account Balance</label>
+          <label htmlFor="bankAccountBalance" className="input-label"><Landmark size={16} className="icon-gap-sm" />Bank Account Balance</label>
           <input 
             type="number" 
             id="bankAccountBalance"
@@ -1219,7 +1220,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
         </div>
 
         <div className="input-row">
-          <label htmlFor="savings" className="input-label">🐷 Savings</label>
+          <label htmlFor="savings" className="input-label"><PiggyBank size={16} className="icon-gap-sm" />Savings</label>
           <input 
             type="number" 
             id="savings"
@@ -1252,14 +1253,14 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
             disabled={loading}
           >
             {loading ? <span className="loading-spinner-balance"></span> : ''}
-            🎯 Set Balance
+            <Target size={16} className="icon-gap-sm" />Set Balance
           </button>
           <button 
             className={`btn-balance btn-reset-balance ${loading ? 'btn-disabled' : ''}`} 
             onClick={resetFields}
             disabled={loading}
           >
-            🔄 Reset Fields
+            <RotateCcw size={16} className="icon-gap-sm" />Reset Fields
           </button>
           {balances.length > 1 && (
             <button 
@@ -1268,7 +1269,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
               disabled={loading}
               title="Update multiple accounts at once"
             >
-              ⚡ Bulk Update
+              <Layers size={16} className="icon-gap-sm" />Bulk Update
             </button>
           )}
         </div>
@@ -1277,11 +1278,11 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       {/* Financial Metrics Section */}
       {financialMetrics && (
         <div className="financial-metrics-section">
-          <h5 className="balance-title">📈 Financial Health Dashboard</h5>
+          <h5 className="balance-title"><Activity size={20} className="icon-gap" />Financial Health Dashboard</h5>
           
           <div className="monthly-inputs">
             <div>
-              <label className="input-label">📊 Monthly Income</label>
+              <label className="input-label"><BarChart3 size={16} className="icon-gap-sm" />Monthly Income</label>
               <input
                 type="number"
                 value={monthlyIncome}
@@ -1291,7 +1292,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
               />
             </div>
             <div>
-              <label className="input-label">💸 Monthly Expenses</label>
+              <label className="input-label"><Receipt size={16} className="icon-gap-sm" />Monthly Expenses</label>
               <input
                 type="number"
                 value={monthlyExpenses}
@@ -1340,7 +1341,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
               className="btn-balance btn-set-balance"
               onClick={() => setShowInsights(!showInsights)}
             >
-              {showInsights ? '🔼 Hide' : '🔽 Show'} Financial Insights
+              {showInsights ? <><ChevronUp size={16} className="icon-gap-sm" />Hide</> : <><ChevronDown size={16} className="icon-gap-sm" />Show</>} Financial Insights
             </button>
           </div>
         </div>
@@ -1349,7 +1350,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       {/* Financial Insights Section */}
       {showInsights && financialMetrics && (
         <div className="insights-section">
-          <h5 className="balance-title">💡 Financial Insights & Recommendations</h5>
+          <h5 className="balance-title"><Lightbulb size={20} className="icon-gap" />Financial Insights & Recommendations</h5>
           
           {financialCalculator.generateFinancialInsights(financialMetrics, balances).map((insight, index) => (
             <div key={index} className={`insight-card ${insight.type}`}>
@@ -1363,7 +1364,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           {financialCalculator.generateFinancialInsights(financialMetrics, balances).length === 0 && (
             <div className="insight-card success">
               <h6 style={{fontWeight: '700', marginBottom: '10px'}}>
-                🎉 Great Financial Health!
+                <CheckCircle2 size={16} className="icon-gap-sm" />Great Financial Health!
               </h6>
               <p style={{margin: 0}}>Your financial metrics look healthy. Keep up the good work!</p>
             </div>
@@ -1374,34 +1375,34 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
       {/* Smart Allocation Section */}
       {(cashOnHand > 0 || bankAccountBalance > 0 || savings > 0) && (
         <div className="allocation-section">
-          <h5 className="balance-title">🎯 Smart Allocation Assistant</h5>
+          <h5 className="balance-title"><ChartPie size={20} className="icon-gap" />Smart Allocation Assistant</h5>
           
           <div className="preset-buttons">
             <button className="btn-preset" onClick={() => applyQuickPreset('emergency')}>
-              🚨 Emergency Fund Preset
+              <Shield size={16} className="icon-gap-sm" />Emergency Fund Preset
             </button>
             <button className="btn-preset" onClick={() => applyQuickPreset('student')}>
-              🎓 Student Budget Preset
+              <GraduationCap size={16} className="icon-gap-sm" />Student Budget Preset
             </button>
             <button className="btn-preset" onClick={() => applyQuickPreset('family')}>
-              👨‍👩‍👧‍👦 Family Budget Preset
+              <Users size={16} className="icon-gap-sm" />Family Budget Preset
             </button>
           </div>
 
           {allocationSuggestion && (
             <div className="allocation-suggestion">
               <h6 style={{fontWeight: '700', marginBottom: '15px'}}>
-                💡 Optimal Allocation Suggestion
+                <Lightbulb size={16} className="icon-gap-sm" />Optimal Allocation Suggestion
               </h6>
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px', marginBottom: '15px'}}>
                 <div>
-                  <strong>💵 Cash: {formatCurrency(allocationSuggestion.cash)}</strong>
+                  <strong><Banknote size={16} className="icon-gap-sm" />Cash: {formatCurrency(allocationSuggestion.cash)}</strong>
                 </div>
                 <div>
-                  <strong>🏦 Bank: {formatCurrency(allocationSuggestion.bank)}</strong>
+                  <strong><Landmark size={16} className="icon-gap-sm" />Bank: {formatCurrency(allocationSuggestion.bank)}</strong>
                 </div>
                 <div>
-                  <strong>🐷 Savings: {formatCurrency(allocationSuggestion.savings)}</strong>
+                  <strong><PiggyBank size={16} className="icon-gap-sm" />Savings: {formatCurrency(allocationSuggestion.savings)}</strong>
                 </div>
               </div>
               <div style={{marginBottom: '15px'}}>
@@ -1416,7 +1417,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                 className="btn-balance btn-set-balance"
                 onClick={applyOptimalAllocation}
               >
-                ✨ Apply Suggestion
+                <Check size={16} className="icon-gap-sm" />Apply Suggestion
               </button>
             </div>
           )}
@@ -1427,7 +1428,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                 className="btn-balance btn-reset-balance"
                 onClick={consolidateLowBalanceAccounts}
               >
-                🔄 Consolidate Low Balance Accounts
+                <Merge size={16} className="icon-gap-sm" />Consolidate Low Balance Accounts
               </button>
             </div>
           )}
@@ -1436,7 +1437,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
 
       {/* Account Overview Section */}
       <div className="overview-section">
-        <h5 className="overview-title">📊 Account Overview</h5>
+        <h5 className="overview-title"><BarChart3 size={20} className="icon-gap" />Account Overview</h5>
 
         {loading && balances.length === 0 ? (
           <div className="loading-container">
@@ -1448,12 +1449,12 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
             <table className="table table-striped table-hover table-bordered">
               <thead>
                 <tr>
-                  <th>🔢 ACC#</th>
-                  <th>💵 Cash on Hand</th>
-                  <th>🏦 Bank Balance</th>
-                  <th>🐷 Savings</th>
-                  <th>💰 Total</th>
-                  <th>⚙️ Actions</th>
+                  <th><Hash size={14} className="icon-gap-sm" />ACC#</th>
+                  <th><Banknote size={14} className="icon-gap-sm" />Cash on Hand</th>
+                  <th><Landmark size={14} className="icon-gap-sm" />Bank Balance</th>
+                  <th><PiggyBank size={14} className="icon-gap-sm" />Savings</th>
+                  <th><Wallet size={14} className="icon-gap-sm" />Total</th>
+                  <th><Settings size={14} className="icon-gap-sm" />Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -1461,9 +1462,9 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                   <tr>
                     <td colSpan="6" className="no-balances">
                       <div>
-                        <h4>🎯 Start Your Financial Journey!</h4>
+                        <h4><Target size={22} className="icon-gap" />Start Your Financial Journey!</h4>
                         <p>Create your first balance account above to begin tracking your finances</p>
-                        <small>💡 Pro tip: Separate your money into different categories for better organization</small>
+                        <small><Lightbulb size={16} className="icon-gap-sm" />Pro tip: Separate your money into different categories for better organization</small>
                       </div>
                     </td>
                   </tr>
@@ -1486,7 +1487,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                             />
                             {smartValidation && smartValidation.warnings && smartValidation.warnings.length > 0 && (
                               <div style={{fontSize: '0.8rem', color: '#f59e0b', marginTop: '2px'}}>
-                                ⚠️ {smartValidation.warnings[0]}
+                                <TriangleAlert size={14} className="icon-gap-sm" />{smartValidation.warnings[0]}
                               </div>
                             )}
                           </td>
@@ -1501,7 +1502,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                             />
                             {smartValidation && smartValidation.suggestions && smartValidation.suggestions.length > 0 && (
                               <div style={{fontSize: '0.8rem', color: '#4299e1', marginTop: '2px'}}>
-                                💡 {smartValidation.suggestions[0]}
+                                <Lightbulb size={14} className="icon-gap-sm" />{smartValidation.suggestions[0]}
                               </div>
                             )}
                           </td>
@@ -1528,7 +1529,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                                 disabled={loading}
                               >
                                 {loading ? <span className="loading-spinner-balance"></span> : ''}
-                                💾 Save
+                                <Save size={14} className="icon-gap-sm" />Save
                               </button>
                               <button 
                                 onClick={() => {
@@ -1537,7 +1538,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                                 }} 
                                 className="btn-table btn-cancel"
                               >
-                                ❌ Cancel
+                                <X size={14} className="icon-gap-sm" />Cancel
                               </button>
                             </div>
                           </td>
@@ -1570,13 +1571,13 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                                 }} 
                                 className="btn-table btn-edit"
                               >
-                                ✏️ Edit
+                                <Pencil size={14} className="icon-gap-sm" />Edit
                               </button>
                               <button 
                                 onClick={() => handleDelete(index)} 
                                 className={`btn-table ${deleteConfirm === index ? 'confirm-delete' : 'btn-delete'}`}
                               >
-                                {deleteConfirm === index ? '⚠️ Confirm?' : '🗑️ Delete'}
+                                {deleteConfirm === index ? <><TriangleAlert size={14} className="icon-gap-sm" />Confirm?</> : <><Trash2 size={14} className="icon-gap-sm" />Delete</>}
                               </button>
                             </div>
                           </td>
