@@ -1,7 +1,8 @@
 import { api } from "../config/api";
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom'
-import { aiCategorizer, suggestCategory, getCategoryIcon, TRANSACTION_CATEGORIES } from '../services/aiCategorization';
+import { aiCategorizer, suggestCategory, TRANSACTION_CATEGORIES } from '../services/aiCategorization';
+import { Bot, Calendar, Check, CheckCircle2, DollarSign, FileText, Plus, Tag, Wallet, X, XCircle } from 'lucide-react';
 
 // X-PENSE Tab
 function AddTransactions( {amount, setAmount, category, setCategory, date, setDate, description, setDescription, darkMode } ) {
@@ -585,25 +586,25 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
             `}</style>
 
             <div className="form-header">
-                <h5>💰 Set X-Penses</h5>
+                <h5><Wallet size={20} className="icon-gap" />Set X-Penses</h5>
             </div>
 
             {showSuccess && (
                 <div className="success-message">
-                    ✅ Transaction added successfully! Redirecting...
+                    <CheckCircle2 size={16} className="icon-gap-sm" />Transaction added successfully! Redirecting...
                 </div>
             )}
 
             {errors.submit && (
                 <div className="error-message" style={{ marginBottom: '20px', justifyContent: 'center' }}>
-                    ❌ {errors.submit}
+                    <XCircle size={16} className="icon-gap-sm" />{errors.submit}
                 </div>
             )}
 
             <div className="form-container">
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="category">📂 Category</label>
+                        <label htmlFor="category"><Tag size={16} className="icon-gap-sm" />Category</label>
                         <select 
                             id="category"
                             name="category"
@@ -630,20 +631,20 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                                 }
                             }}
                         > 
-                            <option value="">🎯 Select A Category</option> 
+                            <option value="">Select A Category</option> 
                             {categoryOptions.map(cat => (
                                 <option key={cat} value={cat}>
                                     {cat}
                                 </option>
                             ))}
                         </select>
-                        {errors.category && <div className="error-message">❌ {errors.category}</div>}
+                        {errors.category && <div className="error-message"><XCircle size={16} className="icon-gap-sm" />{errors.category}</div>}
                         
                         {/* AI Suggestion Banner */}
                         {showAiSuggestion && aiSuggestion && (
                             <div className="ai-suggestion-banner">
                                 <div className="ai-suggestion-content">
-                                    <div className="ai-icon">🤖</div>
+                                    <div className="ai-icon"><Bot size={22} /></div>
                                     <div className="ai-text">
                                         <div className="ai-main-text">
                                             {aiSuggestion.source === 'openai'
@@ -662,14 +663,14 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                                             className="btn-ai-accept"
                                             onClick={acceptAiSuggestion}
                                         >
-                                            ✅ Use This
+                                            <Check size={16} className="icon-gap-sm" />Use This
                                         </button>
                                         <button 
                                             type="button"
                                             className="btn-ai-dismiss"
                                             onClick={dismissAiSuggestion}
                                         >
-                                            ❌ Dismiss
+                                            <X size={16} className="icon-gap-sm" />Dismiss
                                         </button>
                                     </div>
                                 </div>
@@ -680,20 +681,20 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                         {isAnalyzing && (
                             <div className="ai-analyzing">
                                 <div className="spinner"></div>
-                                <span>🤖 AI is analyzing...</span>
+                                <span><Bot size={16} className="icon-gap-sm" />AI is analyzing...</span>
                             </div>
                         )}
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="text">📝 Description</label>
+                        <label htmlFor="text"><FileText size={16} className="icon-gap-sm" />Description</label>
                         <input 
                             type="text" 
                             className={`form-control ${errors.description ? 'error' : ''}`}
                             id="text" 
                             name="text"
                             value={description} 
-                            placeholder="💭 Enter transaction description..."
+                            placeholder="Enter transaction description..."
                             onChange={(e) => {
                                 setDescription(e.target.value);
                                 if (errors.description) {
@@ -701,11 +702,11 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                                 }
                             }}
                         />
-                        {errors.description && <div className="error-message">❌ {errors.description}</div>}
+                        {errors.description && <div className="error-message"><XCircle size={16} className="icon-gap-sm" />{errors.description}</div>}
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="amount">💵 Amount</label>
+                        <label htmlFor="amount"><DollarSign size={16} className="icon-gap-sm" />Amount</label>
                         <div className="amount-input-container">
                             <span className="currency-symbol">$</span>
                             <input 
@@ -720,11 +721,11 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                                 onChange={handleAmountChange}
                             />
                         </div>
-                        {errors.amount && <div className="error-message">❌ {errors.amount}</div>}
+                        {errors.amount && <div className="error-message"><XCircle size={16} className="icon-gap-sm" />{errors.amount}</div>}
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="date">📅 Date</label>
+                        <label htmlFor="date"><Calendar size={16} className="icon-gap-sm" />Date</label>
                         <input 
                             type="date" 
                             id="date"
@@ -733,7 +734,7 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                             value={date ? new Date(date).toISOString().split('T')[0] : ''}
                             onChange={handleDateChange}
                         />
-                        {errors.date && <div className="error-message">❌ {errors.date}</div>}
+                        {errors.date && <div className="error-message"><XCircle size={16} className="icon-gap-sm" />{errors.date}</div>}
                     </div>
 
                     <div>
@@ -748,7 +749,7 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                                     Adding Transaction...
                                 </>
                             ) : (
-                                '✨ Add Transaction'
+                                <><Plus size={16} className="icon-gap-sm" />Add Transaction</>
                             )}
                         </button>
                     </div>
