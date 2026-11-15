@@ -61,7 +61,6 @@ class DashboardAI {
         type: 'warning',
         title: '⚠️ High Spending Alert',
         message: `You're spending ${((avgMonthlySpending / budget) * 100).toFixed(0)}% of your budget monthly. Consider reviewing your expenses.`,
-        confidence: 85,
         actionable: true,
         action: 'View Category Details',
         priority: 'high'
@@ -76,7 +75,6 @@ class DashboardAI {
         type: 'info',
         title: '📊 Spending Pattern Insight',
         message: `${topCategory.percentage.toFixed(0)}% of your spending is on ${topCategory.category}. Consider reviewing this category's transactions.`,
-        confidence: 92,
         actionable: true,
         action: 'View Category Details',
         priority: 'medium'
@@ -93,7 +91,6 @@ class DashboardAI {
           type: 'opportunity',
           title: '🚀 Investment Opportunity',
           message: `Only ${investmentRatio.toFixed(0)}% of your portfolio is invested. Consider increasing investments for better returns.`,
-          confidence: 78,
           actionable: true,
           action: 'Explore Investments',
           priority: 'low'
@@ -109,7 +106,6 @@ class DashboardAI {
           type: 'motivation',
           title: '🎯 Goal Achievement Tip',
           message: `You have ${strugglingGoals.length} goals with low progress. Consider reviewing your goals and adjusting target amounts.`,
-          confidence: 88,
           actionable: true,
           action: 'Review Goal Strategy',
           priority: 'medium'

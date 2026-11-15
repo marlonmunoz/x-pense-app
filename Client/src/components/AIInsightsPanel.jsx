@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { dashboardAI, formatInsight, prioritizeAlerts } from '../services/dashboardAI';
+import { api } from '../config/api';
 import './AIInsightsPanel.css';
 
 const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, darkMode }) => {
-  console.log('🔍 AIInsightsPanel rendering...', { transactions, balance, budget, darkMode });
-  
   const navigate = useNavigate();
   const [insights, setInsights] = useState([]);
   const [alerts, setAlerts] = useState([]);
@@ -13,6 +12,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
   const [predictions, setPredictions] = useState({});
   const [nlQuery, setNlQuery] = useState('');
   const [nlResponse, setNlResponse] = useState(null);
+  const [isAsking, setIsAsking] = useState(false);
   const [activeTab, setActiveTab] = useState('insights');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -100,13 +100,28 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
     }
   }, [transactions, balance, budget, goals, investments]);
 
-  // Handle natural language queries
-  const handleNLQuery = () => {
-    if (nlQuery.trim()) {
-      const response = dashboardAI.processNaturalLanguageQuery(
-        nlQuery, transactions, balance, budget, goals, investments
+  // Ask the server (which asks OpenAI, using totals it calculates itself).
+  // If that is not possible, answer with the old keyword matcher instead.
+  const handleNLQuery = async () => {
+    const question = nlQuery.trim();
+    if (!question || isAsking) return;
+
+    setIsAsking(true);
+    setNlResponse(null);
+    try {
+      const { data } = await api.post('/ai/ask', { question }, { timeout: 30000 });
+      setNlResponse({ answer: data.answer, source: 'openai' });
+    } catch (error) {
+      const fallback = dashboardAI.processNaturalLanguageQuery(
+        question, transactions, balance, budget, goals, investments
       );
-      setNlResponse(response);
+      setNlResponse({
+        ...fallback,
+        source: 'rules',
+        limited: error.response?.status === 429,
+      });
+    } finally {
+      setIsAsking(false);
       setNlQuery('');
     }
   };
@@ -458,15 +473,6 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
           min-width: 0;
         }
 
-        .confidence-badge {
-          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-          color: white;
-          padding: 4px 8px;
-          border-radius: 20px;
-          font-size: 0.8rem;
-          font-weight: 600;
-        }
-
         .priority-badge {
           padding: 4px 8px;
           border-radius: 20px;
@@ -703,7 +709,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
             font-size: 1rem;
           }
 
-          .confidence-badge, .priority-badge {
+          .priority-badge {
             font-size: 0.75rem;
             padding: 3px 6px;
           }
@@ -867,16 +873,25 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
             className="nl-query-input"
             placeholder="Ask me anything... 'How much did I spend this month?' or 'What's my investment performance?'"
             value={nlQuery}
+            maxLength={300}
+            disabled={isAsking}
             onChange={(e) => setNlQuery(e.target.value)}
             onKeyPress={handleKeyPress}
           />
-          <button className="nl-query-btn" onClick={handleNLQuery}>
-            🔍 Ask AI
+          <button className="nl-query-btn" onClick={handleNLQuery} disabled={isAsking}>
+            {isAsking ? '⏳ Thinking...' : '🔍 Ask AI'}
           </button>
         </div>
         {nlResponse && (
           <div className="nl-response">
-            <strong>🤖 AI Assistant:</strong> {nlResponse.answer}
+            <strong>{nlResponse.source === 'openai' ? '🤖 AI Assistant:' : '🔎 Keyword answer:'}</strong> {nlResponse.answer}
+            <div style={{ fontSize: '0.8rem', opacity: 0.8, marginTop: '8px' }}>
+              {nlResponse.source === 'openai'
+                ? 'Answered by OpenAI from your spending totals (no transaction descriptions are sent).'
+                : nlResponse.limited
+                  ? 'You have asked a lot of questions this hour, so this is a simple keyword answer. Try the AI again later.'
+                  : 'The AI is unavailable right now, so this is a simple keyword answer.'}
+            </div>
           </div>
         )}
       </div>
@@ -952,9 +967,6 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
                     <div className="card-header">
                       <h6 className="card-title">{insight.title}</h6>
                       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                        <span className="confidence-badge">
-                          {insight.confidence}% confident
-                        </span>
                         {insight.priority && (
                           <span className={`priority-badge priority-${insight.priority}`}>
                             {insight.priority}
