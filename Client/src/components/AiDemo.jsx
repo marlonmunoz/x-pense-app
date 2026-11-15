@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { aiCategorizer } from '../services/aiCategorization';
+import { Bot } from 'lucide-react';
 
 const AiDemo = ({ darkMode }) => {
   const [testDescription, setTestDescription] = useState('');
@@ -135,7 +136,7 @@ const AiDemo = ({ darkMode }) => {
       `}</style>
 
       <div className="demo-header">
-        <h3>🤖 AI Transaction Categorization Demo</h3>
+        <h3><Bot size={22} className="icon-gap" />AI Transaction Categorization Demo</h3>
         <p>Test how our AI categorizes different transaction descriptions</p>
       </div>
 
@@ -150,7 +151,7 @@ const AiDemo = ({ darkMode }) => {
           onKeyPress={(e) => e.key === 'Enter' && testCategorization()}
         />
         <button className="test-button" onClick={testCategorization}>
-          🤖 Analyze Transaction
+          <Bot size={16} className="icon-gap-sm" />Analyze Transaction
         </button>
         
         {result && (

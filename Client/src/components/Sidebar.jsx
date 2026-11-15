@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { BarChart3, DollarSign, CreditCard, Receipt, Target, TrendingUp, Lightbulb, Plus } from 'lucide-react';
+import { BarChart3, Circle, CreditCard, DollarSign, Lightbulb, Menu, Moon, Plus, Receipt, Sun, Target, TrendingUp, User, X } from 'lucide-react';
 
 // Left-hand navigation (plus the mobile hamburger button and overlay), the welcome box and Log out.
 function Sidebar({ darkMode, toggleDarkMode, sidebarOpen, setSidebarOpen, user, onLogout }) {
@@ -15,7 +15,7 @@ function Sidebar({ darkMode, toggleDarkMode, sidebarOpen, setSidebarOpen, user, 
         onClick={() => setSidebarOpen(!sidebarOpen)}
         aria-label="Toggle navigation menu"
       >
-        <span style={{fontSize: '1.3rem', fontWeight: 'bold'}}>☰</span>
+        <Menu size={22} />
       </button>
     </div>
 
@@ -69,7 +69,7 @@ function Sidebar({ darkMode, toggleDarkMode, sidebarOpen, setSidebarOpen, user, 
             borderRadius: '4px'
           }}
         >
-          ✕
+          <X size={16} />
         </button>
       </div>
 
@@ -166,7 +166,7 @@ function Sidebar({ darkMode, toggleDarkMode, sidebarOpen, setSidebarOpen, user, 
           }}
         >
           <span style={{ fontSize: '16px' }}>
-            {darkMode ? '☀️' : '🌙'}
+            {darkMode ? <Sun size={16} /> : <Moon size={16} />}
           </span>
           <span style={{ fontSize: '12px', letterSpacing: '0.5px' }}>
             {darkMode ? 'LIGHT MODE' : 'DARK MODE'}
@@ -485,9 +485,9 @@ function Sidebar({ darkMode, toggleDarkMode, sidebarOpen, setSidebarOpen, user, 
             justifyContent: 'center',
             gap: '6px'
           }}>
-            <span>👤</span>
+            <span><User size={14} /></span>
             <span>Welcome {user.email.split('@')[0]}</span>
-            <span>🟢</span>
+            <span><Circle size={10} fill="#38a169" color="#38a169" /></span>
             <span>Online</span>
           </small>
           {user.role === 'admin' && (

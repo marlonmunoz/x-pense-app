@@ -17,6 +17,7 @@ import AiDemo from '../components/AiDemo';
 import MobileBottomNav from './MobileBottomNav';
 import Sidebar from './Sidebar';
 import '/src/App.css'
+import { Moon, Sun } from 'lucide-react';
 
 function App() {
   // FORMATTING   
@@ -458,7 +459,7 @@ function AppContent(props) {
                 }}
               >
                 <span style={{ fontSize: '14px' }}>
-                  {darkMode ? '☀️' : '🌙'}
+                  {darkMode ? <Sun size={14} /> : <Moon size={14} />}
                 </span>
                 <span style={{ fontSize: '10px', letterSpacing: '0.5px' }}>
                   {darkMode ? 'LIGHT' : 'DARK'}
