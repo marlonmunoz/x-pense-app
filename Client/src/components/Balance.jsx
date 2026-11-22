@@ -739,7 +739,8 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
         .balance-table {
           background: ${darkMode ? '#2d3748' : '#ffffff'};
           border-radius: 20px;
-          overflow: hidden;
+          overflow-x: auto;
+          overflow-y: hidden;
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
           border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
         }
@@ -773,6 +774,29 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           border: none;
           color: ${darkMode ? '#e2e8f0' : '#2d3748'};
           transition: all 0.3s ease;
+        }
+
+        /* Narrower desktop windows: tighter cells so the table fits its box */
+        @media (max-width: 1100px) {
+          .balance-table thead th {
+            padding: 14px 6px;
+            font-size: 0.75rem;
+            letter-spacing: 0.3px;
+          }
+
+          .balance-table tbody td {
+            padding: 12px 6px;
+          }
+
+          /* The ACC# column is only a row number; drop it when space is short */
+          .balance-table thead th:first-child,
+          .balance-table tbody td:first-child {
+            display: none !important;
+          }
+
+          .overview-section {
+            padding: 20px;
+          }
         }
 
         .account-number {
@@ -1246,7 +1270,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           </div>
         )}
 
-        <div style={{ textAlign: 'center', marginTop: '25px', display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'nowrap', alignItems: 'center' }}>
+        <div style={{ textAlign: 'center', marginTop: '25px', display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap', alignItems: 'center' }}>
           <button 
             className={`btn-balance btn-set-balance ${loading ? 'btn-disabled' : ''}`} 
             onClick={totalBalance}
@@ -1522,7 +1546,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                             </span>
                           </td>
                           <td data-label="Actions">
-                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'nowrap', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
                               <button 
                                 onClick={() => handleEditSave(index)} 
                                 className={`btn-table btn-save ${loading ? 'btn-disabled' : ''}`}
@@ -1563,7 +1587,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
                             </span>
                           </td>
                           <td data-label="Actions">
-                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'nowrap', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
                               <button 
                                 onClick={() => { 
                                   setEditIndex(index); 

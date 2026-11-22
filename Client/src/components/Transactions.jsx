@@ -209,7 +209,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                     margin-bottom: 25px;
                     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
                     display: grid;
-                    grid-template-columns: 2fr 1fr 1fr 1fr;
+                    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
                     gap: 15px;
                     align-items: end;
                 }
@@ -217,6 +217,24 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                 .control-group {
                     display: flex;
                     flex-direction: column;
+                    min-width: 0;
+                }
+
+                /* Narrower desktop windows: search on its own row, the three dropdowns below it */
+                @media (max-width: 1100px) {
+                    .controls-section {
+                        grid-template-columns: repeat(3, minmax(0, 1fr));
+                    }
+
+                    .controls-section .control-group:first-child {
+                        grid-column: 1 / -1;
+                    }
+                }
+
+                @media (max-width: 900px) {
+                    .controls-section {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
                 }
 
                 .control-label {
@@ -227,6 +245,8 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                 }
 
                 .control-input {
+                    width: 100%;
+                    min-width: 0;
                     padding: 12px;
                     border: 2px solid ${darkMode ? '#4a5568' : '#e2e8f0'};
                     border-radius: 8px;
@@ -321,6 +341,18 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                     transition: all 0.3s ease;
                 }
 
+                .enhanced-table td[data-label="Date"] {
+                    white-space: nowrap;
+                }
+
+                /* Narrower desktop windows: tighter cells so the table fits its box */
+                @media (max-width: 1100px) {
+                    .enhanced-table th,
+                    .enhanced-table td {
+                        padding: 12px 6px;
+                    }
+                }
+
                 .table-row {
                     transition: all 0.3s ease;
                 }
@@ -362,7 +394,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                 .action-buttons {
                     display: flex;
                     gap: 8px;
-                    flex-wrap: nowrap;
+                    flex-wrap: wrap;
                     justify-content: flex-start;
                     align-items: center;
                 }

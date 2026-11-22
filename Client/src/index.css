@@ -152,3 +152,32 @@ body.dark-mode .summary-strip {
   background: #151a23;
   border: 1px solid #4a5568;
 }
+
+/* Sidebar links grow on hover (set by JS). The JS never resets a link that became active while
+   hovered, so links stayed enlarged after a click. Only a hovered, non-active link may grow. */
+.mobile-sidebar .nav-link:not(:hover),
+.mobile-sidebar .nav-link.active {
+  transform: none !important;
+}
+
+/* Wide tables scroll sideways inside their box. macOS hides scrollbars by default, so draw a
+   slim one that is always visible; otherwise the cut-off part looks like a bug. */
+.table-responsive::-webkit-scrollbar,
+.table-enhanced::-webkit-scrollbar,
+.balance-table::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb,
+.table-enhanced::-webkit-scrollbar-thumb,
+.balance-table::-webkit-scrollbar-thumb {
+  background: rgba(160, 174, 192, 0.55);
+  border-radius: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track,
+.table-enhanced::-webkit-scrollbar-track,
+.balance-table::-webkit-scrollbar-track {
+  background: transparent;
+}

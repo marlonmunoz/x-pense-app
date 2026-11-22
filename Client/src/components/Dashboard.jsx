@@ -1061,7 +1061,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                         const isSelected = selectedInvestment?.id === investment.id;
                         
                         return (
-                          <div key={index} className="col-md-6 col-lg-4 mb-4">
+                          <div key={index} className="col-md-6 col-xl-4 mb-4">
                             <div 
                               className={`card h-100 ${darkMode ? 'bg-dark text-light' : 'bg-light'} border-0 shadow-sm`}
                               style={{ 
@@ -1520,7 +1520,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                         const isSelected = selectedGoal?.id === goal.id;
                         
                         return (
-                          <div key={index} className="col-md-6 col-lg-4 mb-4">
+                          <div key={index} className="col-md-6 col-xl-4 mb-4">
                             <div 
                               className={`card h-100 ${darkMode ? 'bg-dark text-light' : 'bg-light'} border-0 shadow-sm`}
                               style={{ 
@@ -1832,7 +1832,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                             { name: 'Investments', value: totalPrice, trend: 'up' },
                             { name: 'Overview Total', value: overviewTotal, trend: overviewTotal > 0 ? 'up' : 'down' }
                         ].map((item, index) => (
-                            <div key={index} className="col-md-6 col-lg-4 mb-3">
+                            <div key={index} className="col-md-6 col-xl-4 mb-3">
                                 <div 
                                     className={`card h-100 ${darkMode ? 'bg-dark text-light' : 'bg-light'} border-0 shadow-sm`}
                                     style={{ 

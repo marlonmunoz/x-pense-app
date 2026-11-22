@@ -317,13 +317,13 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                     display: flex;
                     gap: 15px;
                     align-items: center;
-                    flex-wrap: nowrap;
+                    flex-wrap: wrap;
                     justify-content: center;
                 }
 
                 .enhanced-input {
                     flex: 1;
-                    min-width: 200px;
+                    min-width: 150px;
                     padding: 15px 20px;
                     border: 2px solid ${darkMode ? '#4a5568' : '#e2e8f0'};
                     border-radius: 12px;
@@ -513,7 +513,8 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                 .table-enhanced {
                     background: ${darkMode ? '#2d3748' : '#ffffff'};
                     border-radius: 20px;
-                    overflow: hidden;
+                    overflow-x: auto;
+                    overflow-y: hidden;
                     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
                     border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
                 }
@@ -547,6 +548,23 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                     border: none;
                     color: ${darkMode ? '#e2e8f0' : '#2d3748'};
                     transition: all 0.3s ease;
+                }
+
+                /* Narrower desktop windows: tighter cells so the table fits its box */
+                @media (max-width: 1100px) {
+                    .enhanced-input {
+                        padding: 15px 12px;
+                    }
+
+                    .table-enhanced thead th {
+                        padding: 14px 8px;
+                        font-size: 0.8rem;
+                        letter-spacing: 0.4px;
+                    }
+
+                    .table-enhanced tbody td {
+                        padding: 12px 8px;
+                    }
                 }
 
                 .loading-spinner {
@@ -914,7 +932,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                             </td>
                                             <td data-label="Actions">
                                                 {editingIndex === index ? (
-                                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'nowrap', alignItems: 'center' }}>
+                                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
                                                         <button 
                                                             className={`btn-table btn-save-table ${loading ? 'btn-disabled' : ''}`} 
                                                             onClick={() => saveBudget(index)}
@@ -931,7 +949,7 @@ function Budget({ darkMode, budget, setBudget, validated, setValidated, formatCu
                                                         </button>
                                                     </div>
                                                 ) : (
-                                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'nowrap', alignItems: 'center' }}>
+                                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
                                                         <button 
                                                             className="btn-table btn-edit-table" 
                                                             onClick={() => editBudget(index)}
