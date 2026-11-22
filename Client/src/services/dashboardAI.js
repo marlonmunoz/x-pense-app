@@ -68,7 +68,8 @@ class DashboardAI {
     const monthlySpending = this.calculateMonthlySpending(transactions);
     const avgMonthlySpending = monthlySpending.reduce((sum, month) => sum + month.amount, 0) / monthlySpending.length;
     
-    if (avgMonthlySpending > budget * 0.8) {
+    // Without a budget there is nothing to compare against (and dividing by 0 gives "Infinity%").
+    if (budget > 0 && avgMonthlySpending > budget * 0.8) {
       insights.push({
         type: 'warning',
         title: 'High Spending Alert',
@@ -165,7 +166,8 @@ class DashboardAI {
 
     // Budget alerts
     const monthlySpending = this.getCurrentMonthSpending(transactions);
-    const budgetUsed = (monthlySpending / budget) * 100;
+    // No budget set: skip budget alerts instead of showing "Infinity%".
+    const budgetUsed = budget > 0 ? (monthlySpending / budget) * 100 : 0;
 
     if (budgetUsed > 90) {
       alerts.push({
