@@ -181,3 +181,15 @@ body.dark-mode .summary-strip {
 .balance-table::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* The sidebar is always 250px. Before, the main column was sized to its content, so a wide page
+   (Dashboard, Investments) squeezed the sidebar to about 208px while other pages left it at 250px. */
+.app-main.flex-grow-1 {
+  flex: 1 1 0%;
+}
+
+@media (min-width: 768px) {
+  .mobile-sidebar {
+    flex-shrink: 0;
+  }
+}

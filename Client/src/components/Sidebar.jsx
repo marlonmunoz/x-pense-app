@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { BarChart3, Circle, CreditCard, DollarSign, Lightbulb, Menu, Moon, Plus, Receipt, Sun, Target, TrendingUp, User, X } from 'lucide-react';
+import { BarChart3, Circle, CreditCard, DollarSign, Lightbulb, Menu, Moon, Plus, Receipt, Sparkles, Sun, Target, TrendingUp, User, X } from 'lucide-react';
 
 // Left-hand navigation (plus the mobile hamburger button and overlay), the welcome box and Log out.
 function Sidebar({ darkMode, toggleDarkMode, sidebarOpen, setSidebarOpen, user, onLogout }) {
@@ -81,15 +81,16 @@ function Sidebar({ darkMode, toggleDarkMode, sidebarOpen, setSidebarOpen, user, 
         </button>
       </div>
 
-      <div className="text-center mb-4">
-        <div className="d-flex align-items-center justify-content-center mb-2" style={{ flexWrap: 'nowrap' }}>
-          <h1 className="mb-0" style={{ whiteSpace: 'nowrap', marginRight: '.5rem' }}>
+      <div className="text-center mb-4 w-100">
+        {/* Logo and AI icon sit side by side, centered over the tabs and the theme button */}
+        <div className="d-flex keep-row align-items-center justify-content-center mb-3 w-100" style={{ flexWrap: 'nowrap', paddingLeft: '1.5px' }}>
+          <h1 className="mb-0" style={{ whiteSpace: 'nowrap' }}>
             <span 
               className={`app-title ${darkMode ? 'metallic-shadow-dark' : 'metallic-shadow-light'}`}
               style={{
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
-                fontSize: '2.2rem',
+                fontSize: '2rem',
                 fontWeight: 'bold',
                 letterSpacing: '1px'
               }}
@@ -106,24 +107,23 @@ function Sidebar({ darkMode, toggleDarkMode, sidebarOpen, setSidebarOpen, user, 
               X-PENSE
             </span>
           </h1>
-          <span 
-            className='badge badge-danger border p-1'
-            style={{
-              transition: 'all 0.3s ease',
-              cursor: 'default',
-              fontSize: '0.65rem',
-              whiteSpace: 'nowrap'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.transform = 'scale(1.05)';
-              e.target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'scale(1)';
-              e.target.style.boxShadow = '';
-            }}
+          <span
+            className="d-flex align-items-center"
+            title="AI-powered"
+            aria-label="AI-powered"
+            style={{ marginLeft: '8px', cursor: 'default', transform: 'translateY(3.5px)' }}
           >
-            Ai-Powered
+            <Sparkles
+              size={26}
+              strokeWidth={1.75}
+              color={darkMode ? '#ffd700' : '#f5a300'}
+              fill={darkMode ? '#ffd700' : '#f5a300'}
+              style={{
+                filter: darkMode
+                  ? 'drop-shadow(0 0 3px rgba(255, 215, 0, 0.95)) drop-shadow(0 0 9px rgba(255, 215, 0, 0.55))'
+                  : 'drop-shadow(0 0 3px rgba(245, 163, 0, 0.8)) drop-shadow(0 0 8px rgba(245, 163, 0, 0.45))'
+              }}
+            />
           </span>
         </div>
         <button 
