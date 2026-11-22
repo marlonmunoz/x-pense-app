@@ -1296,7 +1296,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                 }}
                                 onClick={() => setSelectedInvestment(isSelected ? null : investment)}
                               >
-                                <td>
+                                <td data-label="Asset">
                                   <div className="d-flex keep-row align-items-center">
                                     <span style={{fontSize: '1.25rem', marginRight: '0.75rem'}}>
                                       {getInvestmentIcon(investment)}
@@ -1310,7 +1310,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                     </div>
                                   </div>
                                 </td>
-                                <td>
+                                <td data-label="Amount">
                                   {editIndex === index ? (
                                     <input
                                       type="number"
@@ -1323,22 +1323,22 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                     <strong style={{color: investmentColor}}>{investment.amount}</strong>
                                   )}
                                 </td>
-                                <td style={{color: investmentColor}}>
+                                <td data-label="Price/Unit" style={{color: investmentColor}}>
                                   ${investment.pricePerUnit?.toFixed(2) || 'N/A'}
                                 </td>
-                                <td>
+                                <td data-label="Total Value">
                                   <strong style={{color: investmentColor}}>
                                     {formatCurrency(investment.total_price)}
                                   </strong>
                                 </td>
-                                <td>
+                                <td data-label="Performance">
                                   <div className="d-flex align-items-center">
                                     <span style={{color: performance > 0 ? '#28a745' : '#dc3545', marginRight: '8px'}}>
                                       {performance > 0 ? <TrendingUp size={14} /> : <TrendingDown size={14} />} {performance.toFixed(2)}%
                                     </span>
                                   </div>
                                 </td>
-                                <td>
+                                <td data-label="Actions">
                                   {editIndex === index ? (
                                     <div className="btn-group">
                                       <button 
@@ -1385,7 +1385,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                   )}
 
                   {/* Portfolio Summary Statistics */}
-                  <div className={`mt-4 p-3 rounded ${darkMode ? 'bg-secondary' : 'bg-light'}`}>
+                  <div className={`summary-strip mt-4 p-3 rounded ${darkMode ? '' : 'bg-light'}`}>
                     <h6 className="mb-3" style={{ 
                         fontSize: '1.2rem', 
                         fontWeight: '700',
@@ -1738,7 +1738,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                   )}
 
                   {/* Summary Statistics */}
-                  <div className={`mt-4 p-3 rounded ${darkMode ? 'bg-secondary' : 'bg-light'}`}>
+                  <div className={`summary-strip mt-4 p-3 rounded ${darkMode ? '' : 'bg-light'}`}>
                     <h6 className="mb-3" style={{ 
                         fontSize: '1.2rem', 
                         fontWeight: '700',
@@ -1920,7 +1920,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                     </div>
 
                     {/* Summary Stats */}
-                    <div className={`mt-3 p-3 rounded ${darkMode ? 'bg-secondary' : 'bg-light'}`}>
+                    <div className={`summary-strip mt-3 p-3 rounded ${darkMode ? '' : 'bg-light'}`}>
                         <div className="row text-center">
                             <div className="col-md-3">
                                 <strong style={{color: '#28a745'}}><Wallet size={16} className="icon-gap" />Total Assets</strong><br />

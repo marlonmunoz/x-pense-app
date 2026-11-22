@@ -146,3 +146,9 @@ body.light-mode .app-main .app-footer p { color: #4a5568; }
   }
   .app-content > .ai-demo-container { padding-top: 20px !important; }
 }
+
+/* Summary strips on the Dashboard: dark background so the colored figures stay readable */
+body.dark-mode .summary-strip {
+  background: #151a23;
+  border: 1px solid #4a5568;
+}
