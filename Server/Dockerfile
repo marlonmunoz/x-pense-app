@@ -1,5 +1,5 @@
-# Use Python 3.8 slim image
-FROM python:3.8-slim
+# Use Python 3.12 slim image
+FROM python:3.12-slim
 
 # Set working directory
 WORKDIR /app
