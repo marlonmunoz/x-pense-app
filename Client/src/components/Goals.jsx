@@ -398,7 +398,7 @@ const Goals = ( {newGoalName, setNewGoalName, newGoalAmount, setNewGoalAmount, g
                     padding: 60px 20px;
                     background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
                     color: white;
-                    border-radius: 15px;
+                    border-radius: 20px;
                     font-size: 1.2rem;
                     font-weight: 600;
                     box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);

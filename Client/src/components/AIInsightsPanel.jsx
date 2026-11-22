@@ -203,7 +203,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
           padding: 20px !important;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
           color: white !important;
-          border-radius: 15px !important;
+          border-radius: 20px !important;
           box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
           position: relative !important;
           display: block !important;
@@ -266,7 +266,7 @@ const AIInsightsPanel = ({ transactions, balance, budget, goals, investments, da
           gap: 10px;
           margin-bottom: 20px;
           background: ${darkMode ? '#4a5568' : '#e2e8f0'};
-          border-radius: 15px;
+          border-radius: 20px;
           padding: 15px;
           width: 100% !important;
           align-items: stretch !important;

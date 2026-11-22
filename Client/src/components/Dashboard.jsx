@@ -834,7 +834,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                 <button   onClick={() => navigate('/transactions')} className={`btn ${darkMode ? 'btn-light' : 'btn-dark'} responsive`}> View All Transactions</button>
             </div>
             <br />
-            <div className={`charts border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+            <div className={`charts border border-info section-box p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                 {/* Interactive Chart Controls */}
                 <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
                   <div>
@@ -963,7 +963,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                 </div>
             </div>
             <br />
-            <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+            <div className={`table-responsive border border-info section-box p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
               <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
                 <div>
                   <h6 style={{ 
@@ -1423,7 +1423,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
               )}
             </div>
             <br />
-            <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+            <div className={`table-responsive border border-info section-box p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
               <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
                 <div>
                   <h6 style={{ 
@@ -1773,7 +1773,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
               )}
             </div>
                 <br />
-                <div className={`table-responsive border border-info rounded p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+                <div className={`table-responsive border border-info section-box p-3 ml-7 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
                     <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
                         <div>
                             <h6 style={{ 

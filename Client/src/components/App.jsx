@@ -401,7 +401,13 @@ function AppContent(props) {
           />
           
           {/* Main Content Area */}
-          <div className="flex-grow-1 p-4" style={{paddingTop: window.innerWidth < 768 ? '76px' : '1rem'}}>
+          {/* Desktop: no top/bottom padding, so the first box and the footer line up with the sidebar.
+              (p-4 is !important in Bootstrap 4, so it is only used on phones, where it is unchanged.) */}
+          <div
+            className={`app-main flex-grow-1${window.innerWidth < 768 ? ' p-4' : ''}`}
+            style={window.innerWidth < 768 ? { paddingTop: '76px' } : { padding: '0 1.5rem' }}
+          >
+            <div className="app-content">
             <Routes>
               <Route path='/' element={<Navigate to='/dashboard' replace />} />
               <Route path='/dashboard' element={<Dashboard 
@@ -526,6 +532,7 @@ function AppContent(props) {
               />} />
               <Route path='/ai-demo' element={<AiDemo darkMode={darkMode} />} />
             </Routes>
+            </div>
             <Footer />
           </div>
         </div>

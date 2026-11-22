@@ -470,7 +470,7 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
 
         .bulk-update-content {
           background: ${darkMode ? '#2d3748' : '#ffffff'};
-          border-radius: 15px;
+          border-radius: 20px;
           max-width: 90%;
           max-height: 90%;
           overflow-y: auto;
@@ -482,7 +482,7 @@ function BulkUpdatePanel({ darkMode, updateType, items, onBulkUpdate, onClose })
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           color: white;
           padding: 20px;
-          border-radius: 15px 15px 0 0;
+          border-radius: 20px 20px 0 0;
         }
 
         .bulk-update-body {

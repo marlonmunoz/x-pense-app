@@ -32,7 +32,7 @@ const AiDemo = ({ darkMode }) => {
           margin: 20px auto;
           padding: 20px;
           background: ${darkMode ? '#2d3748' : '#f8f9fa'};
-          border-radius: 15px;
+          border-radius: 20px;
           border: 2px solid ${darkMode ? '#4a5568' : '#e2e8f0'};
         }
 

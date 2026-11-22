@@ -738,7 +738,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
 
         .balance-table {
           background: ${darkMode ? '#2d3748' : '#ffffff'};
-          border-radius: 15px;
+          border-radius: 20px;
           overflow: hidden;
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
           border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
@@ -885,7 +885,7 @@ function Balance({ darkMode, cashOnHand, setCashOnHand, bankAccountBalance, setB
           padding: 60px 20px;
           background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
           color: white;
-          border-radius: 15px;
+          border-radius: 20px;
           font-size: 1.2rem;
           font-weight: 600;
           box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);

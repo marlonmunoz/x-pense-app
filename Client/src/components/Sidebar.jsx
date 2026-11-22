@@ -52,7 +52,7 @@ function Sidebar({ darkMode, toggleDarkMode, sidebarOpen, setSidebarOpen, user, 
         transition: 'all 0.3s ease',
         borderRight: `2px solid ${darkMode ? '#495057' : '#dee2e6'}`,
         boxShadow: '2px 0 10px rgba(0, 0, 0, 0.1)',
-        borderRadius: '10px',
+        borderRadius: window.innerWidth < 768 ? '10px' : '20px',
         ...(window.innerWidth < 768 ? {
           position: 'fixed',
           top: 0,

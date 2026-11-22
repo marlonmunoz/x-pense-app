@@ -204,7 +204,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
 
                 .controls-section {
                     background: ${darkMode ? 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)' : 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'};
-                    border-radius: 15px;
+                    border-radius: 20px;
                     padding: 25px;
                     margin-bottom: 25px;
                     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -260,7 +260,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
 
                 .table-container {
                     background: ${darkMode ? '#2d3748' : '#ffffff'};
-                    border-radius: 15px;
+                    border-radius: 20px;
                     overflow: hidden;
                     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
                     border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
@@ -271,7 +271,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                     padding: 60px 20px;
                     background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
                     color: white;
-                    border-radius: 15px;
+                    border-radius: 20px;
                     font-size: 1.2rem;
                     font-weight: 600;
                     box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
@@ -494,7 +494,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                     .transaction-card {
                         background: ${darkMode ? '#2d3748' : '#ffffff'};
                         border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
-                        border-radius: 15px;
+                        border-radius: 20px;
                         padding: 20px;
                         margin-bottom: 15px;
                         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -600,7 +600,7 @@ const Transactions = ({ darkMode, transactions, setTransactions, totalAmount, se
                     .total-card {
                         background: ${darkMode ? '#4a5568' : '#667eea'};
                         color: white;
-                        border-radius: 15px;
+                        border-radius: 20px;
                         padding: 25px;
                         text-align: center;
                         margin-top: 20px;

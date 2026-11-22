@@ -326,7 +326,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
 
                 .control-section {
                     background: ${darkMode ? 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)' : 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'};
-                    border-radius: 15px;
+                    border-radius: 20px;
                     padding: 25px;
                     margin-bottom: 25px;
                     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -421,7 +421,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
 
                 .table-container {
                     background: ${darkMode ? '#2d3748' : '#ffffff'};
-                    border-radius: 15px;
+                    border-radius: 20px;
                     overflow: hidden;
                     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
                     border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
@@ -648,7 +648,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    border-radius: 15px;
+                    border-radius: 20px;
                 }
 
                 .loading-container {
@@ -709,7 +709,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                     .investment-card {
                         background: ${darkMode ? '#2d3748' : '#ffffff'};
                         border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
-                        border-radius: 15px;
+                        border-radius: 20px;
                         padding: 20px;
                         margin-bottom: 15px;
                         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -886,7 +886,7 @@ const Investments = ({ darkMode, investments, setInvestments, amounts, setAmount
                         text-align: center;
                         padding: 40px;
                         background: ${darkMode ? '#2d3748' : '#ffffff'};
-                        border-radius: 15px;
+                        border-radius: 20px;
                         border: ${darkMode ? '2px solid #4a5568' : '2px solid #e2e8f0'};
                     }
 

@@ -209,7 +209,7 @@ function AddTransactions( {amount, setAmount, category, setCategory, date, setDa
                     text-align: center;
                     margin-bottom: 30px;
                     padding: 20px;
-                    border-radius: 15px;
+                    border-radius: 20px;
                     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                     color: white;
                     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
