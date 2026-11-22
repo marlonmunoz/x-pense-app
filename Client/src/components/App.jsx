@@ -16,8 +16,6 @@ import Footer from '../components/Footer';
 import AiDemo from '../components/AiDemo';
 import Sidebar from './Sidebar';
 import '/src/App.css'
-import { Moon, Sun } from 'lucide-react';
-
 function App() {
   // FORMATTING   
   const formatCurrency = (amount) => {
@@ -404,83 +402,6 @@ function AppContent(props) {
           
           {/* Main Content Area */}
           <div className="flex-grow-1 p-4" style={{paddingTop: window.innerWidth < 768 ? '76px' : '1rem'}}>
-            
-            {/* Mobile Dark Mode Toggle - Only visible on mobile */}
-            <div className="d-md-none mb-3">
-              <button
-                onClick={toggleDarkMode}
-                className="btn btn-sm w-100"
-                style={{
-                  background: darkMode 
-                    ? 'linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #fff59d 100%)' 
-                    : 'linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%)',
-                  color: darkMode ? '#1a1a1a' : '#ffffff',
-                  border: `2px solid ${darkMode ? '#ffd700' : '#64748b'}`,
-                  fontSize: '11px',
-                  padding: '8px 16px',
-                  borderRadius: '12px',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  boxShadow: darkMode 
-                    ? '0 4px 15px rgba(255, 215, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.1)' 
-                    : '0 4px 15px rgba(30, 41, 59, 0.3), 0 0 20px rgba(30, 41, 59, 0.1)',
-                  transform: 'scale(1)',
-                  fontWeight: '600',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  backdropFilter: 'blur(10px)',
-                  maxWidth: '100%'
-                }}
-                onMouseDown={(e) => {
-                  e.target.style.transform = 'scale(0.95)';
-                }}
-                onMouseUp={(e) => {
-                  e.target.style.transform = 'scale(1.05)';
-                  setTimeout(() => {
-                    e.target.style.transform = 'scale(1)';
-                  }, 150);
-                }}
-                onTouchStart={(e) => {
-                  e.target.style.transform = 'scale(0.95)';
-                  e.target.style.boxShadow = darkMode 
-                    ? '0 2px 8px rgba(255, 215, 0, 0.5)' 
-                    : '0 2px 8px rgba(30, 41, 59, 0.5)';
-                }}
-                onTouchEnd={(e) => {
-                  e.target.style.transform = 'scale(1.05)';
-                  setTimeout(() => {
-                    e.target.style.transform = 'scale(1)';
-                    e.target.style.boxShadow = darkMode 
-                      ? '0 4px 15px rgba(255, 215, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.1)' 
-                      : '0 4px 15px rgba(30, 41, 59, 0.3), 0 0 20px rgba(30, 41, 59, 0.1)';
-                  }, 150);
-                }}
-              >
-                <span style={{ fontSize: '14px' }}>
-                  {darkMode ? <Sun size={14} /> : <Moon size={14} />}
-                </span>
-                <span style={{ fontSize: '10px', letterSpacing: '0.5px' }}>
-                  {darkMode ? 'LIGHT' : 'DARK'}
-                </span>
-              </button>
-              {/* The sidebar (and its Log out button) is hidden on phones, so offer one here. */}
-              <button
-                type="button"
-                onClick={onLogout}
-                className={`btn btn-sm w-100 mt-2 ${darkMode ? 'btn-outline-light' : 'btn-outline-secondary'}`}
-                style={{
-                  fontSize: '11px',
-                  fontWeight: '600',
-                  padding: '8px 16px',
-                  borderRadius: '12px',
-                  borderWidth: '2px'
-                }}
-              >
-                LOG OUT
-              </button>
-            </div>
-            
             <Routes>
               <Route path='/' element={<Navigate to='/dashboard' replace />} />
               <Route path='/dashboard' element={<Dashboard 
