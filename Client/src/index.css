@@ -79,3 +79,11 @@ svg.lucide {
 /* Space between an icon and the text that follows it (scales with the text size) */
 svg.lucide.icon-gap { margin-right: 0.5em; }
 svg.lucide.icon-gap-sm { margin-right: 0.35em; }
+
+/* Keep a flex row on one line on phones. App.css has global small-screen rules
+   (.d-flex { flex-wrap: wrap } and, at <=480px, .d-flex > * { flex: 1 1 100% })
+   that stack every child; add this class to rows (icon + title, label + value)
+   that should not stack. */
+.keep-row { flex-wrap: nowrap !important; }
+.keep-row > * { flex: 0 1 auto !important; margin-bottom: 0 !important; }
+.keep-row > .flex-grow-1 { flex-grow: 1 !important; }

@@ -1093,9 +1093,9 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                               }}
                             >
                               <div className="card-body p-4">
-                                <div className="d-flex justify-content-between align-items-start mb-3">
+                                <div className="d-flex keep-row justify-content-between align-items-start mb-3">
                                   <div className="flex-grow-1">
-                                    <h6 className="card-title mb-2 d-flex align-items-center" style={{color: investmentColor}}>
+                                    <h6 className="card-title mb-2 d-flex keep-row align-items-center" style={{color: investmentColor}}>
                                       <span style={{fontSize: '1.5rem', marginRight: '0.75rem'}}>
                                         {getInvestmentIcon(investment)}
                                       </span>
@@ -1161,7 +1161,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
 
                                 {/* Performance Indicator */}
                                 <div className="mb-3">
-                                  <div className="d-flex justify-content-between align-items-center mb-1">
+                                  <div className="d-flex keep-row justify-content-between align-items-center mb-1">
                                     <small className="text-muted">Performance</small>
                                     <small style={{color: performance > 0 ? '#28a745' : '#dc3545'}}>
                                       {performance > 0 ? '+' : ''}{performance.toFixed(2)}%
@@ -1297,7 +1297,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                 onClick={() => setSelectedInvestment(isSelected ? null : investment)}
                               >
                                 <td>
-                                  <div className="d-flex align-items-center">
+                                  <div className="d-flex keep-row align-items-center">
                                     <span style={{fontSize: '1.25rem', marginRight: '0.75rem'}}>
                                       {getInvestmentIcon(investment)}
                                     </span>
@@ -1552,9 +1552,9 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                               }}
                             >
                               <div className="card-body p-4">
-                                <div className="d-flex justify-content-between align-items-start mb-3">
+                                <div className="d-flex keep-row justify-content-between align-items-start mb-3">
                                   <div className="flex-grow-1">
-                                    <h6 className="card-title mb-1 d-flex align-items-center" style={{color: goalColor}}>
+                                    <h6 className="card-title mb-1 d-flex keep-row align-items-center" style={{color: goalColor}}>
                                       <span style={{fontSize: '1.25rem', marginRight: '0.6rem'}}>
                                         {getGoalIcon(progress)}
                                       </span>
@@ -1568,7 +1568,8 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
 
                                 {/* Circular Progress */}
                                 <div className="d-flex justify-content-center mb-3">
-                                  <div style={{ width: 100, height: 100, position: 'relative' }}>
+                                  {/* flex: 0 0 auto keeps the circle 100px on phones (a global rule would stretch it) */}
+                                  <div style={{ width: 100, height: 100, position: 'relative', flex: '0 0 auto' }}>
                                     <CircularProgressbar
                                       value={progress}
                                       strokeWidth={8}
@@ -1626,7 +1627,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                       }}
                                     ></div>
                                   </div>
-                                  <div className="d-flex justify-content-between mt-1">
+                                  <div className="d-flex keep-row justify-content-between mt-1">
                                     <small style={{color: goalColor}}>
                                       ${(goal.target - goal.saved).toFixed(2)} remaining
                                     </small>
@@ -1696,7 +1697,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                             onClick={() => setSelectedGoal(isSelected ? null : goal)}
                           >
                             <div className="d-flex align-items-center justify-content-between">
-                              <div className="d-flex align-items-center flex-grow-1">
+                              <div className="d-flex keep-row align-items-center flex-grow-1">
                                 <span style={{fontSize: '1.6rem', marginRight: '1rem'}}>
                                   {getGoalIcon(progress)}
                                 </span>
@@ -1704,7 +1705,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                   <h6 className="mb-1" style={{color: goalColor}}>
                                     {goal.name}
                                   </h6>
-                                  <div className="d-flex align-items-center">
+                                  <div className="d-flex keep-row align-items-center">
                                     <div className="progress flex-grow-1 me-3" style={{height: '8px'}}>
                                       <div 
                                         className="progress-bar"
@@ -1856,7 +1857,7 @@ function Dashboard({ transactions =[], balance = 0, totalAmount, darkMode,format
                                     }}
                                 >
                                     <div className="card-body p-3">
-                                        <div className="d-flex justify-content-between align-items-start">
+                                        <div className="d-flex keep-row justify-content-between align-items-start">
                                             <div className="flex-grow-1">
                                                 <h6 className="card-title mb-1" style={{color: getOverviewItemColor(item.name)}}>
                                                     {getOverviewItemIcon(item.name)} {item.name}
